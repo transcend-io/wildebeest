@@ -3,13 +3,6 @@ import difference from 'lodash/difference';
 import uniq from 'lodash/uniq';
 import { QueryTypes } from 'sequelize';
 
-// global
-import { logger } from '@bk/loggers';
-
-// db
-import { defaultFieldsConstraintName } from '@bk/db/helpers';
-import Model from '@bk/db/ModelManager';
-
 // wildebeest
 import { SequelizeMigrator } from '@wildebeest/types';
 

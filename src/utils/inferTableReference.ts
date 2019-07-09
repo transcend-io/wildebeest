@@ -1,5 +1,5 @@
-// commons
-import cases from '@commons/cases';
+// external modules
+import camelCase from 'lodash/camelCase';
 
 /**
  * The foreign key table reference the constraint should be made with
@@ -26,7 +26,7 @@ export default function inferTableReference(column): TableReference {
   const splitColumn = column.split(/(?=[A-Z])/);
 
   // The reference table field is by default the camel case version of the camel case word
-  const field = cases.camelCase(splitColumn.pop());
+  const field = camelCase(splitColumn.pop());
 
   // Determine the name of the reference table
   const table = cases.pluralCase(splitColumn.join(''));

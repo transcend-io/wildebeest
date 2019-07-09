@@ -23,6 +23,7 @@
       "new-parens": true,
       "prefer-for-of": false,
       "no-arg": true,
+      "ordered-imports": false,
       "object-literal-key-quotes": false,
       "no-bitwise": true,
       "no-conditional-assignment": true,

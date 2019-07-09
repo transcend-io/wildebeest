@@ -1,9 +1,3 @@
-// global
-import { logger } from '@bk/loggers';
-
-// aws
-import { s3 } from '@bk/aws';
-
 // wildebeest
 import { MigrationDefinition, SequelizeMigrator } from '@wildebeest/types';
 import batchProcess from '@wildebeest/utils/batchProcess';

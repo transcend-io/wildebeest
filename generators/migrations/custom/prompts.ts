@@ -12,7 +12,7 @@
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.name = {
+export const name = {
   message: 'What is the migration name?',
   nameTransform: 'paramCase',
   type: 'name',
@@ -23,7 +23,7 @@ module.exports.name = {
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.comment = {
+export const comment = {
   message: 'What is the migration comment?',
   type: 'comment',
 };

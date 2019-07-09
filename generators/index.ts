@@ -7,14 +7,12 @@
  */
 
 // external modules
-const difference = require('lodash/difference');
-
-// commons
-const cases = require('@commons/cases');
+import difference from 'lodash/difference';
+import kebabCase from 'lodash/kebabCase';
 
 // global
-const logger = require('@generators/logger');
-const convertToPlop = require('@generators/utils/convertToPlop');
+import logger from '@generators/logger';
+import convertToPlop from '@generators/utils/convertToPlop';
 
 // Get the generators
 module.exports = {
@@ -52,7 +50,7 @@ module.exports = {
     // The migrationTypes that have been defined
     const migrationTypes = repo
       .listEntryFiles('migrations/migrationTypes')
-      .map((fil) => cases.paramCase(fil.split('.')[0]))
+      .map((fil) => kebabCase(fil.split('.')[0]))
       .filter((fil) => !['index', 'skip'].includes(fil));
 
     // The existing generators

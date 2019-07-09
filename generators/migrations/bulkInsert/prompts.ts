@@ -12,7 +12,7 @@
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.nameExt = {
+export const nameExt = {
   message:
     'Name the migration (will be appended after "bulk-insert-{{ modelTableName }}-"',
   type: 'name',

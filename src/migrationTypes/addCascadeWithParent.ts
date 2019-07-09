@@ -1,7 +1,6 @@
 // wildebeest
 import { MigrationDefinition } from '@wildebeest/types';
 import addTableColumnConstraint from '@wildebeest/utils/addTableColumnConstraint';
-import defaultConstraintName from '@wildebeest/utils/defaultConstraintName';
 import { TableReference } from '@wildebeest/utils/inferTableReference';
 
 // local
@@ -43,11 +42,11 @@ export default function addCascadeWithParent(
   } = options;
   // The name of the constraint
   const useConstraintName =
-    constraintName || defaultConstraintName(tableName, columnName);
+    constraintName || defaultForeignKeyConstraintName(tableName, columnName);
 
   return {
     // Add the constraint
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         addTableColumnConstraint(
           db,
@@ -66,7 +65,7 @@ export default function addCascadeWithParent(
         ),
       ),
     // Remove the constraint
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction(({ queryT }) =>
         queryT.raw(
           `ALTER TABLE "${tableName}" DROP CONSTRAINT IF EXISTS "${useConstraintName}";`,

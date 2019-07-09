@@ -1,13 +1,9 @@
 // external modules
 import flatten from 'lodash/flatten';
 
-// global
-import { verboseLogger } from '@bk/loggers';
-
 // wildebeest
 import { MigrationDefinition } from '@wildebeest/types';
 import createIndex from '@wildebeest/utils/createIndex';
-import defaultFieldsConstraintName from '@wildebeest/utils/defaultFieldsConstraintName';
 
 /**
  * Options for adding a unique constraint index across columns in a table
@@ -42,7 +38,7 @@ export default function addUniqueConstraintIndex(
 
   return {
     // Add the unique index
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction(async (transactionOptions) => {
         const { queryT } = transactionOptions;
         if (dropDuplicates) {

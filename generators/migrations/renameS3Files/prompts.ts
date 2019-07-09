@@ -8,14 +8,14 @@
  */
 
 // global
-const { NOT_EMPTY_REGEX } = require('@generators/regexs');
+import { NOT_EMPTY_REGEX } from '@generators/regexs';
 
 /**
  * The extension to add to the migration name
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.nameExt = {
+export const nameExt = {
   message:
     'Name the migration (will be appended after "rename-s3-files-{{ modelTableName }}-"',
   type: 'name',
@@ -26,7 +26,7 @@ module.exports.nameExt = {
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.bucket = {
+export const bucket = {
   message: "What is the bucket? AWS_BUCKET['??']",
   type: 'input',
   validate: (value) =>
@@ -38,7 +38,7 @@ module.exports.bucket = {
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.attributes = {
+export const attributes = {
   default: 'id',
   message:
     'What attributes should be fetched for each row of the table, used to determine its old and new keys?',
@@ -62,7 +62,7 @@ const getAttributes = (attributes) =>
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.getOldKey = {
+export const getOldKey = {
   default: ({ attributes }) =>
     `({ ${getAttributes(attributes).join(', ')} }) => TODO`,
   message:
@@ -76,7 +76,7 @@ module.exports.getOldKey = {
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.getNewKey = {
+export const getNewKey = {
   default: ({ attributes }) =>
     `({ ${getAttributes(attributes).join(', ')} }) => TODO`,
   message:
@@ -90,7 +90,7 @@ module.exports.getNewKey = {
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.remove = {
+export const remove = {
   default: false,
   message: 'Remove rows that are missing an s3 file at oldKey?',
   type: 'confirm',

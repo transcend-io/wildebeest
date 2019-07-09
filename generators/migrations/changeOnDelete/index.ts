@@ -7,14 +7,14 @@
  * @see module:changeOnDelete/prompts
  */
 
-// commons
-const cases = require('@commons/cases');
+// external modules
+import kebabCase from 'lodash/kebabCase';
 
 // global
-const linkToClass = require('@generators/utils/linkToClass');
+import linkToClass from '@generators/utils/linkToClass';
 
 // local
-const prompts = require('./prompts');
+import prompts from './prompts';
 
 module.exports = {
   configure: ({
@@ -25,7 +25,7 @@ module.exports = {
     newOnDelete,
     oldOnDelete,
   }) => ({
-    name: `change-on-delete-${modelTableName}-${columnName}-to-${cases.paramCase(
+    name: `change-on-delete-${modelTableName}-${columnName}-to-${kebabCase(
       newOnDelete,
     )}`,
     comment: `Change the foreign key constraint for column ${linkToClass(

@@ -7,14 +7,11 @@
  * @see module:alterEnum
  */
 
-// commons
-const cases = require('@commons/cases');
-
 // global
-const ModelPath = require('@generators/prompts/modelPath');
+import ModelPath from '@generators/prompts/modelPath';
 
 // migrationTypes
-const { listAllAttributeConfigs } = require('../tableColumnMigration/lib');
+import { listAllAttributeConfigs } from '../tableColumnMigration/lib';
 
 /**
  * The name of the enum
@@ -22,7 +19,7 @@ const { listAllAttributeConfigs } = require('../tableColumnMigration/lib');
  * @param {module:commons--Repository.Repository} repo - The repository configuration
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.enumName = (repo) => ({
+export const enumName = (repo) => ({
   message: 'Which enum are you modifying?',
   source: ({ modelPath }) =>
     listAllAttributeConfigs(repo, modelPath)

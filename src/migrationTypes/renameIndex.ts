@@ -17,18 +17,15 @@ export type RenameIndexOptions = {
 /**
  * Rename an index
  *
- * @param db - The database to migrate
  * @param options - The rename options
  * @param rawTransactionOptions - The existing transaction
  * @returns The rename table promise
  */
 export async function renameTableIndex(
-  options: RenameIndexOptions,
-  transactionOptions: MigrationTransactionOptions,
+  { oldName, newName }: RenameIndexOptions,
+  { queryT }: MigrationTransactionOptions,
 ): Promise<void> {
-  await transactionOptions.queryT.raw(
-    `ALTER INDEX "${options.oldName}" RENAME TO "${options.newName}"`,
-  );
+  await queryT.raw(`ALTER INDEX "${oldName}" RENAME TO "${newName}"`);
 }
 
 /**
@@ -36,19 +33,18 @@ export async function renameTableIndex(
  *
  * @memberof module:migrationTypes
  *
- * @param {string}  options.oldName - The old name of the index
- * @param {string}  options.newName - The new name of the index
+ * @param options - Rename index options
  * @returns The rename index migrator
  */
 export default function renameIndex(
   options: RenameIndexOptions,
 ): MigrationDefinition {
   return {
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         renameTableIndex(options, transactionOptions),
       ),
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         renameTableIndex(
           {

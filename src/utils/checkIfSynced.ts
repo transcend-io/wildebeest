@@ -1,9 +1,3 @@
-// global
-import { logger } from '@bk/loggers';
-
-// db
-import Model from '@bk/db/ModelManager';
-
 // local
 import checkAssociationsSync from './checkAssociationsSync';
 import checkColumnDefinitions from './checkColumnDefinitions';

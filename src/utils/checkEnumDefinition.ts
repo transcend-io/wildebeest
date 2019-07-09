@@ -2,12 +2,8 @@
 import difference from 'lodash/difference';
 import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
-// global
-import { logger } from '@bk/loggers';
-
 // wildebeest
 import { SequelizeMigrator } from '@wildebeest/types';
-import { defaultEnumName } from '@wildebeest/utils';
 
 /**
  * Unnested Value

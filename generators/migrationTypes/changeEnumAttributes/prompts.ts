@@ -8,11 +8,11 @@
  */
 
 // local
-const { listEnumAttributes } = require('./lib');
-const { SEQUELIZE_ENUM_NAME_REGEX } = require('./regexs');
+import { listEnumAttributes } from './lib';
+import { SEQUELIZE_ENUM_NAME_REGEX } from './regexs';
 
 // migrationTypes
-const { listAllAttributeConfigs } = require('../tableColumnMigration/lib');
+import { listAllAttributeConfigs } from '../tableColumnMigration/lib';
 
 let columnName;
 let useModelPath;
@@ -23,7 +23,7 @@ let useModelPath;
  * @param {module:commons--Repository.Repository} repo - The repository configuration
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.attributes = (repo, { attributesSuggestOnly = false }) => ({
+export const attributes = (repo, { attributesSuggestOnly = false }) => ({
   message: 'Choose another attribute?',
   // Remove auto items when auto change on
   source: ({ enumName, modelPath }) => {

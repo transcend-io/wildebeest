@@ -1,8 +1,7 @@
-// db
-import { defaultColumnIndex } from '@bk/db/helpers';
-
 // wildebeest
 import {
+  IndexType,
+  IndexConfig,
   MigrationDefinition,
   MigrationTransactionOptions,
   SequelizeMigrator,
@@ -38,6 +37,28 @@ export type Index = {
 };
 
 /**
+ * Generate the default index name for a table/column pair
+ *
+ * @memberof module:db/helpers
+ *
+ * @param tableName - The name of the table
+ * @param columnName - The name of the column
+ * @returns The index configuration to use with queryInterface to create the index
+ */
+export function defaultColumnIndex(
+  tableName: string,
+  columnName: string,
+): IndexConfig {
+  // Determine the default name
+  const name = defaultColumnIndexName(tableName, columnName);
+
+  // Determine the configuration
+  return columnName === 'id'
+    ? { type: IndexType.PrimaryKey, name }
+    : { type: IndexType.Unique, name };
+}
+
+/**
  * Rename a table and related indices
  *
  * @param db - The db to migrate
@@ -48,7 +69,7 @@ export type Index = {
 export async function changeTableName(
   db: SequelizeMigrator,
   options: RenameTableOptions,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const {
     oldName,
@@ -129,11 +150,11 @@ export default function renameTable(
 ): MigrationDefinition {
   const { oldName, newName, ...rest } = options;
   return {
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeTableName(db, { oldName, newName, ...rest }, transactionOptions),
       ),
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeTableName(
           db,

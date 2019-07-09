@@ -1,9 +1,5 @@
-// global
-import { logger } from '@bk/loggers';
-
 // db
 import { getAssociationAs } from '@bk/db/helpers';
-import Model from '@bk/db/ModelManager';
 import { Association } from '@bk/db/types';
 
 /**

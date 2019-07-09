@@ -1,13 +1,10 @@
 {{> dbMigrationHeader }}
-// aws
-import { AWS_BUCKET } from '@bk/aws/s3/constants';
-
 // migrationTypes
 import renameS3Files from '@wildebeest/migrationTypes/renameS3Files';
 
 module.exports = renameS3Files({
   tableName: '{{ modelTableName }}',
-  Bucket: AWS_BUCKET.{{ bucket }},
+  Bucket: {{{ bucket }}},
   attributes: '{{{ attributes }}}',
   getOldKey: {{{ getOldKey }}},
   getNewKey: {{{ getNewKey }}},

@@ -7,11 +7,6 @@
  * @see module:migration
  */
 
-// global
-import { IS_TEST } from '@bk/constants';
-import { VERBOSE } from '@bk/envs';
-import { logger } from '@bk/loggers';
-
 // local
 import { LOG_SKIPS } from './constants';
 

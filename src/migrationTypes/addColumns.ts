@@ -91,7 +91,7 @@ export type AddColumnsOptions<P, T> = Omit<
 export async function addColumn(
   db: SequelizeMigrator,
   options: AddTableColumnOptions,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const { tableName, columnName, column } = options;
   // Pull apart column config
@@ -124,7 +124,7 @@ export async function addColumn(
 export async function setColumn(
   db: SequelizeMigrator,
   options: AddTableColumnOptions,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const {
     tableName,
@@ -235,7 +235,7 @@ export function shouldDrop(
 export async function removeColumn(
   db: SequelizeMigrator,
   options: AddTableColumnOptions,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   // Raw query interface
   const { queryInterface } = db;
@@ -271,7 +271,7 @@ export async function removeColumn(
 export async function addTableColumns<P, T>(
   db: SequelizeMigrator,
   options: AddTableColumnsOptions<P, T>,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const { queryT } = transactionOptions;
   const {
@@ -353,7 +353,7 @@ export async function addTableColumns<P, T>(
 export async function removeTableColumns<P, T>(
   db: SequelizeMigrator,
   options: AddTableColumnsOptions<P, T>,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const { queryT } = transactionOptions;
   const { getColumns, drop, tableName } = options;
@@ -399,7 +399,7 @@ export default function addColumns<P, T>(
 
   return {
     // Drop the table first if var set
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         Promise.all(
           tablesNames.map((table) =>
@@ -411,7 +411,7 @@ export default function addColumns<P, T>(
           ),
         ),
       ),
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         Promise.all(
           tablesNames.map((table) =>

@@ -7,7 +7,7 @@
  * @see module:removeIndex
  */
 
-const { method } = require('../addIndex/prompts');
+import { method } from '../addIndex/prompts';
 
 /**
  * The index method
@@ -16,4 +16,4 @@ const { method } = require('../addIndex/prompts');
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.method = method;
+export const method = method;

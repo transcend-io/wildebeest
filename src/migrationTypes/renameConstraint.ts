@@ -26,7 +26,7 @@ export type RenameConstraintOptions = {
  */
 export async function changeConstraintName(
   options: RenameConstraintOptions,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   // Raw query interface
   const { queryT } = transactionOptions;
@@ -53,11 +53,11 @@ export default function renameConstraint(
 ): MigrationDefinition {
   const { oldName, newName, ...rest } = options;
   return {
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeConstraintName({ oldName, newName, ...rest }, transactionOptions),
       ),
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeConstraintName(
           { newName: oldName, oldName: newName, ...rest },

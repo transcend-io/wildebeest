@@ -1,14 +1,12 @@
 // external modules
 import { QueryTypes } from 'sequelize';
 
-// commons
-import { ONE_MINUTE, ONE_SECOND } from '@commons/constants';
-
-// global
-import { logger } from '@bk/loggers';
-
 // wildebeest
-import { MigrationTransactionOptions, SequelizeMigrator } from '@wildebeest/types';
+import { ONE_MINUTE, ONE_SECOND } from '@wildebeest/constants';
+import {
+  MigrationTransactionOptions,
+  SequelizeMigrator,
+} from '@wildebeest/types';
 
 /**
  * Options to define which rows to process

@@ -7,18 +7,18 @@
  * @see module:renameConstraint/prompts
  */
 
-// commons
-const cases = require('@commons/cases');
+// external modules
+import kebabCase from 'lodash/kebabCase';
 
 // global
-const linkToClass = require('@generators/utils/linkToClass');
+import linkToClass from '@generators/utils/linkToClass';
 
 // local
-const prompts = require('./prompts');
+import prompts from './prompts';
 
 module.exports = {
   configure: ({ modelContainer, model, columnName, newName, oldName }) => ({
-    name: `rename-constraint-${cases.paramCase(newName)}`,
+    name: `rename-constraint-${kebabCase(newName)}`,
     comment: `Rename the constraint ${oldName} for ${linkToClass(
       modelContainer,
       model,

@@ -7,11 +7,8 @@
  * @see module:tableColumnsMigration
  */
 
-// commons
-const { MODULE_SYSTEM } = require('@commons/enums');
-
 // migrationTypes
-const { SEQUELIZE_ENUM_NAME_REGEX } = require('../changeEnumAttributes/regexs');
+import { SEQUELIZE_ENUM_NAME_REGEX } from '../changeEnumAttributes/regexs';
 
 // local
 const {
@@ -66,7 +63,7 @@ function replaceDefinitionWithRegex(repo, definition, path, regex, index = 1) {
  * @param {string}                                columnName - The name of the attribute
  * @returns {string[]} The comment and definition
  */
-module.exports.getAttributeFileDefinition = function getAttributeFileDefinition(
+export const getAttributeFileDefinition = function getAttributeFileDefinition(
   repo,
   path,
   columnName,
@@ -81,7 +78,7 @@ module.exports.getAttributeFileDefinition = function getAttributeFileDefinition(
   const regex = ATTRIBUTE_VALUE_REGEX(
     columnName,
     repo.moduleSystem === MODULE_SYSTEM.commonjs
-      ? 'module.exports.'
+      ? 'export const '
       : 'export const ',
   );
 

@@ -127,11 +127,11 @@ export default function addEnumValues(
   options: ChangeEnumAttributeOptions,
 ): MigrationDefinition {
   return {
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         addValuesToEnum(db, options, transactionOptions),
       ),
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         removeValuesFromEnum(db, options, transactionOptions),
       ),

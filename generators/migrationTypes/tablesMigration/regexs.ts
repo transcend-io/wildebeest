@@ -10,4 +10,4 @@
 /**
  * The name of a class
  */
-module.exports.CLASS_NAME_REGEX = /@class (.*)/;
+export const CLASS_NAME_REGEX = /@class (.*)/;

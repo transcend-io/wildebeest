@@ -12,7 +12,7 @@
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.oldAttributes = {
+export const oldAttributes = {
   message: 'What are the old enum attributes?',
   extension: 'hbs',
   type: 'editor',
@@ -23,7 +23,7 @@ module.exports.oldAttributes = {
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.newAttributes = {
+export const newAttributes = {
   message: 'What are the new enum attributes?',
   extension: 'hbs',
   type: 'editor',
@@ -34,7 +34,7 @@ module.exports.newAttributes = {
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.oldDefault = {
+export const oldDefault = {
   message: 'What is the old default value?',
   type: 'input',
 };
@@ -44,7 +44,7 @@ module.exports.oldDefault = {
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.newDefault = {
+export const newDefault = {
   message: 'What is the new default value?',
   type: 'input',
 };

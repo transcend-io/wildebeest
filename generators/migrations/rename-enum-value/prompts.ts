@@ -8,14 +8,14 @@
  */
 
 // global
-const { NOT_EMPTY_REGEX } = require('@generators/regexs');
+import { NOT_EMPTY_REGEX } from '@generators/regexs';
 
 /**
  * The old value of the enum
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.oldValue = {
+export const oldValue = {
   message: 'What is the old value?',
   type: 'input',
   validate: (value) =>
@@ -27,7 +27,7 @@ module.exports.oldValue = {
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.newValue = {
+export const newValue = {
   message: 'What is the new value?',
   type: 'input',
   validate: (value) =>

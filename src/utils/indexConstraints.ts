@@ -1,5 +1,5 @@
-// commons
-import indexBy from '@commons/utils/indexBy';
+// external modules
+import keyBy from 'lodash/keyBy';
 
 /**
  * Foreign key constraint definition for a table column
@@ -32,5 +32,5 @@ export default function indexConstraints(
         }
       : constraint,
   );
-  return indexBy(columnConstraints, 'columnName');
+  return keyBy(columnConstraints, 'columnName');
 }

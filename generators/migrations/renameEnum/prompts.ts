@@ -8,14 +8,14 @@
  */
 
 // global
-const { NOT_EMPTY_REGEX } = require('@generators/regexs');
+import { NOT_EMPTY_REGEX } from '@generators/regexs';
 
 /**
  * Determine the old name of the enum
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.oldName = {
+export const oldName = {
   message: 'What was the old enum name?',
   type: 'input',
   validate: (value) =>

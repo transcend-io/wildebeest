@@ -10,7 +10,7 @@
  */
 
 // local
-const prompts = require('./prompts');
+import prompts from './prompts';
 
 module.exports = {
   parentType: 'tableMigration',

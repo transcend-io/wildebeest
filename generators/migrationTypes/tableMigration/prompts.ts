@@ -13,7 +13,7 @@
  * @param {module:commons--Repository.Repository} repo - The repository configuration
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.modelPath = (repo, { suggestOnly }) => ({
+export const modelPath = (repo, { suggestOnly }) => ({
   message: `What db model are you migrating?${
     suggestOnly ? ' (suggestOnly)' : ''
   }`,

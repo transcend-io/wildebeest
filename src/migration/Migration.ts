@@ -17,13 +17,9 @@ import Umzuger, {
   UpToOptions,
 } from 'umzug';
 
-// commons
-import { NUMBERED_REGEX } from '@commons/utils/getNumberedList';
-
 // wildebeest
-import { LOOKUP_MIGRATIONS } from '@wildebeest/constants';
-import { RESTORE_ON_EMPTY } from '@wildebeest/envs';
 import { restoreFromDump, tableExists } from '@wildebeest/utils';
+import { NUMBERED_REGEX } from '@wildebeest/utils/getNumberedList';
 import { transactionWrapper } from '@wildebeest/utils/createQueryMaker';
 
 // local

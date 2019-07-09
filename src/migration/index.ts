@@ -10,7 +10,6 @@
  * @see module:migration/lib
  * @see module:migration/methods
  * @see module:migration/options
- * @see module:migration/prototypes
  * @see module:migration/regexes
  * @see module:migration/types
  */

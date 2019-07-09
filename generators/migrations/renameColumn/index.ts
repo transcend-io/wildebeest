@@ -8,10 +8,10 @@
  */
 
 // global
-const linkToClass = require('@generators/utils/linkToClass');
+import linkToClass from '@generators/utils/linkToClass';
 
 // local
-const prompts = require('./prompts');
+import prompts from './prompts';
 
 module.exports = {
   configure: ({ modelTableName, newName, oldName, modelContainer, model }) => ({

@@ -41,7 +41,7 @@ export default function cascadeWithParent(
     onDelete = 'cascade',
   } = options;
   return {
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         addTableColumnConstraint(
           db,
@@ -60,7 +60,7 @@ export default function cascadeWithParent(
           transactionOptions,
         ),
       ),
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         addTableColumnConstraint(
           db,

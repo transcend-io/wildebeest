@@ -16,15 +16,15 @@
  */
 
 // local
-const alterEnum = require('./alterEnum');
-const changeEnumAttributes = require('./changeEnumAttributes');
-const dbMigration = require('./dbMigration');
-const tableAssociationColumn = require('./tableAssociationColumn');
-const tableColumnMigration = require('./tableColumnMigration');
-const tableColumnsMigration = require('./tableColumnsMigration');
-const tableMigration = require('./tableMigration');
-const tablesColumnMigration = require('./tablesColumnMigration');
-const tablesMigration = require('./tablesMigration');
+import alterEnum from './alterEnum';
+import changeEnumAttributes from './changeEnumAttributes';
+import dbMigration from './dbMigration';
+import tableAssociationColumn from './tableAssociationColumn';
+import tableColumnMigration from './tableColumnMigration';
+import tableColumnsMigration from './tableColumnsMigration';
+import tableMigration from './tableMigration';
+import tablesColumnMigration from './tablesColumnMigration';
+import tablesMigration from './tablesMigration';
 
 module.exports = {
   alterEnum,

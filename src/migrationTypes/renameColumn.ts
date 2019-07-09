@@ -32,7 +32,7 @@ export type RenameColumnOptions = {
 export async function renameColumnAndConstraints(
   db: SequelizeMigrator,
   options: RenameColumnOptions,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const { tableName, oldName, newName, renameConstraints } = options;
 
@@ -74,7 +74,7 @@ export default function renameColumn(
 ): MigrationDefinition {
   const { oldName, newName, ...rest } = options;
   return {
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         renameColumnAndConstraints(
           db,
@@ -86,7 +86,7 @@ export default function renameColumn(
           transactionOptions,
         ),
       ),
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         renameColumnAndConstraints(
           db,

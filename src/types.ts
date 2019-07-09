@@ -10,13 +10,12 @@
 // external modules
 import * as sequelize from 'sequelize';
 
-// db
-import { Associations, Attributes } from '@bk/db/types';
-
 // local
+import Wildebeest from './index';
 import { WhereOptions } from './utils/batchProcess';
 import { WithTransaction } from './utils/createQueryMaker';
 import { RowUpdater, UpdateRowOptions } from './utils/updateRows';
+import mkEnum from './utils/mkEnum';
 
 /**
  * Any array
@@ -38,13 +37,25 @@ export type SequelizeMigrator = sequelize.Sequelize & {
  */
 export type MigrationDefinition = {
   /** The up migration (there should be no loss of data) */
-  up: (db: SequelizeMigrator, withTransaction: WithTransaction) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any,max-len
+  up: (db: Wildebeest, withTransaction: WithTransaction) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any,max-len
   /** The down migration to reverse the up migration, with potential loss of data */
-  down: (
-    db: SequelizeMigrator,
-    withTransaction: WithTransaction,
-  ) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any,max-len
+  down: (db: Wildebeest, withTransaction: WithTransaction) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any,max-len
 };
+
+/**
+ * A db model column attribute, adds some extra configs for associations
+ */
+export type Attribute = sequelize.ModelAttributeColumnOptions & {
+  /** Indicates if the column definition is due to an association */
+  isAssociation?: boolean;
+  /** The association options */
+  associationOptions?: sequelize.AssociationOptions;
+};
+
+/**
+ * The db model column definitions
+ */
+export type Attributes = { [key in string]: Attribute };
 
 /** Function that returns column definition where key is column name and value is column definition */
 /**
@@ -89,7 +100,7 @@ export type QueryHelpers<
   batchUpdate: (
     tableName: string,
     getRowDefaults: RowUpdater<PU, TU>,
-    columnDefinitions: Associations,
+    columnDefinitions: Attributes,
     options: UpdateRowOptions,
   ) => Promise<number>;
 };
@@ -120,3 +131,60 @@ export type MigrationConfig = {
   /** The full path to the file */
   fullPath: string;
 };
+
+/**
+ * The supported postgres index types
+ */
+export enum IndexType {
+  /** An index on a primary key */
+  PrimaryKey = 'primary key',
+  /** A column or set of columns that are unique */
+  Unique = 'unique',
+  /** (default) A regular database index */
+  Index = 'index',
+}
+
+/**
+ * Input for creating an index
+ */
+export type IndexConfig = {
+  /** The type of index */
+  type: IndexType;
+  /** The name of the index */
+  name: string;
+};
+
+/**
+ * The supported postgres index methods
+ */
+export enum IndexMethod {
+  /** A binary tree index */
+  BTree = 'BTREE',
+  /** A hash index */
+  Hash = 'HASH',
+  /** Gist index */
+  Gist = 'GIST',
+  /** Gin index */
+  Gin = 'GIN',
+  /** Sp gist index */
+  SPGist = 'SPGIST',
+  /** Brin index */
+  Brin = 'BRIN',
+}
+
+/**
+ * Possible options on association model delete
+ */
+export const OnDelete = mkEnum({
+  /** Cascade the deletion to this table */
+  Cascade: 'CASCADE',
+  /** Set the column to null */
+  SetNull: 'SET NULL',
+  /** Do nothing (often not used) */
+  NoAction: 'NO ACTION',
+});
+
+/**
+ * Overload with type of on delete
+ */
+export type OnDelete = (typeof OnDelete)[keyof typeof OnDelete];

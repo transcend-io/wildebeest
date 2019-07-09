@@ -1,7 +1,6 @@
 // wildebeest
 import { MigrationDefinition } from '@wildebeest/types';
 import createIndex from '@wildebeest/utils/createIndex';
-import defaultFieldsConstraintName from '@wildebeest/utils/defaultFieldsConstraintName';
 
 /**
  * Options for adding a new index
@@ -32,7 +31,7 @@ export default function addIndex(
 
   return {
     // Add the unique index
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         createIndex(
           db,

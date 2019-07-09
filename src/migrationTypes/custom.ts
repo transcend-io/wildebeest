@@ -34,9 +34,9 @@ export default function custom(
 ): MigrationDefinition {
   const { up, down } = options;
   return {
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) => up(transactionOptions, db)),
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) => down(transactionOptions, db)),
   };
 }

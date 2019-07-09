@@ -49,7 +49,7 @@ export default function removeNonNullColumn(
   } = options;
   return {
     // Remove the column
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         db.queryInterface.removeColumn(
           tableName,
@@ -58,7 +58,7 @@ export default function removeNonNullColumn(
         ),
       ),
     // Add the column back with a constraint
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction(async (transactionOptions) => {
         await db.queryInterface.addColumn(
           tableName,

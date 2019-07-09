@@ -2,9 +2,6 @@
 import difference from 'lodash/difference';
 import flatten from 'lodash/flatten';
 
-// commons
-import invert from '@commons/utils/invert';
-
 // wildebeest
 import {
   MigrationDefinition,
@@ -12,9 +9,9 @@ import {
   SequelizeMigrator,
 } from '@wildebeest/types';
 import {
-  defaultEnumName,
   listEnumAttributes,
   migrateEnumValues,
+  invert,
 } from '@wildebeest/utils';
 
 /**
@@ -106,11 +103,11 @@ export default function convertEnumValues(
   options: ConvertEnumValuesOptions,
 ): MigrationDefinition {
   return {
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         renameManyEnumValues(options, db, transactionOptions),
       ),
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         renameManyEnumValues(options, db, transactionOptions, true),
       ),

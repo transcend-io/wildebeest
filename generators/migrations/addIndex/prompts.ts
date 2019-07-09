@@ -8,16 +8,16 @@
  */
 
 // commons
-const { INDEX_METHOD } = require('@commons/db/enums');
+import { IndexMethod } from '@wildebeest/types';
 
 /**
  * The index method
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.method = {
-  default: INDEX_METHOD.BTREE,
+export const method = {
+  default: IndexMethod.BTree,
   message: 'What method of index?',
-  source: () => Object.values(INDEX_METHOD),
+  source: () => Object.values(IndexMethod),
   type: 'autocomplete',
 };

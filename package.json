@@ -37,6 +37,7 @@
   "moose": "fish",
   "dependencies": {
     "express": "^4.17.1",
+    "lodash": "^4.17.12",
     "sequelize": "^5.9.4",
     "umzug": "^2.2.0"
   },

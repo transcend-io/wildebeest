@@ -7,7 +7,7 @@
  */
 
 // global
-const linkToClass = require('@generators/utils/linkToClass');
+import linkToClass from '@generators/utils/linkToClass';
 
 module.exports = {
   configure: ({ modelTableName, modelContainer, model }) => ({

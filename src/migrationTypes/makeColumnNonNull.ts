@@ -36,7 +36,7 @@ export default function makeColumnNonNull<T, D>(
 ): MigrationDefinition {
   const { tableName, columnName, getRowDefault, drop = false } = options;
   return {
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction(async (transactionOptions) => {
         const { queryT } = transactionOptions;
         // Convert null rows first
@@ -72,7 +72,7 @@ export default function makeColumnNonNull<T, D>(
           `ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" SET not null;`,
         );
       }),
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction(({ queryT }) =>
         queryT.raw(
           `ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" DROP not null;`,

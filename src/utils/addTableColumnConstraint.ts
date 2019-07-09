@@ -2,12 +2,9 @@
 import sequelize from 'sequelize';
 
 // wildebeest
-import {
-  MigrationTransactionOptions,
-  SequelizeMigrator,
-} from '@wildebeest/types';
-import defaultConstraintName from '@wildebeest/utils/defaultConstraintName';
+import { MigrationTransactionOptions } from '@wildebeest/types';
 import inferTableReference from '@wildebeest/utils/inferTableReference';
+import Wildebeest from '@wildebeest';
 
 /**
  * Options for adding a constraint to a table
@@ -34,9 +31,9 @@ export type AddTableConstraintOptions = {
  * @returns The create constraint promise
  */
 export default async function addTableColumnConstraint(
-  db: SequelizeMigrator,
+  { db, namingConventions }: Wildebeest,
   options: AddTableConstraintOptions,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   // Raw query interface
   const { queryInterface } = db;
@@ -48,11 +45,12 @@ export default async function addTableColumnConstraint(
     constraintName,
     drop = false,
   } = options;
-  const { references, ...otherConstraintOptions } = constraintOptions as any;
+  const { references, ...otherConstraintOptions } = constraintOptions;
 
   // Determine the name of the constraint
   const useConstraintName =
-    constraintName || defaultConstraintName(tableName, columnName);
+    constraintName ||
+    namingConventions.foreignKeyConstraint(tableName, columnName);
 
   // Drop the constraint first
   if (drop) {
@@ -67,5 +65,5 @@ export default async function addTableColumnConstraint(
     references: references || inferTableReference(columnName),
     ...otherConstraintOptions,
     ...transactionOptions,
-  } as any);
+  });
 }

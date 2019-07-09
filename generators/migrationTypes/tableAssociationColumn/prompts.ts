@@ -8,7 +8,7 @@
  */
 
 // local
-const { getAssociations } = require('./lib');
+import { getAssociations } from './lib';
 
 /**
  * The name of the association column
@@ -16,7 +16,7 @@ const { getAssociations } = require('./lib');
  * @param {module:commons--Repository.Repository} repo - The repository configuration
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.columnName = (repo) => ({
+export const columnName = (repo) => ({
   message: 'What column should be modified? (suggestOnly)',
   source: ({ modelPath }) =>
     getAssociations(modelPath, repo)

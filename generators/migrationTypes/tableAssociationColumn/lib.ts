@@ -8,10 +8,10 @@
  */
 
 // commons
-const listAssociations = require('@commons/utils/listAssociations');
+import listAssociations from '@commons/utils/listAssociations';
 
 // utils
-const modelPathToAssociationPath = require('@generators/utils/modelPathToAssociationPath');
+import modelPathToAssociationPath from '@generators/utils/modelPathToAssociationPath';
 
 /**
  * Get the associations from a modelPath
@@ -20,7 +20,7 @@ const modelPathToAssociationPath = require('@generators/utils/modelPathToAssocia
  * @param {module:commons--Repository.Repository} repo - The repository configuration
  * @returns {module:commons--utils/typeDefs~AssociationConfig[]} The associations
  */
-module.exports.getAssociations = function getAssociations(modelPath, repo) {
+export const getAssociations = function getAssociations(modelPath, repo) {
   const loc = modelPathToAssociationPath(modelPath);
   if (!repo.hasEntryFile(loc)) {
     return [];

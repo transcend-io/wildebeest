@@ -1,21 +1,13 @@
 // external modules
 import { ModelAttributeColumnOptions } from 'sequelize';
 
-// commons
-import Enum from '@commons/classes/Enum';
-
 // wildebeest
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
   SequelizeMigrator,
 } from '@wildebeest/types';
-import {
-  defaultEnumName,
-  dropEnum,
-  isEnum,
-  migrateEnumColumn,
-} from '@wildebeest/utils';
+import { dropEnum, isEnum, migrateEnumColumn } from '@wildebeest/utils';
 
 /**
  * Change a single column in a table
@@ -147,7 +139,7 @@ export default function changeColumn(
 
   return {
     // Change each column forward
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         Promise.all(
           tableNames.map((table) =>
@@ -165,7 +157,7 @@ export default function changeColumn(
         ),
       ),
     // Change each column backwards
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         Promise.all(
           tableNames.map((table) =>

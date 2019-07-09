@@ -10,32 +10,25 @@
 // external modules
 import * as express from 'express';
 
-// commons
-import { ONE_MINUTE, ONE_SECOND } from '@commons/constants';
-
-// global
-import { logger, verboseLogger } from '@bk/loggers';
-
-// db
-import models from '@bk/db/define';
-import { testSetup } from '@bk/db/helpers';
+// wildebeest
+import { ONE_MINUTE, ONE_SECOND } from '@wildebeest/constants';
 
 // local
-import { MAX_MIGRATION_DISPLAY } from './constants';
-import MIGRATIONS from './migrations';
+import Wildebeest from './index';
 import writeSchema from './utils/writeSchema';
 
 const REVERSED_MIGRATIONS = [...MIGRATIONS].reverse();
 
 // Handle a migration error
 const handleError = (
+  wildbeest: Wildebeest,
   res: express.Response,
   props = {},
   status = 400,
 ): ((error: Error) => void) => ({ message, stack }): void => {
   // Log the error verbosely
-  logger.error(message);
-  verboseLogger.log(stack);
+  wildbeest.logger.error(message);
+  wildbeest.verboseLogger.log(stack);
 
   // Render error with props
   res.status(status);

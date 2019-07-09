@@ -1,12 +1,3 @@
-// global
-import { logger } from '@bk/loggers';
-
-// aws
-import { s3 } from '@bk/aws';
-
-// wildebeest
-import { DRY_RUN } from '@wildebeest/envs';
-
 /**
  * Rename an s3 file
  *

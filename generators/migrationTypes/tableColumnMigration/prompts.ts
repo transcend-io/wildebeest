@@ -8,7 +8,7 @@
  */
 
 // local
-const { listAllAttributes } = require('./lib');
+import { listAllAttributes } from './lib';
 
 /**
  * The name of the column to migrate
@@ -16,7 +16,7 @@ const { listAllAttributes } = require('./lib');
  * @param {module:commons--Repository.Repository} repo - The repository configuration
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.columnName = (repo, { columnSuggestOnly = true }) => ({
+export const columnName = (repo, { columnSuggestOnly = true }) => ({
   message: `What column should be modified? ${
     columnSuggestOnly ? '(suggestOnly)' : ''
   }`,

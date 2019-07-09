@@ -4,17 +4,10 @@
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
+  OnDelete,
   SequelizeMigrator,
 } from '@wildebeest/types';
-import defaultConstraintName from '@wildebeest/utils/defaultConstraintName';
 import getForeignKeyConfig from '@wildebeest/utils/getForeignKeyConfig';
-
-/**
- * Possible options on association model delete
- *
- * TODO use commons OnDelete
- */
-export type OnDelete = 'CASCADE' | 'SET NULL' | 'NO ACTION';
 
 /**
  * Options for changing the onDelete of a table column
@@ -82,9 +75,9 @@ export default function changeOnDelete(
   options: ChangeOnDeleteOptions,
 ): MigrationDefinition {
   const { tableName, columnName, newOnDelete, oldOnDelete } = options;
-  const constraintName = defaultConstraintName(tableName, columnName);
+  const constraintName = defaultForeignKeyConstraintName(tableName, columnName);
   return {
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeConstraintOnDelete(
           db,
@@ -94,7 +87,7 @@ export default function changeOnDelete(
           transactionOptions,
         ),
       ),
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeConstraintOnDelete(
           db,

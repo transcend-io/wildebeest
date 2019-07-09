@@ -2,15 +2,8 @@
 import { execSync } from 'child_process';
 import { join } from 'path';
 
-// global
-import { IS_TEST } from '@bk/constants';
-import { logger } from '@bk/loggers';
-
-// db
-import { DATABASE_URI } from '@bk/db/envs';
-
 // wildebeest
-import { SCHEMA_PATH } from '@wildebeest/constants';
+import { IS_TEST } from '@wildebeest/constants';
 
 /**
  * Restore the database from a pd_dump output
@@ -22,8 +15,8 @@ import { SCHEMA_PATH } from '@wildebeest/constants';
  */
 export default async function restoreFromDump(
   name: string,
-  databaseUri = DATABASE_URI,
-  path = SCHEMA_PATH,
+  databaseUri: string,
+  path: string,
 ): Promise<void> {
   await Promise.resolve(
     execSync(

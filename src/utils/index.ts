@@ -31,16 +31,6 @@ export { default as clearSchema } from './clearSchema';
 export { default as columnAllowsNull } from './columnAllowsNull';
 export { default as createIndex } from './createIndex';
 export { default as createQueryMaker } from './createQueryMaker';
-export { default as defaultColumnIndex } from './defaultColumnIndex';
-export { default as defaultColumnIndexName } from './defaultColumnIndexName';
-export { default as defaultConstraintName } from './defaultConstraintName';
-export { default as defaultEnumName } from './defaultEnumName';
-export {
-  default as defaultFieldsConstraintName,
-} from './defaultFieldsConstraintName';
-export {
-  default as defaultUniqueConstraintName,
-} from './defaultUniqueConstraintName';
 export { default as dropEnum } from './dropEnum';
 export { default as getColumnDefault } from './getColumnDefault';
 export { default as getForeignKeyConfig } from './getForeignKeyConfig';
@@ -48,10 +38,12 @@ export { default as getNextNumber } from './getNextNumber';
 export { default as getNumberedList } from './getNumberedList';
 export { default as indexConstraints } from './indexConstraints';
 export { default as inferTableReference } from './inferTableReference';
+export { default as invert } from './invert';
 export { default as isEnum } from './isEnum';
 export { default as listColumns } from './listColumns';
 export { default as listEnumAttributes } from './listEnumAttributes';
 export { default as listIndexNames } from './listIndexNames';
+export { default as mkEnum } from './mkEnum';
 export { default as migrateEnumColumn } from './migrateEnumColumn';
 export { default as migrateEnumValues } from './migrateEnumValues';
 export { default as renameS3File } from './renameS3File';

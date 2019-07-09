@@ -1,9 +1,6 @@
-// commons
-import Enum from '@commons/classes/Enum';
-import invert from '@commons/utils/invert';
-
 // wildebeest
 import { MigrationDefinition } from '@wildebeest/types';
+import { invert } from '@wildebeest/utils';
 import migrateEnumColumn from '@wildebeest/utils/migrateEnumColumn';
 
 /**
@@ -62,7 +59,7 @@ export default function changeEnumColumn(
 
   return {
     // Migrate the enums forward
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         Promise.all(
           tableNames.map((table) =>
@@ -85,7 +82,7 @@ export default function changeEnumColumn(
         ),
       ),
     // Migrate the enums backwards
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         Promise.all(
           tableNames.map((table) => {

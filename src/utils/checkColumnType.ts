@@ -1,9 +1,6 @@
 // external modules
 import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
-// global
-import { logger } from '@bk/loggers';
-
 // wildebeest
 import { SequelizeMigrator } from '@wildebeest/types';
 

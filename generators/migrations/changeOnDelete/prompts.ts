@@ -7,17 +7,17 @@
  * @see module:changeOnDelete
  */
 
-// commons
-const { ON_DELETE } = require('@commons/db/enums');
+// wildebeest
+import { OnDelete } from '@wildebeest/types';
 
 /**
  * The old onDelete value
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.oldOnDelete = {
+export const oldOnDelete = {
   message: 'What was the old onDelete value?',
-  source: () => Object.values(ON_DELETE),
+  source: () => Object.values(OnDelete),
   type: 'autocomplete',
 };
 
@@ -26,9 +26,9 @@ module.exports.oldOnDelete = {
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.newOnDelete = {
+export const newOnDelete = {
   message: 'What is the new onDelete value?',
   source: ({ oldOnDelete }) =>
-    Object.values(ON_DELETE).filter((val) => val !== oldOnDelete),
+    Object.values(OnDelete).filter((val) => val !== oldOnDelete),
   type: 'autocomplete',
 };

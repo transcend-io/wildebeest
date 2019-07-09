@@ -12,7 +12,7 @@
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.oldDefinition = {
+export const oldDefinition = {
   message: 'What is the old column definition?',
   extension: 'hbs',
   type: 'editor',
@@ -23,7 +23,7 @@ module.exports.oldDefinition = {
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.newDefinition = {
+export const newDefinition = {
   message: 'What is the new definition?',
   extension: 'hbs',
   type: 'editor',

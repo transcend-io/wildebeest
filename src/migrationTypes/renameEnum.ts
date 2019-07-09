@@ -48,11 +48,11 @@ export async function changeEnumName(
 export default function renameEnum(options): MigrationDefinition {
   const { oldName, newName } = options;
   return {
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeEnumName(db, { oldName, newName }, transactionOptions),
       ),
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeEnumName(
           db,

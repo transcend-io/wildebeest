@@ -1,12 +1,8 @@
 // external modules
 import { ModelAttributeColumnOptions } from 'sequelize';
 
-// global
-import { logger } from '@bk/loggers';
-
-// db
-import { defaultEnumName } from '@bk/db/helpers';
-import Model from '@bk/db/ModelManager';
+// wildebeest
+import Wildebeest from '@wildebeest';
 
 // local
 import getColumnDefault from './getColumnDefault';
@@ -23,7 +19,7 @@ import isEnum from './isEnum';
  * @returns True if the association config is proper
  */
 export default async function checkDefaultValue(
-  db: SequelizeMigrator,
+  { db, logger }: Wildebeest,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,

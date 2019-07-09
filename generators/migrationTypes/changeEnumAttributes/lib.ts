@@ -8,7 +8,7 @@
  */
 
 // local
-const { ENUM_ATTRIBUTE_REGEX } = require('./regexs');
+import { ENUM_ATTRIBUTE_REGEX } from './regexs';
 
 /**
  * List the attributes of an enum from the content definition
@@ -17,7 +17,7 @@ const { ENUM_ATTRIBUTE_REGEX } = require('./regexs');
  * @param {boolean} [returnValue=true] - Return the enum value (false means return the key)
  * @returns {string[]} The enum attributes
  */
-module.exports.listEnumAttributes = function listEnumAttributes(
+export const listEnumAttributes = function listEnumAttributes(
   content,
   returnValue = true,
 ) {

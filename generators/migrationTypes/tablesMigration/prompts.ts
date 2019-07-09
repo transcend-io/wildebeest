@@ -12,7 +12,7 @@
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.tables = {
+export const tables = {
   childName: 'table',
   message: 'Choose another table?',
   prompts: {

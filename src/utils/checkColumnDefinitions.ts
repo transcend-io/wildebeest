@@ -2,12 +2,6 @@
 import difference from 'lodash/difference';
 import uniq from 'lodash/uniq';
 
-// global
-import { logger } from '@bk/loggers';
-
-// db
-import Model from '@bk/db/ModelManager';
-
 // local
 import checkColumnDefinition from './checkColumnDefinition';
 import listColumns from './listColumns';

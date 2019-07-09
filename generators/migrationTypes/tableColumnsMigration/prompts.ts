@@ -14,7 +14,7 @@ const {
 } = require('../tableColumnMigration/lib');
 
 // local
-const { getAttributeFileDefinition } = require('./lib');
+import { getAttributeFileDefinition } from './lib';
 
 let useData;
 let attributeConfigs;
@@ -26,7 +26,7 @@ let attributeConfigs;
  * @param {module:typeDefs~Options}               options - The configuration options
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.getRowDefaults = (repo, { withGetRowDefaults }) =>
+export const getRowDefaults = (repo, { withGetRowDefaults }) =>
   withGetRowDefaults && {
     message:
       'Provider a mapping from oldRowInstance => newColumnDefaults (leaving blank to skip)',
@@ -37,7 +37,7 @@ module.exports.getRowDefaults = (repo, { withGetRowDefaults }) =>
 /**
  * Recurse is message up and so in order to have method before columnName, this needs to exist
  */
-module.exports.method = false;
+export const method = false;
 
 /**
  * The columns to modify
@@ -46,7 +46,7 @@ module.exports.method = false;
  * @param {module:typeDefs~Options}               options - The configuration options
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.columns = (repo, options) => ({
+export const columns = (repo, options) => ({
   itemName: 'columnName',
   message: `Choose another column?${
     options.suggestOnly || options.columnSuggestOnly ? ' (suggestOnly)' : ''

@@ -1,12 +1,8 @@
 // external modules
 import { QueryTypes } from 'sequelize';
 
-// db
-import { Attribute } from '@bk/db/types';
-
 // wildebeest
-import logger from '@wildebeest/logger';
-import { SequelizeMigrator } from '@wildebeest/types';
+import { Attribute, SequelizeMigrator } from '@wildebeest/types';
 
 // local
 import getForeignKeyConfig from './getForeignKeyConfig';

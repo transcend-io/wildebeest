@@ -12,7 +12,7 @@
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.oldName = {
+export const oldName = {
   message: 'What was the old name of the constraint?',
   type: 'name',
 };
@@ -22,7 +22,7 @@ module.exports.oldName = {
  *
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.newName = {
+export const newName = {
   message: 'What is the new name of the constraint?',
   type: 'name',
 };

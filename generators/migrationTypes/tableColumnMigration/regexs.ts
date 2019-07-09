@@ -10,7 +10,7 @@
 /**
  * Pull out the name of the extends
  */
-module.exports.CLASS_EXTENDS_REGEX = /extends ((?!Model).+?) {/;
+export const CLASS_EXTENDS_REGEX = /extends ((?!Model).+?) {/;
 
 /**
  * Determine the location of the class import
@@ -18,7 +18,7 @@ module.exports.CLASS_EXTENDS_REGEX = /extends ((?!Model).+?) {/;
  * @param {string}  type - The class type
  * @returns {module:commons--typeDefs~RegEx} The regex
  */
-module.exports.CLASS_IMPORT_REGEX = (type) =>
+export const CLASS_IMPORT_REGEX = (type) =>
   new RegExp(`const ${type} = require\\('(.+?)'\\);`);
 
 /**
@@ -27,5 +27,5 @@ module.exports.CLASS_IMPORT_REGEX = (type) =>
  * @param {string}  exportType - The way the definition is exported
  * @returns {module:commons--typeDefs~RegEx} The regex
  */
-module.exports.CLASS_TYPE_REGEX = (exportType) =>
+export const CLASS_TYPE_REGEX = (exportType) =>
   new RegExp(`${exportType.replace('.', '\\.')}type = '(.+?)';`);

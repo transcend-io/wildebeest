@@ -2,7 +2,6 @@
 import { QueryTypes } from 'sequelize';
 
 // wildebeest
-import { logger } from '@bk/loggers';
 import { SequelizeMigrator } from '@wildebeest/types';
 
 /**

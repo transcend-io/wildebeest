@@ -8,10 +8,10 @@
  */
 
 // external modules
-const intersection = require('lodash/intersection');
+import intersection from 'lodash/intersection';
 
 // migrationTypes
-const { listAllAttributes } = require('../tableColumnMigration/lib');
+import { listAllAttributes } from '../tableColumnMigration/lib';
 
 /**
  * The name of the column to migrate
@@ -19,7 +19,7 @@ const { listAllAttributes } = require('../tableColumnMigration/lib');
  * @param {module:commons--Repository.Repository} repo - The repository configuration
  * @returns {module:typeDefs~PlopPrompt} The prompt
  */
-module.exports.columnName = (repo) => ({
+export const columnName = (repo) => ({
   message: 'What column should be modified? (suggestOnly)',
   source: ({ tables }) =>
     intersection(

@@ -1,12 +1,9 @@
-// commons
-import calcIfFunc from '@commons/utils/calcIfFunc';
-import isNull from '@commons/utils/isNull';
-
-// db
-import { Associations } from '@bk/db/types';
-
 // wildebeest
-import { MigrationTransactionOptions, SequelizeMigrator } from '@wildebeest/types';
+import {
+  Attributes,
+  MigrationTransactionOptions,
+  SequelizeMigrator,
+} from '@wildebeest/types';
 
 // local
 import batchProcess from './batchProcess';
@@ -27,7 +24,7 @@ export type UpdateRowOptions = {
   /** The name of the primary key column in the table */
   idName?: string;
   /** What to set for columns when no default is provided */
-  onNullValue?: () => any; // TODO remove
+  onNullValue?: (dv: any) => any; // TODO remove
 };
 
 /**
@@ -46,7 +43,7 @@ export default async function updateRows<P, T>(
   db: SequelizeMigrator,
   tableName: string,
   getRowDefaults: RowUpdater<P, T>,
-  columnDefinitions: Associations,
+  columnDefinitions: Attributes,
   options: UpdateRowOptions = {},
   transactionOptions: MigrationTransactionOptions,
 ): Promise<number> {
@@ -65,12 +62,15 @@ export default async function updateRows<P, T>(
       // Ensure each column is defined
       Object.keys(columnDefinitions)
         // Find columns that are not defined
-        .filter((columnName) => isNull(defaultValues[columnName]))
+        .filter(
+          (columnName) =>
+            defaultValues[columnName] === null ||
+            defaultValues[columnName] === undefined,
+        )
         .forEach((columnName) => {
-          const defaultValue = calcIfFunc(
-            onNullValue,
-            columnDefinitions[columnName].defaultValue,
-          );
+          const defaultValue = onNullValue
+            ? onNullValue(columnDefinitions[columnName].defaultValue)
+            : undefined;
           if (defaultValue !== undefined) {
             Object.assign(defaultValues, { [columnName]: defaultValue });
           }

@@ -1,20 +1,14 @@
-// db
-import { Attributes } from '@bk/db/types';
-
 // wildebeest
 import {
+  Attributes,
   DefineColumns,
   MigrationDefinition,
   MigrationTransactionOptions,
   SequelizeMigrator,
 } from '@wildebeest/types';
-import {
-  addTableColumnConstraint,
-  defaultEnumName,
-  dropEnum,
-  isEnum,
-} from '@wildebeest/utils';
+import { addTableColumnConstraint, dropEnum, isEnum } from '@wildebeest/utils';
 import { RawConstraint } from '@wildebeest/utils/indexConstraints';
+import Wildebeest from '@wildebeest';
 
 /**
  * Options for dropping a table
@@ -47,18 +41,18 @@ export type CreateTableOptions = {
  * @returns The create table promise
  */
 export async function createNewTable(
-  db: SequelizeMigrator,
+  wildebeest: Wildebeest,
   options: CreateTableOptions,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   // Raw query interface
-  const { queryInterface } = db;
+  const { queryInterface } = wildebeest.db;
   const { tableName, getColumns, constraints = [] } = options;
 
   // Create the table
   await queryInterface.createTable(
     tableName,
-    getColumns(db),
+    getColumns(wildebeest.db),
     transactionOptions,
   );
 
@@ -68,7 +62,7 @@ export async function createNewTable(
     await Promise.all(
       constraints.map((constraintConfig) =>
         addTableColumnConstraint(
-          db,
+          wildebeest,
           {
             tableName,
             columnName:
@@ -76,7 +70,7 @@ export async function createNewTable(
                 ? constraintConfig
                 : constraintConfig.columnName,
             constraintOptions: {
-              type: 'foreign key',
+              type: 'foreign key' as 'foreign key',
               onDelete: 'SET NULL',
               onUpdate: 'CASCADE',
               ...(typeof constraintConfig === 'string'
@@ -174,7 +168,7 @@ export default function createTable(
 
   return {
     // Create a new table
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction(async (transactionOptions) =>
         createNewTable(
           db,
@@ -183,7 +177,7 @@ export default function createTable(
         ),
       ),
     // Drop the table
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         dropTable(
           db,

@@ -53,7 +53,7 @@ export default function newApiVersion(
   const { tableName, columnName, oldDefault, newDefault } = options;
   return {
     // Add the unique index
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeDefaultValue(
           tableName,
@@ -63,7 +63,7 @@ export default function newApiVersion(
         ),
       ),
     // Remove the index
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeDefaultValue(
           tableName,

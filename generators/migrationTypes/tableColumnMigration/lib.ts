@@ -8,13 +8,10 @@
  */
 
 // external modules
-const flatten = require('lodash/flatten');
-
-// commons
-const { MODULE_SYSTEM } = require('@commons/enums');
+import flatten from 'lodash/flatten';
 
 // migrationTypes
-const { getAssociations } = require('../tableAssociationColumn/lib');
+import { getAssociations } from '../tableAssociationColumn/lib';
 
 // local
 const {
@@ -61,7 +58,7 @@ function getClassTypeDir(repo, modelPath) {
   // Build a regex to find the class type
   const typeRegex = CLASS_TYPE_REGEX(
     repo.moduleSystem === MODULE_SYSTEM.commonjs
-      ? 'module.exports.'
+      ? 'export const '
       : 'export const ',
   );
   const contents = repo.readEntryFile(modelPath);
@@ -133,7 +130,7 @@ function getAllExtends(repo, classPath) {
  * @param {string}                                modelPath - The relative path to the table model
  * @returns {module:tableColumnMigration/typeDefs~AttributeDefinition[]} The attributes that the model supports
  */
-module.exports.listAllAttributeConfigs = function listAllAttributeConfigs(
+export const listAllAttributeConfigs = function listAllAttributeConfigs(
   repo,
   modelPath,
 ) {
@@ -189,7 +186,7 @@ module.exports.listAllAttributeConfigs = function listAllAttributeConfigs(
  * @param {string}                                modelPath - The relative path to the table model
  * @returns {string[]} The attributes that the model supports
  */
-module.exports.listAllAttributes = function listAllAttributes(repo, modelPath) {
+export const listAllAttributes = function listAllAttributes(repo, modelPath) {
   return module.exports
     .listAllAttributeConfigs(repo, modelPath)
     .map(({ columnName }) => columnName);

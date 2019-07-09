@@ -80,7 +80,7 @@ export default function renameEnumValue(
 ): MigrationDefinition {
   const { oldValue, newValue, ...rest } = options;
   return {
-    up: async (db, withTransaction) =>
+    up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         renameValueOfEnum(
           db,
@@ -88,7 +88,7 @@ export default function renameEnumValue(
           transactionOptions,
         ),
       ),
-    down: async (db, withTransaction) =>
+    down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         renameValueOfEnum(
           db,
