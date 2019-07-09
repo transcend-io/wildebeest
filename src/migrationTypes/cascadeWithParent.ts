@@ -1,7 +1,7 @@
 // wildebeest
-import addTableColumnConstraint from '@wildebeest/helpers/addTableColumnConstraint';
-import { TableReference } from '@wildebeest/helpers/inferTableReference';
 import { MigrationDefinition } from '@wildebeest/types';
+import addTableColumnConstraint from '@wildebeest/utils/addTableColumnConstraint';
+import { TableReference } from '@wildebeest/utils/inferTableReference';
 
 // local
 import { OnDelete } from './changeOnDelete';

@@ -3,18 +3,18 @@ import { Attributes } from '@bk/db/types';
 
 // wildebeest
 import {
-  addTableColumnConstraint,
-  defaultEnumName,
-  dropEnum,
-  isEnum,
-} from '@wildebeest/helpers';
-import { RawConstraint } from '@wildebeest/helpers/indexConstraints';
-import {
   DefineColumns,
   MigrationDefinition,
   MigrationTransactionOptions,
   SequelizeMigrator,
 } from '@wildebeest/types';
+import {
+  addTableColumnConstraint,
+  defaultEnumName,
+  dropEnum,
+  isEnum,
+} from '@wildebeest/utils';
+import { RawConstraint } from '@wildebeest/utils/indexConstraints';
 
 /**
  * Options for dropping a table

@@ -1,5 +1,5 @@
 // migrators
-import reverseMigrator from '@wildebeest/helpers/reverseMigrator';
+import reverseMigrator from '@wildebeest/utils/reverseMigrator';
 
 // local
 import addColumns from './addColumns';

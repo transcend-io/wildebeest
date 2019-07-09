@@ -24,7 +24,7 @@ export type RenameIndexOptions = {
  */
 export async function renameTableIndex(
   options: RenameIndexOptions,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   await transactionOptions.queryT.raw(
     `ALTER INDEX "${options.oldName}" RENAME TO "${options.newName}"`,

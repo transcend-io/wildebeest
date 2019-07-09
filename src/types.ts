@@ -11,12 +11,12 @@
 import * as sequelize from 'sequelize';
 
 // db
-import { Associations, Attributes, TransactionOptions } from '@bk/db/types';
+import { Associations, Attributes } from '@bk/db/types';
 
 // local
-import { WhereOptions } from './helpers/batchProcess';
-import { WithTransaction } from './helpers/createQueryMaker';
-import { RowUpdater, UpdateRowOptions } from './helpers/updateRows';
+import { WhereOptions } from './utils/batchProcess';
+import { WithTransaction } from './utils/createQueryMaker';
+import { RowUpdater, UpdateRowOptions } from './utils/updateRows';
 
 /**
  * Any array
@@ -101,4 +101,22 @@ export type QueryHelpers<
 export type MigrationTransactionOptions = {
   /** Helper functions that run within the migration transaction */
   queryT: QueryHelpers;
-} & TransactionOptions;
+  /** The transaction itself */
+  transaction: sequelize.Transaction;
+};
+
+/**
+ * A definition for a migration file
+ */
+export type MigrationConfig = {
+  /** The migration count */
+  numInt: number;
+  /** The migration count as a string */
+  num: string;
+  /** The migration name with the count */
+  name: string;
+  /** The name of the file */
+  fileName: string;
+  /** The full path to the file */
+  fullPath: string;
+};

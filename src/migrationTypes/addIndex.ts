@@ -1,7 +1,7 @@
 // wildebeest
-import createIndex from '@wildebeest/helpers/createIndex';
-import defaultFieldsConstraintName from '@wildebeest/helpers/defaultFieldsConstraintName';
 import { MigrationDefinition } from '@wildebeest/types';
+import createIndex from '@wildebeest/utils/createIndex';
+import defaultFieldsConstraintName from '@wildebeest/utils/defaultFieldsConstraintName';
 
 /**
  * Options for adding a new index

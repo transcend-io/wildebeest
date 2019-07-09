@@ -5,9 +5,9 @@ import flatten from 'lodash/flatten';
 import { verboseLogger } from '@bk/loggers';
 
 // wildebeest
-import createIndex from '@wildebeest/helpers/createIndex';
-import defaultFieldsConstraintName from '@wildebeest/helpers/defaultFieldsConstraintName';
 import { MigrationDefinition } from '@wildebeest/types';
+import createIndex from '@wildebeest/utils/createIndex';
+import defaultFieldsConstraintName from '@wildebeest/utils/defaultFieldsConstraintName';
 
 /**
  * Options for adding a unique constraint index across columns in a table

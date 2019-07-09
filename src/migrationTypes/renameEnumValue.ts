@@ -2,13 +2,13 @@
 import difference from 'lodash/difference';
 
 // wildebeest
-import listEnumAttributes from '@wildebeest/helpers/listEnumAttributes';
-import migrateEnumValues from '@wildebeest/helpers/migrateEnumValues';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  SequelizeMigrator
+  SequelizeMigrator,
 } from '@wildebeest/types';
+import listEnumAttributes from '@wildebeest/utils/listEnumAttributes';
+import migrateEnumValues from '@wildebeest/utils/migrateEnumValues';
 
 /**
  * Input for renaming the value of a sequelize enum

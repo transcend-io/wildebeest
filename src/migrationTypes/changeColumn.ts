@@ -6,16 +6,16 @@ import Enum from '@commons/classes/Enum';
 
 // wildebeest
 import {
-  defaultEnumName,
-  dropEnum,
-  isEnum,
-  migrateEnumColumn,
-} from '@wildebeest/helpers';
-import {
   MigrationDefinition,
   MigrationTransactionOptions,
   SequelizeMigrator,
 } from '@wildebeest/types';
+import {
+  defaultEnumName,
+  dropEnum,
+  isEnum,
+  migrateEnumColumn,
+} from '@wildebeest/utils';
 
 /**
  * Change a single column in a table

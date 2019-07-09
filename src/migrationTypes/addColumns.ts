@@ -5,23 +5,23 @@ import { ModelAttributeColumnOptions, WhereOptions } from 'sequelize';
 
 // wildebeest
 import {
-  addTableColumnConstraint,
-  defaultEnumName,
-  dropEnum,
-  isEnum,
-  migrateEnumColumn,
-} from '@wildebeest/helpers';
-import indexConstraints, {
-  ColumnConstraint,
-  RawConstraint,
-} from '@wildebeest/helpers/indexConstraints';
-import { RowUpdater } from '@wildebeest/helpers/updateRows';
-import {
   DefineColumns,
   MigrationDefinition,
   MigrationTransactionOptions,
   SequelizeMigrator,
 } from '@wildebeest/types';
+import {
+  addTableColumnConstraint,
+  defaultEnumName,
+  dropEnum,
+  isEnum,
+  migrateEnumColumn,
+} from '@wildebeest/utils';
+import indexConstraints, {
+  ColumnConstraint,
+  RawConstraint,
+} from '@wildebeest/utils/indexConstraints';
+import { RowUpdater } from '@wildebeest/utils/updateRows';
 
 // local
 import { OnDelete } from './changeOnDelete';

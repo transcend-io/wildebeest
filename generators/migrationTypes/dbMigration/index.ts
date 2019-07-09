@@ -10,7 +10,7 @@
  */
 
 // commons
-const getNextNumber = require('@commons/utils/getNextNumber');
+import getNextNumber from '@wildebeest/utils/getNextNumber';
 
 // local
 const actions = require('./actions');

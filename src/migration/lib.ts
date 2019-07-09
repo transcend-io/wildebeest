@@ -14,7 +14,11 @@ import { logger } from '@bk/loggers';
 
 // local
 import { LOG_SKIPS } from './constants';
-import { BASE_100_MIGRATIONS_REGEX } from './regexes';
+
+/**
+ * Only log every 10th migration in test mode
+ */
+export const BASE_100_MIGRATIONS_REGEX = /== ([0-9][0-9]00).+?\(.+?s\)/;
 
 /**
  * Logs migrations

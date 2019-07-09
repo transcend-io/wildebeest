@@ -6,8 +6,8 @@ import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 import { logger } from '@bk/loggers';
 
 // wildebeest
-import { defaultEnumName } from '@wildebeest/helpers';
 import { SequelizeMigrator } from '@wildebeest/types';
+import { defaultEnumName } from '@wildebeest/utils';
 
 /**
  * Unnested Value

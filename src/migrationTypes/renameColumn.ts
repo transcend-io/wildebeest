@@ -1,10 +1,10 @@
 // wildebeest
-import { listIndexNames } from '@wildebeest/helpers';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  SequelizeMigrator
+  SequelizeMigrator,
 } from '@wildebeest/types';
+import { listIndexNames } from '@wildebeest/utils';
 
 // local
 import { renameTableIndex } from './renameIndex';

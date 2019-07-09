@@ -20,6 +20,24 @@ export const id: ModelAttributeColumnOptions = {
 };
 
 /**
+ * Created at time
+ */
+export const createdAt: ModelAttributeColumnOptions = {
+  allowNull: false,
+  defaultValue: () => new Date(),
+  type: DataTypes.DATE,
+};
+
+/**
+ * Updated at time
+ */
+export const updatedAt: ModelAttributeColumnOptions = {
+  allowNull: false,
+  defaultValue: () => new Date(),
+  type: DataTypes.DATE,
+};
+
+/**
  * The batch the migration was run in
  */
 export const batch: ModelAttributeColumnOptions = {

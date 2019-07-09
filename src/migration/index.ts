@@ -15,20 +15,10 @@
  * @see module:migration/types
  */
 
-// db
-import { createdAt, updatedAt } from '@bk/db/attributes';
-
 // local
 import * as attributes from './attributes';
 import * as constants from './constants';
-import * as methods from './methods';
 import * as options from './options';
-import * as prototypes from './prototypes';
 import * as regexes from './regexes';
 
-export { attributes, constants, methods, options, prototypes, regexes };
-
-/**
- * Default attributes
- */
-export const defaultAttributes = { createdAt, updatedAt };
+export { attributes, constants, options, regexes };

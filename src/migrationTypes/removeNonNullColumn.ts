@@ -2,9 +2,9 @@
 import { ModelAttributeColumnOptions } from 'sequelize';
 
 // wildebeest
-import addTableColumnConstraint from '@wildebeest/helpers/addTableColumnConstraint';
-import { TableReference } from '@wildebeest/helpers/inferTableReference';
 import { MigrationDefinition, SequelizeMigrator } from '@wildebeest/types';
+import addTableColumnConstraint from '@wildebeest/utils/addTableColumnConstraint';
+import { TableReference } from '@wildebeest/utils/inferTableReference';
 
 /**
  * Options for removing a column that is supposed to be non null

@@ -22,8 +22,8 @@ import { testSetup } from '@bk/db/helpers';
 
 // local
 import { MAX_MIGRATION_DISPLAY } from './constants';
-import writeSchema from './helpers/writeSchema';
 import MIGRATIONS from './migrations';
+import writeSchema from './utils/writeSchema';
 
 const REVERSED_MIGRATIONS = [...MIGRATIONS].reverse();
 

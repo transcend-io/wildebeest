@@ -7,24 +7,24 @@
  * @see module:migration
  */
 
-// db
-import { HookOptions } from '@bk/db/types';
+// external modules
+import { ModelHooks } from 'sequelize/types/lib/hooks';
 
 // local
-import { MigrationInstance } from './types';
+import Migration from './Migration';
 
 /**
  * The default model hooks
  */
-export const hooks: HookOptions<MigrationInstance> = {
+export const hooks: Partial<ModelHooks<Migration>> = {
   /**
    * Updates the batch number of a new migration
    *
    * @param migration - The newly created migration
    */
-  afterCreate: (migration) => {
-    const { batch } = migration.constructor;
-    return migration.update({ batch });
+  afterCreate: async (migration) => {
+    const { batch } = Migration;
+    await migration.update({ batch });
   },
   /**
    * The pre hook before the model is destroyed.
@@ -33,10 +33,10 @@ export const hooks: HookOptions<MigrationInstance> = {
    *
    * @param migration - The newly created migration
    */
-  beforeDestroy: (migration) => {
+  beforeDestroy: async (migration) => {
     const index = parseInt(migration.name.match(/^\d+/), 10);
 
-    return migration.Model.findAll()
+    await Migration.findAll()
       .then((migrations) =>
         migrations.filter(
           ({ name }) => parseInt(name.match(/^\d+/), 10) >= index,

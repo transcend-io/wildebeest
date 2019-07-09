@@ -2,7 +2,7 @@
 import { Op } from 'sequelize';
 
 // wildebeest
-import { defaultEnumName } from '@wildebeest/helpers';
+import { defaultEnumName } from '@wildebeest/utils';
 import {
   MigrationTransactionOptions,
   SequelizeMigrator,

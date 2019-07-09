@@ -2,7 +2,7 @@
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  SequelizeMigrator
+  SequelizeMigrator,
 } from '@wildebeest/types';
 
 /**

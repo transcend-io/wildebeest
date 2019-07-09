@@ -3,13 +3,13 @@ import difference from 'lodash/difference';
 import uniq from 'lodash/uniq';
 
 // wildebeest
-import listEnumAttributes from '@wildebeest/helpers/listEnumAttributes';
-import migrateEnumValues from '@wildebeest/helpers/migrateEnumValues';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
   SequelizeMigrator,
 } from '@wildebeest/types';
+import listEnumAttributes from '@wildebeest/utils/listEnumAttributes';
+import migrateEnumValues from '@wildebeest/utils/migrateEnumValues';
 
 /**
  * Options for adding or removing enum values

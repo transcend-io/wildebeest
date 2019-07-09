@@ -3,8 +3,8 @@ import Enum from '@commons/classes/Enum';
 import invert from '@commons/utils/invert';
 
 // wildebeest
-import migrateEnumColumn from '@wildebeest/helpers/migrateEnumColumn';
 import { MigrationDefinition } from '@wildebeest/types';
+import migrateEnumColumn from '@wildebeest/utils/migrateEnumColumn';
 
 /**
  * Options for changing an enum column definition, needs to temporarily migrate to a string

@@ -1,13 +1,13 @@
 /* eslint-disable camelcase */
 
 // wildebeest
-import defaultConstraintName from '@wildebeest/helpers/defaultConstraintName';
-import getForeignKeyConfig from '@wildebeest/helpers/getForeignKeyConfig';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
   SequelizeMigrator,
 } from '@wildebeest/types';
+import defaultConstraintName from '@wildebeest/utils/defaultConstraintName';
+import getForeignKeyConfig from '@wildebeest/utils/getForeignKeyConfig';
 
 /**
  * Possible options on association model delete

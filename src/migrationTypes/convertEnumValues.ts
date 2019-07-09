@@ -7,15 +7,15 @@ import invert from '@commons/utils/invert';
 
 // wildebeest
 import {
-  defaultEnumName,
-  listEnumAttributes,
-  migrateEnumValues,
-} from '@wildebeest/helpers';
-import {
   MigrationDefinition,
   MigrationTransactionOptions,
   SequelizeMigrator,
 } from '@wildebeest/types';
+import {
+  defaultEnumName,
+  listEnumAttributes,
+  migrateEnumValues,
+} from '@wildebeest/utils';
 
 /**
  * A migration that should run on the db

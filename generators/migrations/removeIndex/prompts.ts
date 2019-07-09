@@ -7,7 +7,6 @@
  * @see module:removeIndex
  */
 
-
 const { method } = require('../addIndex/prompts');
 
 /**

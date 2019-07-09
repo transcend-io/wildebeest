@@ -5,9 +5,9 @@ import { logger } from '@bk/loggers';
 import { s3 } from '@bk/aws';
 
 // wildebeest
-import batchProcess from '@wildebeest/helpers/batchProcess';
-import renameS3File from '@wildebeest/helpers/renameS3File';
 import { MigrationDefinition, SequelizeMigrator } from '@wildebeest/types';
+import batchProcess from '@wildebeest/utils/batchProcess';
+import renameS3File from '@wildebeest/utils/renameS3File';
 
 /**
  * Options for creating a migration that will rename s3 files

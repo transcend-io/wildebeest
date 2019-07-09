@@ -2,12 +2,12 @@
 import sequelize from 'sequelize';
 
 // wildebeest
-import defaultConstraintName from '@wildebeest/helpers/defaultConstraintName';
-import inferTableReference from '@wildebeest/helpers/inferTableReference';
 import {
   MigrationTransactionOptions,
   SequelizeMigrator,
 } from '@wildebeest/types';
+import defaultConstraintName from '@wildebeest/utils/defaultConstraintName';
+import inferTableReference from '@wildebeest/utils/inferTableReference';
 
 /**
  * Options for adding a constraint to a table

@@ -1,9 +1,6 @@
 // external modules
 import * as sequelize from 'sequelize';
 
-// db
-import { TransactionOptions } from '@bk/db/types';
-
 // wildebeest
 import {
   MigrationTransactionOptions,
@@ -21,7 +18,7 @@ import updateRows from './updateRows';
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type RunInTransaction<T = any> = (
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions,
 ) => PromiseLike<T>;
 
 /**
@@ -39,7 +36,7 @@ export type WithTransaction = (
  */
 export default function createQueryMaker(
   queryInterface: sequelize.QueryInterface,
-  transactionOptions: TransactionOptions,
+  transactionOptions: { transaction: sequelize.Transaction },
   type: sequelize.QueryTypes = sequelize.QueryTypes.SELECT,
 ): QueryWithTransaction {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

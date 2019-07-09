@@ -2,12 +2,12 @@
 import { defaultColumnIndex } from '@bk/db/helpers';
 
 // wildebeest
-import { listIndexNames } from '@wildebeest/helpers';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
   SequelizeMigrator,
 } from '@wildebeest/types';
+import { listIndexNames } from '@wildebeest/utils';
 
 // local
 import { changeConstraintName } from './renameConstraint';
