@@ -1,0 +1,8 @@
+{{> dbMigrationHeader }}
+// migrationTypes
+import addUniqueConstraintIndex from '@wildebeest/migrationTypes/addUniqueConstraintIndex';
+
+module.exports = addUniqueConstraintIndex({
+  tableName: '{{ modelTableName }}',
+  fields: [{{#listComma columns}}'{{ columnName }}'{{/listComma}}],
+});

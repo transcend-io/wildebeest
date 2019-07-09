@@ -1,0 +1,8 @@
+{{> dbMigrationHeader }}
+// migrationTypes
+import makeColumnAllowNull from '@wildebeest/migrationTypes/makeColumnAllowNull';
+
+module.exports = makeColumnAllowNull({
+  {{> tableColumnMigration }}
+
+});

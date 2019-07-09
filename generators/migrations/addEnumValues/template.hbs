@@ -1,0 +1,8 @@
+{{> dbMigrationHeader }}
+// migrationTypes
+import addEnumValues from '@wildebeest/migrationTypes/addEnumValues';
+
+module.exports = addEnumValues({
+  {{> changeEnumAttributes}}
+
+});

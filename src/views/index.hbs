@@ -1,0 +1,29 @@
+<h1>Database Migrations</h1>
+
+<h2><a href="/migrate/current?page={{page}}">CURRENT</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="/migrate/current?page={{page}}&wipe=true">WIPE&CURRENT</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="/migrate/empty?page={{page}}">EMPTY</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="/migrate/test?page={{page}}">WIPE&TEST ALL</a> |&nbsp;&nbsp;&nbsp;<a href="/migrate/sync?page={{page}}">TEST SYNC</a></h2>
+
+<ul>
+{{#each migrations}}
+  <li>
+    <h4>
+      {{#if isRun }}
+        <a href="/migrate/down/{{num}}?page={{../page}}">DOWN</a>
+      {{else}}
+        <a href="/migrate/up/{{num}}?page={{../page}}">UP</a>
+      {{/if}}
+      &nbsp;&nbsp;
+      {{name}}
+    </h4>
+  </li>
+{{/each}}
+</ul>
+<br />
+<h2>
+  &nbsp;&nbsp;&nbsp;
+  {{#if hasBackPage}}
+    <a href="/migrate?page={{backPage}}">Back</a>&nbsp;&nbsp;
+  {{/if}}
+  {{#if hasNextPage}}
+    <a href="/migrate?page={{nextPage}}">Next</a>
+  {{/if}}
+</h2>

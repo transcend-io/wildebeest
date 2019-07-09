@@ -1,0 +1,13 @@
+{{> dbMigrationHeader }}
+// external modules
+import uuidv4 from 'uuid/v4';
+
+// wildebeest
+import custom from '@wildebeest/migrationTypes/custom';
+
+throw new Error('FIX TODO IN MIGRATION {{ migrationNumber }}');
+module.exports = custom({
+  up: async ({ queryT }) =>
+    queryT.insert('{{ modelTableName }}', []), // TODO
+  down: async ({ queryT }) => queryT.delete('{{ modelTableName }}', { TODO }),
+});

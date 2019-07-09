@@ -1,0 +1,13 @@
+// TODO
+const [TODO] = await queryInterface.sequelize.query(`SELECT * FROM ${TODO}`);
+
+// Create the {{ model }} inputs
+const inputs = TODO.map(() => ({
+  id: uuidv4(),
+  updatedAt: new Date(),
+  createdAt: new Date(),
+  TODO,
+}));
+
+// Bulk insert {{ pluralCase model }}
+if (inputs.length > 0) await queryInterface.bulkInsert('{{ pluralCase model }}', inputs);

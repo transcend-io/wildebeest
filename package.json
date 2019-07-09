@@ -1,0 +1,68 @@
+{
+  "name": "@transcend-io/wildebeest",
+  "version": "1.0.2",
+  "description": "Simple class for manipulating files from a relative path",
+  "main": "build/index.js",
+  "homepage": "https://github.com/transcend-io/wildebeest#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/transcend-io/wildebeest.git"
+  },
+  "author": "Transcend Privacy Inc.",
+  "license": "MIT",
+  "bugs": "https://github.com/transcend-io/wildebeest/issues",
+  "files": [
+    "build/**/*",
+    "src/**/*",
+    "tsconfig.json"
+  ],
+  "engines": {
+    "npm": ">=6.4.1",
+    "node": ">=10.15.0"
+  },
+  "moduleSystem": "typescript",
+  "private": false,
+  "scripts": {
+    "####### Linting #######": "",
+    "lint": "eslint . --cache --ext .js,.ts,.tsx,.jsx",
+    "ts:lint": "tslint ./src/**/*.ts",
+    "####### Testing #######": "",
+    "test": "npm run build && npm run test:nobuild",
+    "test:nobuild": "NODE_ENV=test ./node_modules/.bin/mocha \"build/**/*.test.{js,ts}\" --reporter spec --timeout 10000",
+    "####### Build #######": "",
+    "_prepare": "npm run build",
+    "build": "rimraf build && tsc",
+    "build:watch": "tsc --watch"
+  },
+  "moose": "fish",
+  "dependencies": {
+    "sequelize": "^5.9.4",
+    "umzug": "^2.2.0"
+  },
+  "devDependencies": {
+    "@transcend-io/generators": "^1.4.28",
+    "@types/chai": "^4.1.7",
+    "@types/lodash": "^4.14.136",
+    "@types/mkdirp": "^0.5.2",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.6.0",
+    "@types/uuid": "^3.4.5",
+    "@typescript-eslint/eslint-plugin": "^1.11.0",
+    "@typescript-eslint/parser": "^1.11.0",
+    "babel-eslint": "^10.0.2",
+    "chai": "^4.2.0",
+    "eslint": "^6.0.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-import-resolver-typescript": "^1.1.1",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "mocha": "^6.1.4",
+    "npm-check": "^5.9.0",
+    "prettier": "^1.17.1",
+    "rimraf": "^2.6.3",
+    "tslint": "^5.18.0",
+    "tslint-microsoft-contrib": "^6.2.0",
+    "typescript": "^3.5.2"
+  }
+}

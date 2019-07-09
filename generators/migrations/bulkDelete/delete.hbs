@@ -1,0 +1,14 @@
+// Get the {{ pluralCase model }}
+const [{{ pluralCase model }}] = await queryInterface.sequelize.query('SELECT * FROM "{{ pluralCase model }}"');
+
+// Update TODO
+await Promise.all({{ pluralCase model }}.map(() => queryInterface.sequelize.query(`
+  UPDATE "${TODO}"
+  SET "${TODO}"='${TODO}'
+  WHERE "${TODO}"='${TODO}';
+`)));
+
+// Bulk delete {{ pluralCase model }}
+await queryInterface.bulkDelete('{{ pluralCase model }}', {
+  TODO
+});

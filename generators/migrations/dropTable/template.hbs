@@ -1,0 +1,7 @@
+{{> dbMigrationHeader }}
+// migrationTypes
+import dropTable from '@wildebeest/migrationTypes/dropTable';
+
+module.exports = dropTable({
+  {{> tableColumnsMigration }}
+});

@@ -1,0 +1,7 @@
+{{> dbMigrationHeader }}
+// migrationTypes
+import removeColumns from '@wildebeest/migrationTypes/removeColumns';
+
+module.exports = removeColumns({
+  {{> tableColumnsMigration }}
+});

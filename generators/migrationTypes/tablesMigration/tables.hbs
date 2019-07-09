@@ -1,0 +1,1 @@
+tableName: {{#if (listLen tables)}}{{#listComma tables }}'{{ modelTableName }}'{{/listComma}}{{else}}{{#each tables}}'{{ modelTableName }}'{{/each}}{{/if}},

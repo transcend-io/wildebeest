@@ -1,0 +1,22 @@
+{{> dbMigrationHeader }}
+// migrationTypes
+import changeEnumColumn from '@wildebeest/migrationTypes/changeEnumColumn';
+
+module.exports = changeEnumColumn({
+  {{> tableColumnMigration }}
+
+{{#if oldDefault}}
+  oldDefault: '{{ oldDefault }}',
+{{/if}}
+{{#if newDefault}}
+  newDefault: '{{ newDefault }}',
+{{/if}}
+  oldEnum: {
+    {{> changeEnumColumnAttributes attributes=oldAttributes }}
+
+  },
+  newEnum: {
+    {{> changeEnumColumnAttributes attributes=newAttributes }}
+
+  },
+});

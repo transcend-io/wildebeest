@@ -1,0 +1,7 @@
+{{> dbMigrationHeader }}
+// migrationTypes
+import uuidNonNull from '@wildebeest/migrationTypes/uuidNonNull';
+
+module.exports = uuidNonNull({
+  {{> tableColumnMigration }}
+});

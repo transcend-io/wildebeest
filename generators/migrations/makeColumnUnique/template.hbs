@@ -1,0 +1,8 @@
+{{> dbMigrationHeader }}
+// migrationTypes
+import makeColumnUnique from '@wildebeest/migrationTypes/makeColumnUnique';
+
+module.exports = makeColumnUnique({
+  {{> tableColumnMigration }}
+
+});

@@ -1,0 +1,11 @@
+{{> dbMigrationHeader }}
+// migrationTypes
+import removeIndex from '@wildebeest/migrationTypes/removeIndex';
+
+module.exports = removeIndex({
+  tableName: '{{ modelTableName }}',
+  fields: [{{#listComma columns}}'{{ columnName }}'{{/listComma}}],
+{{#ifNotEquals method "BTREE"}}
+  method: '{{ method }}',
+{{/ifNotEquals}}
+});

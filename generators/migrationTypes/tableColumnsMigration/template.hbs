@@ -1,0 +1,8 @@
+tableName: '{{ modelTableName }}',
+{{> tableColumnsMigrationColumns }}
+{{#if getRowDefaults}}
+{{> addColumnsGetRowDefaults }}
+{{/if}}
+{{#if (listLen constraints)}}
+constraints: [{{#listComma constraints}}{{> tableColumnsMigrationConstraint }}{{/listComma}}],
+{{/if}}

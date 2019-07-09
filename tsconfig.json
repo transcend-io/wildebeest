@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "commonjs",
+    "lib": ["esnext", "dom", "es2015"],
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "removeComments": false,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@generators/*": ["@transcend-io/generators/src/*"],
+      "@wildebeest/*": ["./src/*"]
+    },
+    "outDir": "./build",
+    "types": ["node", "mocha", "chai"],
+    "strict": true
+  },
+  "include": [
+    "src/**/*",
+    "generators/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "docs",
+    "Internal-Documentation"
+  ]
+}

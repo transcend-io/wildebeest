@@ -1,0 +1,14 @@
+{{> dbMigrationHeader }}
+// migrationTypes
+import changeColumn from '@wildebeest/migrationTypes/changeColumn';
+
+module.exports = changeColumn({
+  {{> tableColumnMigration }}
+
+  getOldColumn: ({ DataTypes }) => ({
+    {{> tableColumnsMigrationDefinition definition=oldDefinition }}
+  }),
+  getNewColumn: ({ DataTypes }) => ({
+    {{> tableColumnsMigrationDefinition definition=newDefinition }}
+  }),
+});

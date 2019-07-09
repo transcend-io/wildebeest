@@ -1,0 +1,8 @@
+{{> dbMigrationHeader }}
+// migrationTypes
+import cascadeWithParent from '@wildebeest/migrationTypes/cascadeWithParent';
+
+module.exports = cascadeWithParent({
+  {{> tableColumnMigration }}
+
+});
