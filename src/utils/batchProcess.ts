@@ -1,10 +1,10 @@
 // external modules
 import { QueryTypes } from 'sequelize';
 
-// wildebeest
+// global
 import { ONE_MINUTE, ONE_SECOND } from '@wildebeest/constants';
 import { MigrationTransactionOptions } from '@wildebeest/types';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Options to define which rows to process

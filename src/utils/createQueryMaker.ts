@@ -1,13 +1,14 @@
 // external modules
 import * as sequelize from 'sequelize';
 
-// wildebeest
+// global
 import {
+  AnyArray,
   MigrationTransactionOptions,
   QueryHelpers,
   QueryWithTransaction,
 } from '@wildebeest/types';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 // local
 import batchProcess from './batchProcess';
@@ -16,10 +17,9 @@ import updateRows from './updateRows';
 /**
  * A function should be run with all queries inside a transaction a transaction
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type RunInTransaction<T = any> = (
+export type RunInTransaction = (
   transactionOptions: MigrationTransactionOptions,
-) => PromiseLike<T>;
+) => PromiseLike<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
  * Similar to the function provided to db.transaction
@@ -31,8 +31,12 @@ export type WithTransaction = (
 /**
  * Create a query make from sequelize query interface
  *
- * @memberof module:migrations/helpers
+ * @memberof module:utils
  *
+ * @param queryInterface - The interface to query with
+ * @param transactionOptions - The transaction
+ * @param type - The query type
+ * @returns A query wrapped in transaction
  */
 export default function createQueryMaker(
   queryInterface: sequelize.QueryInterface,
@@ -43,28 +47,30 @@ export default function createQueryMaker(
   type: sequelize.QueryTypes = sequelize.QueryTypes.SELECT,
 ): QueryWithTransaction {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return <T = any>(q: string): PromiseLike<T[]> =>
+  return <T extends AnyArray = AnyArray>(q: string): PromiseLike<T> =>
     queryInterface.sequelize
       .query(q, {
         type,
         ...transactionOptions,
       })
       .then((results) => {
-        const casted = results as T[];
+        const casted = results as T;
         return casted;
       });
 }
 
 /**
  * Construct a transaction wrapper helper function that will make it easier for migrations to run in transactions
- * @param db - The database to operate on
+ *
+ * @param wildebeest - The wildebeest configuration
  * @returns A function that takes in the argument of db.transaction but wrapped with extras
  */
 export function transactionWrapper(
   wildebeest: Wildebeest,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): (runInTransaction: RunInTransaction) => PromiseLike<any> {
   const { db } = wildebeest;
-  return async <BP>(runInTransaction: RunInTransaction) =>
+  return async (runInTransaction: RunInTransaction) =>
     db.transaction(async (transaction) => {
       const tOpt = { transaction };
 
@@ -89,7 +95,7 @@ export function transactionWrapper(
           sequelize.QueryTypes.RAW,
         ),
         batchProcess: (tableName, whereOptions, processRow) =>
-          batchProcess<BP>(wildebeest, tableName, whereOptions, processRow, {
+          batchProcess(wildebeest, tableName, whereOptions, processRow, {
             queryT: qT,
             ...tOpt,
           }),

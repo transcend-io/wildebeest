@@ -1,14 +1,14 @@
 // external modules
 import difference from 'lodash/difference';
 import uniq from 'lodash/uniq';
-import { QueryTypes, ModelAttributeColumnOptions } from 'sequelize';
+import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
-// wildebeest
+// global
 import { ModelDefinition, SequelizeMigrator } from '@wildebeest/types';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 // local
-import listIndexNames from './listIndexNames';
+import listIndexNames from '@wildebeest/utils/listIndexNames';
 
 /**
  * Check if the database has an index
@@ -53,7 +53,7 @@ export async function hasIndex(
 /**
  * Check that db model indexes are setup properly
  *
- * @memberof module:migrations/helpers
+ * @memberof module:checks
  *
  * @param wildebeest - The wildebeest configuration
  * @param model - The database model definition to verify

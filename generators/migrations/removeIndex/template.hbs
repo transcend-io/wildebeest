@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import removeIndex from '@wildebeest/migrationTypes/removeIndex';
+import { removeIndex } from '@wildebeest';
 
 module.exports = removeIndex({
   tableName: '{{ modelTableName }}',

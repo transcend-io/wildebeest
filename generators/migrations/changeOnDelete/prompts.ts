@@ -7,7 +7,7 @@
  * @see module:changeOnDelete
  */
 
-// wildebeest
+// global
 import { OnDelete } from '@wildebeest/types';
 
 /**

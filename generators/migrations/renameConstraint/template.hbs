@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import renameConstraint from '@wildebeest/migrationTypes/renameConstraint';
+import { renameConstraint } from '@wildebeest';
 
 module.exports = renameConstraint({
   tableName: '{{ modelTableName }}',

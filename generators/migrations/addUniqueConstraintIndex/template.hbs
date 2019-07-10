@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import addUniqueConstraintIndex from '@wildebeest/migrationTypes/addUniqueConstraintIndex';
+import { addUniqueConstraintIndex } from '@wildebeest';
 
 module.exports = addUniqueConstraintIndex({
   tableName: '{{ modelTableName }}',

@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import renameS3Files from '@wildebeest/migrationTypes/renameS3Files';
+import { renameS3Files } from '@wildebeest';
 
 module.exports = renameS3Files({
   tableName: '{{ modelTableName }}',

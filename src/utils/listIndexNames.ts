@@ -1,7 +1,7 @@
 // external modules
 import { QueryTypes } from 'sequelize';
 
-// wildebeest
+// global
 import {
   MigrationTransactionOptions,
   SequelizeMigrator,
@@ -18,7 +18,7 @@ export type PgIndex = {
 /**
  * List indexes related to a table
  *
- * @memberof module:migrations/helpers
+ * @memberof module:utils
  *
  * @param db - The db instance to check
  * @param tableName - The table to list indexes for

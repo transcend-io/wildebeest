@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import addCascadeWithParent from '@wildebeest/migrationTypes/addCascadeWithParent';
+import { addCascadeWithParent } from '@wildebeest';
 
 module.exports = addCascadeWithParent({
   {{> tableColumnMigration }}

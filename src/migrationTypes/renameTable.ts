@@ -1,12 +1,12 @@
-// wildebeest
+// global
 import {
-  IndexType,
   IndexConfig,
+  IndexType,
   MigrationDefinition,
   MigrationTransactionOptions,
 } from '@wildebeest/types';
 import { listIndexNames } from '@wildebeest/utils';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 // local
 import { changeConstraintName } from './renameConstraint';

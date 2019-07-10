@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import renameIndex from '@wildebeest/migrationTypes/renameIndex';
+import { renameIndex } from '@wildebeest';
 
 module.exports = renameIndex({
   oldName: '{{ oldName }}',

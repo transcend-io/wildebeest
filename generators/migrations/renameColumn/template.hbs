@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import renameColumn from '@wildebeest/migrationTypes/renameColumn';
+import { renameColumn } from '@wildebeest';
 
 module.exports = renameColumn({
   tableName: '{{ modelTableName }}',

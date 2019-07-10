@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import removeUniqueConstraintIndex from '@wildebeest/migrationTypes/removeUniqueConstraintIndex';
+import { removeUniqueConstraintIndex } from '@wildebeest';
 
 module.exports = removeUniqueConstraintIndex({
   tableName: '{{ modelTableName }}',

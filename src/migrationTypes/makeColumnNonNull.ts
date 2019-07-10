@@ -1,4 +1,4 @@
-// wildebeest
+// global
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
@@ -6,9 +6,20 @@ import {
 } from '@wildebeest/types';
 
 /**
+ * Some queries expect the primary key columnt to be called id TODO factor this out
+ */
+export type RowWithId = {
+  /** Id of column in priamry key */
+  id: string | number;
+};
+
+/**
  * Input for changing null status migrator
  */
-export type MakeColumnNonNullOptions<T, D> = {
+export type MakeColumnNonNullOptions<
+  T extends RowWithId,
+  TValue extends string | number | null
+> = {
   /** The name of the table to modify */
   tableName: string;
   /** The name of the column to make non null */
@@ -18,7 +29,7 @@ export type MakeColumnNonNullOptions<T, D> = {
     row: T,
     transactionOptions: MigrationTransactionOptions,
     db: SequelizeMigrator,
-  ) => Promise<D>;
+  ) => Promise<TValue>;
   /** When true, drop all null rows */
   drop?: boolean;
 };
@@ -31,9 +42,10 @@ export type MakeColumnNonNullOptions<T, D> = {
  * @param options - The table column identifiers
  * @returns The make column non null migrator
  */
-export default function makeColumnNonNull<T, D>(
-  options: MakeColumnNonNullOptions<T, D>,
-): MigrationDefinition {
+export default function makeColumnNonNull<
+  T extends RowWithId,
+  TValue extends string | number | null
+>(options: MakeColumnNonNullOptions<T, TValue>): MigrationDefinition {
   const { tableName, columnName, getRowDefault, drop = false } = options;
   return {
     up: async (wildebeest, withTransaction) =>
@@ -41,7 +53,7 @@ export default function makeColumnNonNull<T, D>(
         const { queryT } = transactionOptions;
         // Convert null rows first
         if (getRowDefault) {
-          await queryT.batchProcess(
+          await queryT.batchProcess<T>(
             tableName,
             { where: `"${columnName}" IS NULL` },
             async (row) => {

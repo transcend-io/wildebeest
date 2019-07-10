@@ -14,3 +14,4 @@ import * as attributes from './attributes';
 import * as constants from './constants';
 
 export { attributes, constants };
+export { default } from './MigrationLock';

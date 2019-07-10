@@ -1,4 +1,4 @@
-// wildebeest
+// global
 import {
   Attributes,
   DefineColumns,
@@ -8,7 +8,7 @@ import {
 } from '@wildebeest/types';
 import { addTableColumnConstraint, dropEnum, isEnum } from '@wildebeest/utils';
 import { RawConstraint } from '@wildebeest/utils/indexConstraints';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Options for dropping a table

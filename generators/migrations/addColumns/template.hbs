@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import addColumns from '@wildebeest/migrationTypes/addColumns';
+import { addColumns } from '@wildebeest';
 
 module.exports = addColumns({
   {{> tableColumnsMigration }}

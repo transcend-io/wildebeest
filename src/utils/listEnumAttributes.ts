@@ -1,7 +1,7 @@
 // external modules
 import { QueryTypes } from 'sequelize';
 
-// wildebeest
+// global
 import {
   MigrationTransactionOptions,
   SequelizeMigrator,

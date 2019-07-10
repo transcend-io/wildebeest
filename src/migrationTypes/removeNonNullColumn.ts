@@ -1,7 +1,7 @@
 // external modules
 import { ModelAttributeColumnOptions } from 'sequelize';
 
-// wildebeest
+// global
 import { MigrationDefinition, SequelizeMigrator } from '@wildebeest/types';
 import addTableColumnConstraint from '@wildebeest/utils/addTableColumnConstraint';
 import { TableReference } from '@wildebeest/utils/inferTableReference';

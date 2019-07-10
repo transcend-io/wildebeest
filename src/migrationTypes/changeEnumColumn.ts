@@ -1,4 +1,4 @@
-// wildebeest
+// global
 import { MigrationDefinition } from '@wildebeest/types';
 import { invert } from '@wildebeest/utils';
 import migrateEnumColumn from '@wildebeest/utils/migrateEnumColumn';

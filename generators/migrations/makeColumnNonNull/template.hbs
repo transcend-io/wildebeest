@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import makeColumnNonNull from '@wildebeest/migrationTypes/makeColumnNonNull';
+import { makeColumnNonNull } from '@wildebeest';
 
 module.exports = makeColumnNonNull({
   {{> tableColumnMigration}}

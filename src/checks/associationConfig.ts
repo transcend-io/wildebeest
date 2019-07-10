@@ -1,12 +1,12 @@
 // external modules
 import { QueryTypes } from 'sequelize';
 
-// wildebeest
+// global
 import { Attribute, SequelizeMigrator } from '@wildebeest/types';
+import getForeignKeyConfig from '@wildebeest/utils/getForeignKeyConfig';
 
 // local
-import getForeignKeyConfig from './getForeignKeyConfig';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Check if the database has a constraint
@@ -33,7 +33,7 @@ export async function hasConstraint(
 /**
  * Ensure the constraint between the table column associations is valid
  *
- * @memberof module:migrations/helpers
+ * @memberof module:checks
  *
  * @param wilebeest - The wildebeest configuration
  * @param tableName - The name of the table to check

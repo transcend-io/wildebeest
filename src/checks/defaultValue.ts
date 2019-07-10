@@ -1,25 +1,25 @@
 // external modules
 import { ModelAttributeColumnOptions } from 'sequelize';
 
-// wildebeest
-import Wildebeest from '@wildebeest';
+// global
+import Wildebeest from '@wildebeest/Wildebeest';
 
 // local
-import getColumnDefault from './getColumnDefault';
-import isEnum from './isEnum';
+import getColumnDefault from '@wildebeest/utils/getColumnDefault';
+import isEnum from '@wildebeest/utils/isEnum';
 
 /**
  * Ensure the default value of a sequelize definition matches the default value in postgres
  *
- * @memberof module:migrations/helpers
+ * @memberof module:checks
  *
  * @param model - The model to check
  * @param name - The name of the column
  * @param definition - The attribute definition
  * @returns True if the association config is proper
  */
-export default async function checkDefaultValue(
-  { db, logger }: Wildebeest,
+export default async function DefaultValue(
+  { db, logger, namingConventions }: Wildebeest,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,
@@ -28,7 +28,7 @@ export default async function checkDefaultValue(
   const currentDefault = await getColumnDefault(db, tableName, name);
 
   // Determine the expected default
-  let expectedDefault = definition.defaultValue;
+  let expectedDefault = definition.defaultValue as any;
 
   // If autoIncrement
   if (definition.autoIncrement) {
@@ -47,7 +47,7 @@ export default async function checkDefaultValue(
     expectedDefault = null;
     // Enum -> enum syntax of a string
   } else if (isEnum(definition) && typeof expectedDefault === 'string') {
-    let enumName = defaultEnumName(tableName, name);
+    let enumName = namingConventions.enum(tableName, name);
     const isLower = enumName === enumName.toLowerCase();
     if (!isLower) {
       enumName = `"${enumName}"`;

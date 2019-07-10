@@ -10,8 +10,12 @@
 // external modules
 import * as express from 'express';
 
-// wildebeest
-import { ONE_MINUTE, ONE_SECOND } from '@wildebeest/constants';
+// global
+import {
+  MAX_MIGRATION_DISPLAY,
+  ONE_MINUTE,
+  ONE_SECOND,
+} from '@wildebeest/constants';
 
 // local
 import Wildebeest from './index';
@@ -166,7 +170,7 @@ export async function renderRoutes(
   const endIndex = startIndex + MAX_MIGRATION_DISPLAY;
 
   // The migrations to display
-  const currentMigration = await db.model('migration').latest();
+  const currentMigration = await Migration.latest();
 
   // Check if a num has been run
   const checkIsRun = (checkNum): boolean =>

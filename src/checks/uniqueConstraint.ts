@@ -1,9 +1,9 @@
 // external modules
 import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
-// wildebeest
+// global
 import { SequelizeMigrator } from '@wildebeest/types';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Check if the database has a unique constraint
@@ -34,7 +34,7 @@ export async function hasUniqueConstraint(
 /**
  * Ensure a unique constraint is set properly
  *
- * @memberof module:migrations/helpers
+ * @memberof module:checks
  *
  * @param model - The db model to check
  * @param name - The name of the attribute

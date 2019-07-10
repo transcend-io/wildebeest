@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import renameEnumValue from '@wildebeest/migrationTypes/renameEnumValue';
+import { renameEnumValue } from '@wildebeest';
 
 module.exports = renameEnumValue({
   name: '{{ enumName }}',

@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import addIndex from '@wildebeest/migrationTypes/addIndex';
+import { addIndex } from '@wildebeest';
 
 module.exports = addIndex({
   tableName: '{{ modelTableName }}',

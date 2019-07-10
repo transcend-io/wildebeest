@@ -145,3 +145,6 @@ Until this new framework is in place, the current process for re-ordering migrat
 4. You will need to do a wipe on your local db and re-run the migrations, you can do this on the [/migrate](https://yo.com:4001/migrate)
    page or with the command `npm run server:dev:clean && npm run server:dev:uplogs`
 
+
+*Only will work when RUN apk add --no-cache postgresql-client=10.5-r0 is not commented out in app.Dockerfile*
+TODO first migration expected to be genesis

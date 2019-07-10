@@ -7,10 +7,10 @@
  */
 
 // local
-import * as migration from './migration';
-import * as migrationLock from './migrationLock';
+import Migration from './migration';
+import MigrationLock from './migrationLock';
 
 export default {
-  migrationLock,
-  migration,
+  Migration,
+  MigrationLock,
 };

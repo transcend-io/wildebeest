@@ -44,6 +44,7 @@ module.exports = {
     "import/no-dynamic-require": ["error"],
     "import/no-extraneous-dependencies": 0,
     "import/no-named-as-default": 0,
+    "import/order": 0,
     // "import/no-relative-parent-imports": ["warn"],
     "import/no-unresolved": 2,
     "import/no-webpack-loader-syntax": ["error"],

@@ -1,8 +1,8 @@
 // external modules
 import { S3 } from 'aws-sdk';
 
-// wildebeest
-import Wildebeest from '@wildebeest';
+// global
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Rename an s3 file

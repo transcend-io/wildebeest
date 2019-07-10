@@ -1,9 +1,9 @@
 // global
 import { QueryTypes } from 'sequelize';
 
-// wildebeest
+// global
 import { SequelizeMigrator } from '@wildebeest/types';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * The configuration for a primary key
@@ -55,7 +55,7 @@ export async function getTablePrimaryKey(
 /**
  * Ensure that a primary key constraint is setup properly
  *
- * @memberof module:migrations/helpers
+ * @memberof module:checks
  *
  * @param model - The model to check
  * @param name - The name of the expected primary key

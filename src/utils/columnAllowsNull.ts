@@ -1,7 +1,7 @@
 // external modules
 import { QueryTypes } from 'sequelize';
 
-// wildebeest
+// global
 import {
   MigrationTransactionOptions,
   SequelizeMigrator,
@@ -10,7 +10,7 @@ import {
 /**
  * Check if a postgres column allows null values
  *
- * @memberof module:migrations/helpers
+ * @memberof module:utils
  *
  * @param db - The db instance to use
  * @param tableName - The name of the table to check

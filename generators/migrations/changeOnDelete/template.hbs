@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import changeOnDelete from '@wildebeest/migrationTypes/changeOnDelete';
+import { changeOnDelete } from '@wildebeest';
 
 module.exports = changeOnDelete({
   {{> tableColumnMigration }}

@@ -13,6 +13,9 @@ import { ModelHooks } from 'sequelize/types/lib/hooks';
 // local
 import Migration from './Migration';
 
+const getNumber = (name: string): number =>
+  parseInt(name.match(/^\d+/) as any, 10);
+
 /**
  * The default model hooks
  */
@@ -34,13 +37,11 @@ export const hooks: Partial<ModelHooks<Migration>> = {
    * @param migration - The newly created migration
    */
   beforeDestroy: async (migration) => {
-    const index = parseInt(migration.name.match(/^\d+/), 10);
+    const index = getNumber(migration.name);
 
     await Migration.findAll()
       .then((migrations) =>
-        migrations.filter(
-          ({ name }) => parseInt(name.match(/^\d+/), 10) >= index,
-        ),
+        migrations.filter(({ name }) => getNumber(name) >= index),
       )
       .then((migrations) =>
         Promise.all(migrations.map((mig) => mig.destroy())),

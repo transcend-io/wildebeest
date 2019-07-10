@@ -2,19 +2,21 @@
 import difference from 'lodash/difference';
 import uniq from 'lodash/uniq';
 
-// wildebeest
+// global
 import { ModelDefinition } from '@wildebeest/types';
-import Wildebeest from '@wildebeest';
+import expectedColumnNames from '@wildebeest/utils/expectedColumnNames';
+import listColumns from '@wildebeest/utils/listColumns';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 // local
-import checkColumnDefinition from './checkColumnDefinition';
-import listColumns from './listColumns';
+import checkColumnDefinition from './columnDefinition';
 
 /**
  * Check that all db model attributes defined by sequelize match the ones in postgres
  *
- * @memberof module:migrations/helpers
+ * @memberof module:checks
  *
+ * @param wildebeest - The wildebeest configuration
  * @param model - The db model to check against
  * @returns True if column definitions are in sync
  */
@@ -23,7 +25,7 @@ export default async function checkColumnDefinitions(
   model: ModelDefinition,
 ): Promise<boolean> {
   // Compare columns to what exist
-  const expectedColumns = model.expectedColumns();
+  const expectedColumns = expectedColumnNames(model);
   const existingColumns = await listColumns(wildebeest.db, model.tableName);
 
   // Extra check
@@ -50,7 +52,9 @@ export default async function checkColumnDefinitions(
 
   // Check each individual column definition
   const syncedColumns = await Promise.all(
-    existingColumns.map((name) => checkColumnDefinition(model, name)),
+    existingColumns.map((name) =>
+      checkColumnDefinition(wildebeest, model, name),
+    ),
   );
   const columnSynced =
     syncedColumns.filter((isSynced) => !isSynced).length === 0;

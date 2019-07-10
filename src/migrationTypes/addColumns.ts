@@ -1,18 +1,17 @@
 /* eslint-disable max-lines */
 // external modules
 import difference from 'lodash/difference';
-import { ModelAttributeColumnOptions, WhereOptions } from 'sequelize';
+import { DataType, ModelAttributeColumnOptions, WhereOptions } from 'sequelize';
 
-// wildebeest
+// global
 import {
   DefineColumns,
   MigrationDefinition,
   MigrationTransactionOptions,
-  SequelizeMigrator,
+  OnDelete,
 } from '@wildebeest/types';
 import {
   addTableColumnConstraint,
-  defaultEnumName,
   dropEnum,
   isEnum,
   migrateEnumColumn,
@@ -22,16 +21,12 @@ import indexConstraints, {
   RawConstraint,
 } from '@wildebeest/utils/indexConstraints';
 import { RowUpdater } from '@wildebeest/utils/updateRows';
+import Wildebeest from '@wildebeest/Wildebeest';
 
-// local
-import { OnDelete } from './changeOnDelete';
-import Wildebeest from '@wildebeest';
-
-// TODO cleanup types
 /**
  * Options for adding new columns to a single table
  */
-export type AddTableColumnsOptions<P, T> = {
+export type AddTableColumnsOptions<T extends {}> = {
   /** The name of the table */
   tableName: string;
   /** Function that returns column definition where key is column name and value is column definition */
@@ -41,11 +36,11 @@ export type AddTableColumnsOptions<P, T> = {
   /** Drop the table values first. True means drop all rows. Can also specify the where options to drop */
   drop?: boolean | WhereOptions;
   /**  When migrating a table with data in it, write a function that takes in a db row and returns the new defaults for that row */
-  getRowDefaults?: RowUpdater<P, T>;
+  getRowDefaults?: RowUpdater<T>;
   /** The constraint on delete (SET NULL is default) */
   onDelete?: OnDelete;
   /** The name of the id column */
-  idName?: string;
+  idName?: Extract<keyof T, string>;
   /** What to return when no default value is defined */
   onNullValue?: () => any; // TODO remove
 };
@@ -53,7 +48,7 @@ export type AddTableColumnsOptions<P, T> = {
 /**
  * Options for adding a single column to a single table
  */
-export type AddTableColumnOptions = {
+export type AddTableColumnOptions<T extends {}> = {
   /** The name of the table */
   tableName: string;
   /** The column definition */
@@ -65,7 +60,7 @@ export type AddTableColumnOptions = {
   /** The constraint on delete (SET NULL is default) */
   onDelete?: OnDelete;
   /** The name of the id column */
-  idName?: string;
+  idName?: Extract<keyof T, string>;
   /** What to return when no default value is defined */
   onNullValue?: () => any; // TODO remove
 };
@@ -73,36 +68,36 @@ export type AddTableColumnOptions = {
 /**
  * Options for adding new columns to a table
  */
-export type AddColumnsOptions<P, T> = Omit<
-  AddTableColumnsOptions<P, T>,
+export type AddColumnsOptions<T> = Omit<
+  AddTableColumnsOptions<T>,
   'tableName'
 > & {
   /** The name of the table */
-  tableName: string | TableName[];
+  tableName: string | string[];
 };
 
 /**
  * Add a new column to an existing table
  *
- * @param db - The database to migrate against
+ * @param wildebeest - The wildebeest configuration
  * @param options - The options for adding a new column to a table
  * @param transactionOptions - The current transaction
  * @returns The add column promise
  */
-export async function addColumn(
-  db: SequelizeMigrator,
-  options: AddTableColumnOptions,
+export async function addColumn<T extends {}>(
+  wildebeest: Wildebeest,
+  options: AddTableColumnOptions<T>,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const { tableName, columnName, column } = options;
   // Pull apart column config
-  const { queryInterface } = db;
+  const { queryInterface } = wildebeest.db;
 
   // Drop old enum if still exists
   if (isEnum(column)) {
     await dropEnum(
-      db,
-      defaultEnumName(tableName, columnName),
+      wildebeest.db,
+      wildebeest.namingConventions.enum(tableName, columnName),
       transactionOptions,
     );
   }
@@ -119,12 +114,14 @@ export async function addColumn(
 /**
  * Set column definition with possible constraint
  *
- * @param input - The options for adding a new column to a table
+ * @param wildebeest - The wildebeest configuration
+ * @param options - The options for adding a new column to a table
+ * @param transactionOptions - The current transaction
  * @returns The add column promise
  */
-export async function setColumn(
+export async function setColumn<T extends {}>(
   wildebeest: Wildebeest,
-  options: AddTableColumnOptions,
+  options: AddTableColumnOptions<T>,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const {
@@ -138,9 +135,19 @@ export async function setColumn(
   const { queryInterface } = wildebeest.db;
   const { allowNull, defaultValue, ...rest } = column;
 
+  /**
+   * Type cast to values that may not exist
+   */
+  type WithValues = DataType & {
+    /** Enum values */
+    values: string[];
+  };
+
   // Change enum column if an enum
   if (isEnum(column)) {
-    const enumValue = (rest.values || (rest.type as any).values).reduce(
+    const enumValue: {
+      [k in string]: string;
+    } = (rest.values || (rest.type as WithValues).values).reduce(
       (acc, val) => Object.assign(acc, { [val]: val }),
       {},
     );
@@ -200,7 +207,7 @@ export async function setColumn(
  * @returns True if should call the row delete
  */
 export function shouldDrop(
-  drop: boolean | WhereOptions,
+  drop: boolean | WhereOptions | undefined,
   columnDefinitions: { [name in string]: ModelAttributeColumnOptions },
   isCreate: boolean,
 ): boolean {
@@ -228,18 +235,18 @@ export function shouldDrop(
 /**
  * Remove a column from a table
  *
- * @param db - The database to migration
+ * @param wildebeest - The wildebeest configuration
  * @param options - The remove column options
  * @param transactionOptions - The current transaction
  * @returns The remove column promise
  */
-export async function removeColumn(
-  db: SequelizeMigrator,
-  options: AddTableColumnOptions,
+export async function removeColumn<T extends {}>(
+  wildebeest: Wildebeest,
+  options: AddTableColumnOptions<T>,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   // Raw query interface
-  const { queryInterface } = db;
+  const { queryInterface } = wildebeest.db;
   const { tableName, columnName, column } = options;
 
   // Remove the column
@@ -248,8 +255,8 @@ export async function removeColumn(
   // If the column is an enum, drop the enum
   if (isEnum(column)) {
     await dropEnum(
-      db,
-      defaultEnumName(tableName, columnName),
+      wildebeest.db,
+      wildebeest.namingConventions.enum(tableName, columnName),
       transactionOptions,
     );
   }
@@ -263,15 +270,14 @@ export async function removeColumn(
  * 3. If getRowDefaults provided, paginate over the table and set the default values
  * 4. Set back the column definition to have the proper allowNull
  *
- * @param db - The database to operate on
+ * @param wildebeest - The wildebeest config
  * @param options - The add table column options
- * @param queryT - Helper functions wrapped in transactions
  * @param transactionOptions - The current transaction
  * @returns The add column promise
  */
-export async function addTableColumns<P, T>(
-  db: SequelizeMigrator,
-  options: AddTableColumnsOptions<P, T>,
+export async function addTableColumns<T extends {}>(
+  wildebeest: Wildebeest,
+  options: AddTableColumnsOptions<T>,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const { queryT } = transactionOptions;
@@ -290,7 +296,7 @@ export async function addTableColumns<P, T>(
   const lookupConstraint = indexConstraints(constraints);
 
   // Calculate the column definitions
-  const columnDefinitions = getColumns(db);
+  const columnDefinitions = getColumns(wildebeest.db);
 
   // Drop all table rows if specified
   if (shouldDrop(drop, columnDefinitions, true)) {
@@ -301,7 +307,7 @@ export async function addTableColumns<P, T>(
   await Promise.all(
     Object.entries(columnDefinitions).map(([columnName, column]) =>
       addColumn(
-        db,
+        wildebeest,
         {
           tableName,
           columnName,
@@ -315,8 +321,8 @@ export async function addTableColumns<P, T>(
 
   // When provided, set the default values for the new null columns
   if (getRowDefaults) {
-    await queryT.batchUpdate(tableName, getRowDefaults, columnDefinitions, {
-      idName,
+    await queryT.batchUpdate<T>(tableName, getRowDefaults, columnDefinitions, {
+      idName: idName as Extract<keyof T, string>,
       onNullValue,
     });
   }
@@ -325,7 +331,7 @@ export async function addTableColumns<P, T>(
   await Promise.all(
     Object.entries(columnDefinitions).map(([columnName, column]) =>
       setColumn(
-        db,
+        wildebeest,
         {
           tableName,
           columnName,
@@ -345,22 +351,21 @@ export async function addTableColumns<P, T>(
  * 1. If drop=true, drop all rows from the table
  * 2. Remove the columns
  *
- * @param db - The database to operate on
+ * @param wildebeest - The wildebeest config
  * @param options - The remove table column options
- * @param queryT - Helper functions wrapped in transactions
  * @param transactionOptions - The current transaction
  * @returns The add column promise
  */
-export async function removeTableColumns<P, T>(
-  db: SequelizeMigrator,
-  options: AddTableColumnsOptions<P, T>,
+export async function removeTableColumns<T extends {}>(
+  wildebeest: Wildebeest,
+  options: AddTableColumnsOptions<T>,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const { queryT } = transactionOptions;
   const { getColumns, drop, tableName } = options;
 
   // Calculate the column definitions
-  const columnDefinitions = getColumns(db);
+  const columnDefinitions = getColumns(wildebeest.db);
 
   // Drop all table rows if specified
   if (shouldDrop(drop, columnDefinitions, false)) {
@@ -371,7 +376,7 @@ export async function removeTableColumns<P, T>(
   await Promise.all(
     Object.entries(columnDefinitions).map(([columnName, column]) =>
       removeColumn(
-        db,
+        wildebeest,
         {
           tableName,
           columnName,
@@ -391,8 +396,8 @@ export async function removeTableColumns<P, T>(
  * @param options - Options for adding new columns to a table
  * @returns The add columns migrator
  */
-export default function addColumns<P, T>(
-  options: AddColumnsOptions<P, T>,
+export default function addColumns<T extends {}>(
+  options: AddColumnsOptions<T>,
 ): MigrationDefinition {
   const { tableName, ...rest } = options;
   // List of tables
@@ -405,7 +410,7 @@ export default function addColumns<P, T>(
         Promise.all(
           tablesNames.map((table) =>
             addTableColumns(
-              db,
+              wildebeest,
               { tableName: table, ...rest },
               transactionOptions,
             ),
@@ -417,7 +422,7 @@ export default function addColumns<P, T>(
         Promise.all(
           tablesNames.map((table) =>
             removeTableColumns(
-              db,
+              wildebeest,
               { tableName: table, ...rest },
               transactionOptions,
             ),

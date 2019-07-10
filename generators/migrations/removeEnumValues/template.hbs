@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import removeEnumValues from '@wildebeest/migrationTypes/removeEnumValues';
+import { removeEnumValues } from '@wildebeest';
 
 module.exports = removeEnumValues({
   {{> changeEnumAttributes }}

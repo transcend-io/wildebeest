@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import changeEnumColumn from '@wildebeest/migrationTypes/changeEnumColumn';
+import { changeEnumColumn } from '@wildebeest';
 
 module.exports = changeEnumColumn({
   {{> tableColumnMigration }}

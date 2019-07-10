@@ -1,7 +1,7 @@
 // external modules
 import flatten from 'lodash/flatten';
 
-// wildebeest
+// global
 import { MigrationDefinition } from '@wildebeest/types';
 import createIndex from '@wildebeest/utils/createIndex';
 

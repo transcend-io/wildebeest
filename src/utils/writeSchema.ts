@@ -1,10 +1,9 @@
 // external modules
 import { execSync } from 'child_process';
 import { copyFileSync } from 'fs';
-import { join } from 'path';
 
-// wildebeest
-import Wildebeest from '@wildebeest';
+// global
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Write the current database schema to a file
@@ -16,12 +15,14 @@ import Wildebeest from '@wildebeest';
  * @returns The schema written
  */
 export default async function writeSchema(
-  { schemaDirectory, databaseUri, logger }: Wildebeest,
+  wildebeest: Wildebeest,
   name: string,
 ): Promise<void> {
   // Hold the output of the sql
-  const writePath = join(schemaDirectory, `${name}.dump`);
-  await Promise.resolve(execSync(`pg_dump -Fc  ${databaseUri} > ${writePath}`));
+  const writePath = wildebeest.getSchemaFile(name);
+  await Promise.resolve(
+    execSync(`pg_dump -Fc  ${wildebeest.databaseUri} > ${writePath}`),
+  );
 
   // Copy to src so that it can be synced
   // TODO custom to transcend remove this eventually
@@ -31,5 +32,5 @@ export default async function writeSchema(
   }
 
   // Log success
-  logger.info(`\nWrote schema to dump: "${name}"\n`);
+  wildebeest.logger.success(`\nWrote schema to dump: "${name}"\n`);
 }

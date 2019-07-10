@@ -2,17 +2,17 @@
 import difference from 'lodash/difference';
 import flatten from 'lodash/flatten';
 
-// wildebeest
+// global
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
 } from '@wildebeest/types';
 import {
+  invert,
   listEnumAttributes,
   migrateEnumValues,
-  invert,
 } from '@wildebeest/utils';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * A migration that should run on the db

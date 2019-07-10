@@ -1,10 +1,10 @@
-// wildebeest
+// global
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
 } from '@wildebeest/types';
 import { listIndexNames } from '@wildebeest/utils';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 // local
 import { renameTableIndex } from './renameIndex';

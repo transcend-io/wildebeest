@@ -1,7 +1,7 @@
 // external modules
 import { QueryTypes } from 'sequelize';
 
-// wildebeest
+// global
 import { SequelizeMigrator } from '@wildebeest/types';
 
 /**
@@ -17,7 +17,7 @@ export type ListedColumn = {
 /**
  * List the columns that the table currently has
  *
- * @memberof module:migrations/helpers
+ * @memberof module:utils
  *
  * @returns The current table columns
  */

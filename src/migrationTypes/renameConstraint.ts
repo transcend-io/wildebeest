@@ -1,4 +1,4 @@
-// wildebeest
+// global
 import {
   MigrationDefinition,
   MigrationTransactionOptions,

@@ -1,4 +1,4 @@
-// wildebeest
+// global
 import { MigrationDefinition } from '@wildebeest/types';
 import createIndex from '@wildebeest/utils/createIndex';
 

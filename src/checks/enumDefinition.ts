@@ -2,9 +2,9 @@
 import difference from 'lodash/difference';
 import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
-// wildebeest
+// global
 import { SequelizeMigrator } from '@wildebeest/types';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Unnested Value
@@ -61,7 +61,7 @@ export async function hasEnum(
 /**
  * Check that an enum in the database matches an enum attribute column
  *
- * @memberof module:migrations/helpers
+ * @memberof module:checks
  *
  * @param wildebeest - The wildebeest config
  * @param tableName - The name of the table to check
@@ -69,7 +69,7 @@ export async function hasEnum(
  * @param definition - The enum attribute definition
  * @returns True if the enum value is valid
  */
-export default async function checkEnumDefinition(
+export default async function EnumDefinition(
   wildebeest: Wildebeest,
   tableName: string,
   name: string,

@@ -1,11 +1,11 @@
 // external modules
 import { S3 } from 'aws-sdk';
 
-// wildebeest
+// global
 import { MigrationDefinition, SequelizeMigrator } from '@wildebeest/types';
 import batchProcess from '@wildebeest/utils/batchProcess';
 import renameS3File from '@wildebeest/utils/renameS3File';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Options for creating a migration that will rename s3 files
@@ -122,7 +122,7 @@ async function renameFiles<T>(
 
   // Log the number of keys that were renamed and the number that were deleted
   if (renameCount > 0) {
-    wildebeest.logger.info(`Successfully renamed "${renameCount}" s3 files`);
+    wildebeest.logger.success(`Successfully renamed "${renameCount}" s3 files`);
   }
   if (errorCount > 0) {
     wildebeest.logger.error(`Failed to find "${errorCount}" s3 files`);

@@ -12,7 +12,6 @@ import express from 'express';
 
 // local
 import * as controller from './controller';
-import { ALLOW_WRITE_SCHEMA_ROUTE } from './envs';
 
 // instantiate a router
 const router = express.Router();

@@ -1,6 +1,6 @@
 {{> dbMigrationHeader }}
 // migrationTypes
-import changeColumn from '@wildebeest/migrationTypes/changeColumn';
+import { changeColumn } from '@wildebeest';
 
 module.exports = changeColumn({
   {{> tableColumnMigration }}

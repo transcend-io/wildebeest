@@ -8,6 +8,7 @@
  */
 
 // external modules
+import keyBy from 'lodash/keyBy';
 import { Model } from 'sequelize';
 import Umzuger, {
   DownToOptions,
@@ -17,10 +18,11 @@ import Umzuger, {
   UpToOptions,
 } from 'umzug';
 
-// wildebeest
+// global
 import { restoreFromDump, tableExists } from '@wildebeest/utils';
-import { NUMBERED_REGEX } from '@wildebeest/utils/getNumberedList';
 import { transactionWrapper } from '@wildebeest/utils/createQueryMaker';
+import { NUMBERED_REGEX } from '@wildebeest/utils/getNumberedList';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 // local
 import { MIGRATIONS_PATH } from './constants';
@@ -29,11 +31,10 @@ import { logging, logSection } from './lib';
 /**
  * Lookup from number to migration config
  */
-export const LOOKUP_MIGRATIONS: { [num in number]: MigrationConfig } = indexBy(
+export const LOOKUP_MIGRATIONS: { [num in number]: MigrationConfig } = keyBy(
   MIGRATIONS,
   'numInt',
 );
-
 /**
  * A Migration db model
  */
@@ -101,7 +102,10 @@ export default class Migration extends Model {
    */
   public static async setup(): Promise<void> {
     // Check if the migrations table exists
-    const exists = await tableExists(this.db, this.constructor.tableName);
+    const exists = await tableExists(
+      this.sequelize,
+      this.constructor.tableName,
+    );
 
     // If the table does not exist yet, restore the genesis migration and indicate the first migration ocurred
     if (!exists) {

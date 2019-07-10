@@ -1,10 +1,10 @@
 // external modules
 import sequelize from 'sequelize';
 
-// wildebeest
+// global
 import { MigrationTransactionOptions } from '@wildebeest/types';
 import inferTableReference from '@wildebeest/utils/inferTableReference';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Options for adding a constraint to a table
@@ -15,7 +15,7 @@ export type AddTableConstraintOptions = {
   /** The name of the column */
   columnName: string;
   /** The add constraint options to pass to queryInterface.addConstraint */
-  constraintOptions: sequelize.AddConstraintOptions;
+  constraintOptions: sequelize.AddForeignKeyConstraintOptions;
   /** Override the name of the constraint */
   constraintName?: string;
   /** When true, drop the constraint if it exists */

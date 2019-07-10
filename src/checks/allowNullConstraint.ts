@@ -1,16 +1,14 @@
 // external modules
 import { ModelAttributeColumnOptions } from 'sequelize';
 
-// wildebeest
-import Wildebeest from '@wildebeest';
-
-// local
-import columnAllowsNull from './columnAllowsNull';
+// global
+import columnAllowsNull from '@wildebeest/utils/columnAllowsNull';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Check that the allowNull constraint is setup properly on the column
  *
- * @memberof module:migrations/helpers
+ * @memberof module:checks
  *
  * @param name - The name of the attribute
  * @param definition - The attribute definition

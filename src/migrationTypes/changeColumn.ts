@@ -1,14 +1,14 @@
 // external modules
 import { ModelAttributeColumnOptions } from 'sequelize';
 
-// wildebeest
+// global
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
   SequelizeMigrator,
 } from '@wildebeest/types';
 import { dropEnum, isEnum, migrateEnumColumn } from '@wildebeest/utils';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Change a single column in a table
@@ -31,7 +31,7 @@ export type ChangeColumnOptions = {
  */
 export type ChangeTableColumnOptions = {
   /** The name(S) of the table to change the column on */
-  tableName: string | TableName[];
+  tableName: string | string[];
 } & ChangeColumnOptions;
 
 /**

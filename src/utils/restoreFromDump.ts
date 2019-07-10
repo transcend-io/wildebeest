@@ -1,9 +1,9 @@
 // external modules
 import { execSync } from 'child_process';
 
-// wildebeest
+// global
 import { IS_TEST } from '@wildebeest/constants';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Restore the database from a pd_dump output

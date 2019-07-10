@@ -1,7 +1,7 @@
 // external modules
 import { QueryTypes } from 'sequelize';
 
-// wildebeest
+// global
 import {
   MigrationTransactionOptions,
   SequelizeMigrator,
@@ -10,7 +10,7 @@ import {
 /**
  * Get the default value that the column takes on
  *
- * @memberof module:migrations/helpers
+ * @memberof module:utils
  *
  * @param db - The db to check
  * @param tableName - The name of the table to check

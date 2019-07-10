@@ -21,3 +21,4 @@ import * as options from './options';
 import * as regexes from './regexes';
 
 export { attributes, constants, options, regexes };
+export { default } from './Migration';

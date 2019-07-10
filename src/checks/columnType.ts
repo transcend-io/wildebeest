@@ -1,9 +1,9 @@
 // external modules
 import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
-// wildebeest
+// global
 import { SequelizeMigrator } from '@wildebeest/types';
-import Wildebeest from '@wildebeest';
+import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Mapping from sequelize type to data type
@@ -52,7 +52,7 @@ export async function getColumnType(
 /**
  * Check that the type of a column matches postgres
  *
- * @memberof module:migrations/helpers
+ * @memberof module:checks
  *
  * @param model - The db model to check for
  * @param name - The name of the column

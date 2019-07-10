@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 
-// wildebeest
+// global
 import {
   MigrationDefinition,
   MigrationTransactionOptions,

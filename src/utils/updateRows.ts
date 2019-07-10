@@ -1,4 +1,4 @@
-// wildebeest
+// global
 import {
   Attributes,
   MigrationTransactionOptions,
@@ -6,8 +6,8 @@ import {
 } from '@wildebeest/types';
 
 // local
+import Wildebeest from '@wildebeest/Wildebeest';
 import batchProcess from './batchProcess';
-import Wildebeest from '@wildebeest';
 
 /**
  * Database column definitions, often found in attributes.js
