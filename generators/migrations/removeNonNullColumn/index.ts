@@ -9,7 +9,7 @@
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
-module.exports = {
+export default {
   configure: ({ modelTableName, columnName, modelContainer, model }) => ({
     name: `remove-non-null-column-${modelTableName}-${columnName}`,
     comment: `Remove non null column ${linkToClass(

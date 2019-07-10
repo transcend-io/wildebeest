@@ -8,13 +8,13 @@
  */
 
 // migrationTypes
-const {
-  listAllAttributeConfigs,
-  listAllAttributes,
-} = require('../tableColumnMigration/lib');
-
 // local
 import { getAttributeFileDefinition } from './lib';
+
+import {
+  listAllAttributeConfigs,
+  listAllAttributes,
+} from '../tableColumnMigration/lib';
 
 let useData;
 let attributeConfigs;
@@ -22,11 +22,11 @@ let attributeConfigs;
 /**
  * Determine the function for get row defaults
  *
- * @param {module:commons--Repository.Repository} repo - The repository configuration
- * @param {module:typeDefs~Options}               options - The configuration options
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @param repo - The repository configuration
+ * @param options - The configuration options
+ * @returns The prompt
  */
-export const getRowDefaults = (repo, { withGetRowDefaults }) =>
+export const getRowDefaults = (repo, { withGetRowDefaults }: Options) =>
   withGetRowDefaults && {
     message:
       'Provider a mapping from oldRowInstance => newColumnDefaults (leaving blank to skip)',
@@ -42,11 +42,11 @@ export const method = false;
 /**
  * The columns to modify
  *
- * @param {module:commons--Repository.Repository} repo - The repository configuration
- * @param {module:typeDefs~Options}               options - The configuration options
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @param repo - The repository configuration
+ * @param  options - The configuration options
+ * @returns The prompt
  */
-export const columns = (repo, options) => ({
+export const columns = (repo, options: Options) => ({
   itemName: 'columnName',
   message: `Choose another column?${
     options.suggestOnly || options.columnSuggestOnly ? ' (suggestOnly)' : ''

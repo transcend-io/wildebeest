@@ -8,9 +8,9 @@
  */
 
 // local
-import prompts from './prompts';
+import * as prompts from './prompts';
 
-module.exports = {
+export default {
   configure: ({ oldName, newName }) => ({
     name: `rename-index-to-${newName}`,
     comment: `Rename the index ${oldName} to ${newName}.`,

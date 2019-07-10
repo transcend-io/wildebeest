@@ -6,7 +6,7 @@
  * @module removeEnumValues
  */
 
-module.exports = {
+export default {
   configure: ({ enumName, attributes }) => ({
     name: `remove-enum-values-from-${enumName}`,
     comment: `Remove the attributes: ${attributes

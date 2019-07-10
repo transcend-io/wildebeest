@@ -18,9 +18,9 @@ export const BASE_100_MIGRATIONS_REGEX = /== ([0-9][0-9]00).+?\(.+?s\)/;
 /**
  * Logs migrations
  *
- * @param {string}  info - The migration message
+ * @param info - The migration message
  */
-function logHelper(info): void {
+function logHelper(info: string): void {
   // The logging function to use
   const func =
     info.includes(': migrated') || info.includes(': reverted')
@@ -52,8 +52,8 @@ export const logging = logHelper.bind(logger);
 /**
  * Run some code wrapped in a logged header
  *
- * @param {Function}  cb - The code to run
- * @param {string}    header - The header of the log section
+ * @param cb - The code to run
+ * @param header - The header of the log section
  * @returns The section execution promise wrapped in logging
  */
 export async function logSection(cb, header = 'Migrations'): Promise<void> {

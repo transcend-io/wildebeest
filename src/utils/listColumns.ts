@@ -30,7 +30,7 @@ export default function listColumns(
       `SELECT column_name,data_type from information_schema.columns WHERE table_name='${tableName}'`,
       { type: QueryTypes.SELECT },
     )
-    .then((columns: ListedColumn[]) =>
-      columns.map(({ column_name }) => column_name),
+    .then((columns) =>
+      (columns as ListedColumn[]).map(({ column_name }) => column_name),
     );
 }

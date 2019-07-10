@@ -15,7 +15,7 @@ import getNextNumber from '@wildebeest/utils/getNextNumber';
 // local
 import actions from './actions';
 
-module.exports = {
+export default {
   actions,
   configure: ({ location, generatorName }, repo) => ({
     migrationNumber: getNextNumber(repo.getEntryFolder(location)),

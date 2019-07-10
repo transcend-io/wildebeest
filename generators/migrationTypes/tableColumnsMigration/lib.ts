@@ -19,14 +19,20 @@ const {
 /**
  * Replace part of the definition using a regex
  *
- * @param {module:commons--Repository.Repository} repo - The repository configuration
- * @param {string}                                definition - The raw definition
- * @param {string}                                path - The path where the definition is
- * @param {module:commons--typeDefs~RegEx}        regex - The regex to extract with
- * @param {number}                                [index=1] - The index in the regex of the extracted value
- * @returns {string} The definition with replace content
+ * @param repo - The repository configuration
+ * @param definition - The raw definition
+ * @param path - The path where the definition is
+ * @param regex - The regex to extract with
+ * @param index - The index in the regex of the extracted value
+ * @returns The definition with replace content
  */
-function replaceDefinitionWithRegex(repo, definition, path, regex, index = 1) {
+function replaceDefinitionWithRegex(
+  repo,
+  definition: string,
+  path: string,
+  regex: RegExp,
+  index = 1,
+): string {
   let useDefinition = definition;
 
   // Check if the definition matches the regex
@@ -58,16 +64,16 @@ function replaceDefinitionWithRegex(repo, definition, path, regex, index = 1) {
 /**
  * Get the definition of an attribute from its file
  *
- * @param {module:commons--Repository.Repository} repo - The repository configuration
- * @param {string}                                path - The path to the attributes file
- * @param {string}                                columnName - The name of the attribute
- * @returns {string[]} The comment and definition
+ * @param repo - The repository configuration
+ * @param path - The path to the attributes file
+ * @param columnName - The name of the attribute
+ * @returns The comment and definition
  */
 export const getAttributeFileDefinition = function getAttributeFileDefinition(
   repo,
-  path,
-  columnName,
-) {
+  path: string,
+  columnName: string,
+): string[] {
   // Read in the attributes
   const content = repo.readEntryFile(path);
   const [attr] = repo

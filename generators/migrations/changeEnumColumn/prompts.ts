@@ -10,7 +10,7 @@
 /**
  * The old enum attributes
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const oldAttributes = {
   message: 'What are the old enum attributes?',
@@ -21,7 +21,7 @@ export const oldAttributes = {
 /**
  * What are the new enum attributes?
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const newAttributes = {
   message: 'What are the new enum attributes?',
@@ -32,7 +32,7 @@ export const newAttributes = {
 /**
  * The old default value
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const oldDefault = {
   message: 'What is the old default value?',
@@ -42,7 +42,7 @@ export const oldDefault = {
 /**
  * The new default value
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const newDefault = {
   message: 'What is the new default value?',

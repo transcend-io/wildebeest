@@ -7,7 +7,8 @@
  */
 
 // external modules
-import { readdirSync } from 'fs';
+import { S3 } from 'aws-sdk';
+import { readdirSync, existsSync } from 'fs';
 import snakeCase from 'lodash/snakeCase';
 import { join } from 'path';
 import { DataTypes, ModelIndexesOptions, Sequelize } from 'sequelize';
@@ -167,6 +168,13 @@ export default class Wildebeest {
   /** Maximum number of migrations to display on a single page */
   public maxMigrationDisplay: number;
 
+  // // //
+  // S3 //
+  // // //
+
+  /** The default connection to s3 */
+  public s3: S3;
+
   // //// //
   // Misc //
   // //// //
@@ -213,5 +221,47 @@ export default class Wildebeest {
 
     // Controller routes
     this.maxMigrationDisplay = maxMigrationDisplay;
+
+    // TODO check genesis schema
+  }
+
+  /**
+   * Ensure migration tables are setup and run migrations.
+   *
+   * @returns The schema written
+   */
+  public async runMigrations(): Promise<void> {
+    // Ensure the migrations table it setup
+    await this.Migration.setup();
+
+    // Unlock if force is un
+    if (this.forceUnlock) {
+      await this.MigrationLock.releaseLock();
+    }
+
+    // Run the new migrations if auto migrate is on
+    if (this.autoMigrate) {
+      await this.MigrationLock.runWithLock((lock) => lock.migrate());
+    }
+  }
+
+  /**
+   * Validate whether a schema exists
+   *
+   * @param schemaName - The name of the schema to checl
+   * @returns True if it exists
+   */
+  public schemaExists(schemaName: string): boolean {
+    return existsSync(this.getSchemaFile(schemaName));
+  }
+
+  /**
+   * Validate whether a schema exists
+   *
+   * @param schemaName - The name of the schema to checl
+   * @returns The absolute path to the schema
+   */
+  public getSchemaFile(schemaName: string): string {
+    return join(this.schemaDirectory, `${schemaName}.dump`);
   }
 }

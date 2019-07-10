@@ -2,7 +2,10 @@
 import { QueryTypes } from 'sequelize';
 
 // wildebeest
-import { MigrationTransactionOptions, SequelizeMigrator } from '@wildebeest/types';
+import {
+  MigrationTransactionOptions,
+  SequelizeMigrator,
+} from '@wildebeest/types';
 
 /**
  * A db index

@@ -10,7 +10,7 @@
 /**
  * What is the old definition?
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const oldDefinition = {
   message: 'What is the old column definition?',
@@ -21,7 +21,7 @@ export const oldDefinition = {
 /**
  * What is the new definition?
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const newDefinition = {
   message: 'What is the new definition?',

@@ -13,8 +13,8 @@ import { listAllAttributes } from './lib';
 /**
  * The name of the column to migrate
  *
- * @param {module:commons--Repository.Repository} repo - The repository configuration
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @param repo - The repository configuration
+ * @returns The prompt
  */
 export const columnName = (repo, { columnSuggestOnly = true }) => ({
   message: `What column should be modified? ${

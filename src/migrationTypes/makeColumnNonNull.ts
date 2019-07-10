@@ -47,7 +47,7 @@ export default function makeColumnNonNull<T, D>(
             async (row) => {
               // Get the new value
               const value = await Promise.resolve(
-                getRowDefault(row, transactionOptions, db),
+                getRowDefault(row, transactionOptions, wildebeest.db),
               );
 
               // Update by id

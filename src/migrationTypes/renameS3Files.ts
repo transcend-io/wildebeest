@@ -1,7 +1,11 @@
+// external modules
+import { S3 } from 'aws-sdk';
+
 // wildebeest
 import { MigrationDefinition, SequelizeMigrator } from '@wildebeest/types';
 import batchProcess from '@wildebeest/utils/batchProcess';
 import renameS3File from '@wildebeest/utils/renameS3File';
+import Wildebeest from '@wildebeest';
 
 /**
  * Options for creating a migration that will rename s3 files
@@ -19,6 +23,8 @@ export type RenameS3FileOptions<T> = {
   getNewKey: (file: T, db: SequelizeMigrator) => string;
   /** When true, remove files that did not have an associated s3 file */
   remove?: boolean;
+  /** Provide a connection to s3, else the default will be used */
+  s3?: S3;
 };
 
 /**
@@ -35,8 +41,9 @@ export type File = {
  * Change the name of a file on s3
  */
 async function moveFile<T>(
+  wildebeest: Wildebeest,
+  s3: S3,
   file: T & File,
-  db: SequelizeMigrator,
   options: RenameS3FileOptions<T>,
 ): Promise<{
   /** Number of renamed */
@@ -47,15 +54,15 @@ async function moveFile<T>(
   const { remove, Bucket, tableName, getOldKey, getNewKey } = options;
 
   // Get the old key and the new key
-  const oldKey = await Promise.resolve(getOldKey(file, db));
-  const newKey = await Promise.resolve(getNewKey(file, db));
+  const oldKey = await Promise.resolve(getOldKey(file, wildebeest.db));
+  const newKey = await Promise.resolve(getNewKey(file, wildebeest.db));
 
   try {
     // Check that the file exists
     await s3.headObject({ Bucket, Key: oldKey }).promise();
 
     // Rename the file
-    await renameS3File(Bucket, oldKey, newKey, file.mimetype);
+    await renameS3File(wildebeest, s3, Bucket, oldKey, newKey, file.mimetype);
     return { renamed: 1 };
   } catch (headErr) {
     // When the file does not exist, we just ignore it and handle this later
@@ -64,7 +71,7 @@ async function moveFile<T>(
     } else {
       // Remove the row
       if (remove) {
-        await db.queryInterface.bulkDelete(tableName, {
+        await wildebeest.db.queryInterface.bulkDelete(tableName, {
           id: file.id,
         });
       }
@@ -80,10 +87,10 @@ async function moveFile<T>(
  * @returns The rename promise
  */
 async function renameFiles<T>(
-  db: SequelizeMigrator,
+  wildebeest: Wildebeest,
   options: RenameS3FileOptions<T>,
 ): Promise<void> {
-  const { tableName, attributes = '' } = options;
+  const { tableName, s3, attributes = '' } = options;
 
   // Hold the counts
   let renameCount = 0;
@@ -98,13 +105,14 @@ async function renameFiles<T>(
     useAttributes = `mimetype${useAttributes ? `,${useAttributes}` : ''}`;
   }
   await batchProcess<T & File>(
-    db,
+    wildebeest,
     tableName,
     { attributes: useAttributes },
     async (file) => {
       const { errors = 0, renamed = 0 } = await moveFile<T & File>(
+        wildebeest,
+        s3 || wildebeest.s3,
         file,
-        db,
         options,
       );
       renameCount += renamed;
@@ -114,10 +122,10 @@ async function renameFiles<T>(
 
   // Log the number of keys that were renamed and the number that were deleted
   if (renameCount > 0) {
-    logger.success(`Successfully renamed "${renameCount}" s3 files`);
+    wildebeest.logger.info(`Successfully renamed "${renameCount}" s3 files`);
   }
   if (errorCount > 0) {
-    logger.error(`Failed to find "${errorCount}" s3 files`);
+    wildebeest.logger.error(`Failed to find "${errorCount}" s3 files`);
   }
 }
 /**
@@ -133,14 +141,14 @@ export default function renameS3Files<T>(
 ): MigrationDefinition {
   const { getOldKey, getNewKey, ...rest } = options;
   return {
-    up: (db) =>
-      renameFiles(db, {
+    up: (wildebeest) =>
+      renameFiles(wildebeest, {
         getOldKey,
         getNewKey,
         ...rest,
       }),
-    down: (db) =>
-      renameFiles(db, {
+    down: (wildebeest) =>
+      renameFiles(wildebeest, {
         getNewKey: getOldKey,
         getOldKey: getNewKey,
         ...rest,

@@ -8,9 +8,9 @@
  */
 
 // local
-import prompts from './prompts';
+import * as prompts from './prompts';
 
-module.exports = {
+export default {
   configure: ({ modelTableName, modelContainer, nameExt }) => ({
     name: `bulk-insert-${modelTableName}${nameExt ? `-${nameExt}` : ''}`,
     comment: `Bulk insert into table [${modelTableName}]{@link module:${modelContainer}}`,

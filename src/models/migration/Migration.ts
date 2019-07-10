@@ -8,7 +8,7 @@
  */
 
 // external modules
-import { DataTypes, Model } from 'sequelize';
+import { Model } from 'sequelize';
 import Umzuger, {
   DownToOptions,
   ExecuteOptions,
@@ -25,6 +25,14 @@ import { transactionWrapper } from '@wildebeest/utils/createQueryMaker';
 // local
 import { MIGRATIONS_PATH } from './constants';
 import { logging, logSection } from './lib';
+
+/**
+ * Lookup from number to migration config
+ */
+export const LOOKUP_MIGRATIONS: { [num in number]: MigrationConfig } = indexBy(
+  MIGRATIONS,
+  'numInt',
+);
 
 /**
  * A Migration db model
@@ -121,14 +129,13 @@ export default class Migration extends Model {
     if (this._umzug) {
       return this._umzug;
     }
-    const { db } = this;
 
     // Create a new instance
     this._umzug = new Umzuger({
       storage: 'sequelize',
       // The table to hold the migrations
       storageOptions: {
-        sequelize: db,
+        sequelize: wildebeest.db,
         modelName: this.name,
         tableName: this.tableName,
         columnName: 'name',
@@ -140,9 +147,9 @@ export default class Migration extends Model {
         pattern: NUMBERED_REGEX,
         params: [
           // The database
-          Object.assign(db, { DataTypes }),
+          wildebeest,
           // A transaction wrapper
-          transactionWrapper(db),
+          transactionWrapper(wildebeest),
           // This
           this,
         ],

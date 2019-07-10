@@ -13,7 +13,7 @@ import { NOT_EMPTY_REGEX } from '@generators/regexs';
 /**
  * The old name of the index
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const oldName = {
   message: 'What is the old index name?',
@@ -25,7 +25,7 @@ export const oldName = {
 /**
  * The new name of the index
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const newName = {
   message: 'What is the new name?',

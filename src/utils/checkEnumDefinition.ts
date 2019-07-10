@@ -4,6 +4,7 @@ import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
 // wildebeest
 import { SequelizeMigrator } from '@wildebeest/types';
+import Wildebeest from '@wildebeest';
 
 /**
  * Unnested Value
@@ -62,13 +63,14 @@ export async function hasEnum(
  *
  * @memberof module:migrations/helpers
  *
- * @param model - The model to check
+ * @param wildebeest - The wildebeest config
+ * @param tableName - The name of the table to check
  * @param name - The name of the attribute
  * @param definition - The enum attribute definition
  * @returns True if the enum value is valid
  */
 export default async function checkEnumDefinition(
-  db: SequelizeMigrator,
+  wildebeest: Wildebeest,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,
@@ -76,23 +78,23 @@ export default async function checkEnumDefinition(
   let valid = true;
 
   // The expected name of the enum
-  const expectedEnumName = defaultEnumName(tableName, name);
+  const expectedEnumName = wildebeest.namingConventions.enum(tableName, name);
 
   // Check if the enum exists
-  const enumExists = await hasEnum(db, expectedEnumName);
+  const enumExists = await hasEnum(wildebeest.db, expectedEnumName);
   valid = valid && enumExists;
 
   // Ensure that the enum values match
   if (enumExists) {
     // Determine the existing and expected values
-    const currentValues = await listEnumValues(db, expectedEnumName);
+    const currentValues = await listEnumValues(wildebeest.db, expectedEnumName);
     const expectedValues = definition.values || [];
 
     // Ensure there are no extra values
     const extraValues = difference(currentValues, expectedValues);
     const hasExtraValues = extraValues.length > 0;
     if (hasExtraValues) {
-      logger.error(
+      wildebeest.logger.error(
         `Extra enum values for "${expectedEnumName}": "${extraValues.join(
           '", "',
         )}"`,
@@ -103,7 +105,7 @@ export default async function checkEnumDefinition(
     const missingValues = difference(expectedValues, currentValues);
     const hasMissingValues = missingValues.length > 0;
     if (hasMissingValues) {
-      logger.error(
+      wildebeest.logger.error(
         `Missing enum values for "${expectedEnumName}": "${missingValues.join(
           '", "',
         )}"`,
@@ -111,7 +113,7 @@ export default async function checkEnumDefinition(
     }
     valid = valid && !hasMissingValues && !hasExtraValues;
   } else {
-    logger.error(`Could not find enum: "${expectedEnumName}"`);
+    wildebeest.logger.error(`Could not find enum: "${expectedEnumName}"`);
   }
 
   return valid;

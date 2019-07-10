@@ -11,9 +11,9 @@
 import linkToClass from '@generators/utils/linkToClass';
 
 // local
-import prompts from './prompts';
+import * as prompts from './prompts';
 
-module.exports = {
+export default {
   configure: ({ modelTableName, nameExt, modelContainer, model }) => ({
     name: `rename-s3-files-${modelTableName}-${nameExt}`,
     comment: `Change the naming convention of s3 files in ${linkToClass(

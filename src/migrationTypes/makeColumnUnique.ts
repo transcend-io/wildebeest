@@ -42,20 +42,20 @@ export default function makeColumnUnique(
 
   return {
     // Add the constraint
-    up: async (db) =>
-      db.transaction((transaction) =>
+    up: async ({ db }, withTransaction) =>
+      withTransaction((transactionOptions) =>
         db.queryInterface.addConstraint(tableName, [columnName], {
           type: constraintType,
           name,
-          ...(transaction ? { transaction } : {}),
+          ...transactionOptions,
         }),
       ),
     // Remove the constraint
-    down: async (db) =>
-      db.transaction((transaction) =>
+    down: async ({ db }, withTransaction) =>
+      withTransaction((transactionOptions) =>
         db.queryInterface.sequelize.query(
           `ALTER TABLE "${tableName}" DROP CONSTRAINT IF EXISTS "${name}";`,
-          { transaction },
+          transactionOptions,
         ),
       ),
   };

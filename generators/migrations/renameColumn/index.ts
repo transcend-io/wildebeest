@@ -11,9 +11,9 @@
 import linkToClass from '@generators/utils/linkToClass';
 
 // local
-import prompts from './prompts';
+import * as prompts from './prompts';
 
-module.exports = {
+export default {
   configure: ({ modelTableName, newName, oldName, modelContainer, model }) => ({
     name: `rename-column-${modelTableName}-to-${newName}`,
     comment: `Rename the column ${oldName} to ${newName} on table ${linkToClass(

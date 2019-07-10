@@ -20,7 +20,7 @@ import mkEnum from './utils/mkEnum';
 /**
  * Any array
  */
-export type AnyArray = any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
+type AnyArray = any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
  * Foreign key constraint definition for a table column
@@ -64,6 +64,18 @@ export type Attributes = { [key in string]: Attribute };
 export type DefineColumns = (db: SequelizeMigrator) => Attributes;
 
 /**
+ * A definition of a database model
+ */
+export type ModelDefinition = {
+  /** The name of the table */
+  tableName: string;
+  /** The sequelize db model attribute definitions */
+  attributes: sequelize.ModelAttributes;
+  /** The sequelize db model options */
+  options: sequelize.ModelOptions;
+};
+
+/**
  * Run a query with a transaction
  */
 export type QueryWithTransaction<T extends AnyArray = AnyArray> = (
@@ -73,45 +85,39 @@ export type QueryWithTransaction<T extends AnyArray = AnyArray> = (
 /**
  * The helper functions wrapped in transactions
  */
-export type QueryHelpers<
-  T extends AnyArray = AnyArray,
-  PR = any,
-  PU = any,
-  TU = any
-> = {
+export type QueryHelpers<T extends {}, TInput extends {} = T> = {
   /** Run a SELECT query in the transaction that returns a list */
-  select: QueryWithTransaction<T>;
+  select: QueryWithTransaction<T[]>;
   /** Delete rows inside the transaction */
   delete: (
     tableName: string,
     identifier?: sequelize.WhereOptions,
-  ) => Promise<any>;
+  ) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
   /** Insert rows inside the transaction */
-  insert: (tableName: string, records: any[]) => Promise<any>;
+  insert: (tableName: string, records: TInput[]) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
   /** A raw SQL query returning metadata as well */
-  raw: QueryWithTransaction<T>;
+  raw: QueryWithTransaction<T[]>;
   /** Batch process in the same transaction */
   batchProcess: (
     tableName: string,
     whereOptions: WhereOptions,
-    processRow: (row: PR) => void,
+    processRow: (row: T) => void,
   ) => Promise<number>;
   /** Batch update a table */
   batchUpdate: (
     tableName: string,
-    getRowDefaults: RowUpdater<PU, TU>,
+    getRowDefaults: RowUpdater<T>,
     columnDefinitions: Attributes,
-    options: UpdateRowOptions,
+    options: UpdateRowOptions<T>,
   ) => Promise<number>;
 };
 
 /**
  * Transaction options when running a migration come with helper functions
- * // TODO pass typings of query helpers through
  */
-export type MigrationTransactionOptions = {
+export type MigrationTransactionOptions<T extends {} = {}> = {
   /** Helper functions that run within the migration transaction */
-  queryT: QueryHelpers;
+  queryT: QueryHelpers<T>;
   /** The transaction itself */
   transaction: sequelize.Transaction;
 };

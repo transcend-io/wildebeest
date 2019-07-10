@@ -23,10 +23,10 @@ const {
 /**
  * Get the parent directory from modelPath
  *
- * @param {string}  modelPath - The relative path to the table model
- * @returns {string} The relative path to the model parent directory
+ * @param modelPath - The relative path to the table model
+ * @returns The relative path to the model parent directory
  */
-function getParentDir(modelPath) {
+function getParentDir(modelPath: string): string {
   const split = modelPath.split('/');
   const parentLoc = split.slice(0, split.length - 2).join('/');
   return parentLoc;
@@ -35,11 +35,11 @@ function getParentDir(modelPath) {
 /**
  * Get attributes file from index file
  *
- * @param {module:commons--Repository.Repository} repo - The repository configuration
- * @param {string}                                indexPath - The relative path to an index file
- * @returns {string} The relative path to the attributes file
+ * @param repo - The repository configuration
+ * @param indexPath - The relative path to an index file
+ * @returns The relative path to the attributes file
  */
-function getAttributeFiles(repo, indexPath) {
+function getAttributeFiles(repo, indexPath: string): string {
   // Attributes for model
   return repo.join(
     indexPath.replace('/index', '').replace('/Model', ''),
@@ -50,11 +50,11 @@ function getAttributeFiles(repo, indexPath) {
 /**
  * Get the relative path to the class type definition that the model inherits from
  *
- * @param {module:commons--Repository.Repository} repo - The repository configuration
- * @param {string}                                modelPath - The relative path to the table model
- * @returns {string} The relative path to the class type definition folder
+ * @param repo - The repository configuration
+ * @param modelPath - The relative path to the table model
+ * @returns The relative path to the class type definition folder
  */
-function getClassTypeDir(repo, modelPath) {
+function getClassTypeDir(repo, modelPath: string): string {
   // Build a regex to find the class type
   const typeRegex = CLASS_TYPE_REGEX(
     repo.moduleSystem === MODULE_SYSTEM.commonjs
@@ -93,11 +93,11 @@ function getClassTypeDir(repo, modelPath) {
 /**
  * Get the relative path to all folders that the class extends
  *
- * @param {module:commons--Repository.Repository} repo - The repository configuration
- * @param {string}                                classPath - The relative path to the class model
- * @returns {string[]} The relative path to the class definitions that the model extends from
+ * @param repo - The repository configuration
+ * @param classPath - The relative path to the class model
+ * @returns The relative path to the class definitions that the model extends from
  */
-function getAllExtends(repo, classPath) {
+function getAllExtends(repo, classPath: string): string[] {
   // The folders that the class extends from
   const extendClasses = [];
   let currentPath = classPath;
@@ -126,14 +126,14 @@ function getAllExtends(repo, classPath) {
 /**
  * List all attributes for a model with the path and type
  *
- * @param {module:commons--Repository.Repository} repo - The repository configuration
- * @param {string}                                modelPath - The relative path to the table model
- * @returns {module:tableColumnMigration/typeDefs~AttributeDefinition[]} The attributes that the model supports
+ * @param repo - The repository configuration
+ * @param modelPath - The relative path to the table model
+ * @returns The attributes that the model supports
  */
 export const listAllAttributeConfigs = function listAllAttributeConfigs(
   repo,
-  modelPath,
-) {
+  modelPath: string,
+): AttributeDefinition[] {
   // Check if the modelPath inherits from a class
   const classPath = getClassTypeDir(repo, modelPath);
 
@@ -182,11 +182,14 @@ export const listAllAttributeConfigs = function listAllAttributeConfigs(
 /**
  * List all attributes for a model
  *
- * @param {module:commons--Repository.Repository} repo - The repository configuration
- * @param {string}                                modelPath - The relative path to the table model
- * @returns {string[]} The attributes that the model supports
+ * @param repo - The repository configuration
+ * @param modelPath - The relative path to the table model
+ * @returns The attributes that the model supports
  */
-export const listAllAttributes = function listAllAttributes(repo, modelPath) {
+export const listAllAttributes = function listAllAttributes(
+  repo,
+  modelPath: string,
+): string[] {
   return module.exports
     .listAllAttributeConfigs(repo, modelPath)
     .map(({ columnName }) => columnName);

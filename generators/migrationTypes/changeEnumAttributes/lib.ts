@@ -13,14 +13,14 @@ import { ENUM_ATTRIBUTE_REGEX } from './regexs';
 /**
  * List the attributes of an enum from the content definition
  *
- * @param {string}  content - The enum content
- * @param {boolean} [returnValue=true] - Return the enum value (false means return the key)
- * @returns {string[]} The enum attributes
+ * @param content - The enum content
+ * @param returnValue - Return the enum value (false means return the key)
+ * @returns The enum attributes
  */
 export const listEnumAttributes = function listEnumAttributes(
-  content,
+  content: string,
   returnValue = true,
-) {
+): string[] {
   const attributes = [];
   let attr = ENUM_ATTRIBUTE_REGEX.exec(content);
   while (attr) {

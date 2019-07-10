@@ -16,8 +16,8 @@ import { listAllAttributeConfigs } from '../tableColumnMigration/lib';
 /**
  * The name of the enum
  *
- * @param {module:commons--Repository.Repository} repo - The repository configuration
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @param repo - The repository configuration
+ * @returns The prompt
  */
 export const enumName = (repo) => ({
   message: 'Which enum are you modifying?',

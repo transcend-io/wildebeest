@@ -26,7 +26,7 @@ import tableMigration from './tableMigration';
 import tablesColumnMigration from './tablesColumnMigration';
 import tablesMigration from './tablesMigration';
 
-module.exports = {
+export default {
   alterEnum,
   changeEnumAttributes,
   dbMigration,

@@ -75,24 +75,23 @@ export default function changeOnDelete(
   options: ChangeOnDeleteOptions,
 ): MigrationDefinition {
   const { tableName, columnName, newOnDelete, oldOnDelete } = options;
-  const constraintName = defaultForeignKeyConstraintName(tableName, columnName);
   return {
-    up: async (wildebeest, withTransaction) =>
+    up: async ({ db, namingConventions }, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeConstraintOnDelete(
           db,
           tableName,
-          constraintName,
+          namingConventions.foreignKeyConstraint(tableName, columnName),
           newOnDelete,
           transactionOptions,
         ),
       ),
-    down: async (wildebeest, withTransaction) =>
+    down: async ({ db, namingConventions }, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeConstraintOnDelete(
           db,
           tableName,
-          constraintName,
+          namingConventions.foreignKeyConstraint(tableName, columnName),
           oldOnDelete,
           transactionOptions,
         ),

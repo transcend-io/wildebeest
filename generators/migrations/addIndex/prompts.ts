@@ -13,7 +13,7 @@ import { IndexMethod } from '@wildebeest/types';
 /**
  * The index method
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const method = {
   default: IndexMethod.BTree,

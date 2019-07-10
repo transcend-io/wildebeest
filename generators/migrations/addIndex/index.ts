@@ -11,9 +11,9 @@
 import linkToClass from '@generators/utils/linkToClass';
 
 // local
-import prompts from './prompts';
+import * as prompts from './prompts';
 
-module.exports = {
+export default {
   configure: ({ columns, modelContainer, model }) => ({
     name: `add-index-${columns.map(({ columnName }) => columnName).join('-')}`,
     comment: `Add index on ${linkToClass(

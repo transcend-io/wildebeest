@@ -8,9 +8,9 @@
  */
 
 // local
-import prompts from './prompts';
+import * as prompts from './prompts';
 
-module.exports = {
+export default {
   configure: ({ newName, oldName }) => ({
     name: `rename-table-to-${newName}`,
     comment: `Rename the table ${oldName} to ${newName}.`,

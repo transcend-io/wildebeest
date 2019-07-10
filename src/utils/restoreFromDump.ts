@@ -1,33 +1,34 @@
 // external modules
 import { execSync } from 'child_process';
-import { join } from 'path';
 
 // wildebeest
 import { IS_TEST } from '@wildebeest/constants';
+import Wildebeest from '@wildebeest';
 
 /**
  * Restore the database from a pd_dump output
  *
+ * @param wildebeest - The wildebeest instance to restore a dump to
  * @param name - The name of the schema that was written
- * @param databaseUri - The uri of the database
- * @param path - The path to the restore file
+ * @param schemaPath - The path to the schema folder
  * @returns The pg_restore promise
  */
 export default async function restoreFromDump(
+  wildebeest: Wildebeest,
   name: string,
-  databaseUri: string,
-  path: string,
 ): Promise<void> {
+  if (!wildebeest.schemaExists(name)) {
+    throw new Error(`Schema definition not found: "${name}"`);
+  }
   await Promise.resolve(
     execSync(
-      `pg_restore -d "${databaseUri}" -n public -C ${join(
-        path,
-        `${name}.dump`,
-      )}`,
+      `pg_restore -d "${
+        wildebeest.databaseUri
+      }" -n public -C ${wildebeest.getSchemaFile(name)}`,
     ),
   );
   // Log success
   if (!IS_TEST) {
-    logger.success(`\nRestored database schema dump: "${name}"\n`);
+    wildebeest.logger.info(`\nRestored database schema dump: "${name}"\n`);
   }
 }

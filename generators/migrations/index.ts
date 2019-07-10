@@ -68,7 +68,7 @@ import renameS3Files from './renameS3Files';
 import renameTable from './renameTable';
 import uuidNonNull from './uuidNonNull';
 
-module.exports = {
+export default {
   addCascadeWithParent,
   addColumns,
   addEnumValues,

@@ -33,8 +33,6 @@ export default function addUniqueConstraintIndex(
   options: AddUniqueIndexOptions,
 ): MigrationDefinition {
   const { tableName, fields, constraintName, dropDuplicates = false } = options;
-  // Determine the name of the constraint
-  const name = constraintName || defaultFieldsConstraintName(tableName, fields);
 
   return {
     // Add the unique index
@@ -72,15 +70,16 @@ export default function addUniqueConstraintIndex(
 
           // Log removal and remove
           if (removeIds) {
-            verboseLogger.info(
+            wildebeest.verboseLogger.info(
               `Removing "${removeIds.length}" that duplicates`,
             );
             await queryT.delete(tableName, { id: removeIds });
           }
         }
         return createIndex(
-          db,
-          name,
+          wildebeest.db,
+          constraintName ||
+            wildebeest.namingConventions.fieldsConstraint(tableName, fields),
           {
             tableName,
             fields,
@@ -90,9 +89,14 @@ export default function addUniqueConstraintIndex(
         );
       }),
     // Remove the index
-    down: async (db) =>
-      db.transaction((transaction) =>
-        db.queryInterface.removeIndex(tableName, name, { transaction }),
+    down: async (wildebeest, withTransaction) =>
+      withTransaction((transactionOptions) =>
+        wildebeest.db.queryInterface.removeIndex(
+          tableName,
+          constraintName ||
+            wildebeest.namingConventions.fieldsConstraint(tableName, fields),
+          transactionOptions,
+        ),
       ),
   };
 }

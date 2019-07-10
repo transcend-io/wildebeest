@@ -1,5 +1,8 @@
 // wildebeest
-import { MigrationTransactionOptions, SequelizeMigrator } from '@wildebeest/types';
+import {
+  MigrationTransactionOptions,
+  SequelizeMigrator,
+} from '@wildebeest/types';
 
 /**
  * Options for creating an index

@@ -3,11 +3,12 @@ import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
 // wildebeest
 import { SequelizeMigrator } from '@wildebeest/types';
+import Wildebeest from '@wildebeest';
 
 /**
  * Mapping from sequelize type to data type
  */
-export const SEQUELIZE_TO_DATA_TYPE = {
+export const SEQUELIZE_TO_DATA_TYPE: { [k in string]: string } = {
   BLOB: 'bytea',
   BOOLEAN: 'boolean',
   DATE: 'timestamp with time zone',
@@ -59,7 +60,7 @@ export async function getColumnType(
  * @returns True if the column type matches postgres
  */
 export default async function checkColumnType(
-  db: SequelizeMigrator,
+  { logger, db }: Wildebeest,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,

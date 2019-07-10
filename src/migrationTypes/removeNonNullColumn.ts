@@ -38,7 +38,7 @@ export default function removeNonNullColumn(
   const {
     tableName,
     columnName,
-    getColumn = ({ DataTypes }) => ({
+    getColumn = ({ DataTypes }: SequelizeMigrator) => ({
       allowNull: true,
       defaultValue: DataTypes.UUIDV4,
       type: DataTypes.UUID,
@@ -49,7 +49,7 @@ export default function removeNonNullColumn(
   } = options;
   return {
     // Remove the column
-    up: async (wildebeest, withTransaction) =>
+    up: async ({ db }, withTransaction) =>
       withTransaction((transactionOptions) =>
         db.queryInterface.removeColumn(
           tableName,
@@ -60,15 +60,15 @@ export default function removeNonNullColumn(
     // Add the column back with a constraint
     down: async (wildebeest, withTransaction) =>
       withTransaction(async (transactionOptions) => {
-        await db.queryInterface.addColumn(
+        await wildebeest.db.queryInterface.addColumn(
           tableName,
           columnName,
-          getColumn(db),
+          getColumn(wildebeest.db),
           transactionOptions,
         );
         if (!noDownConstraint) {
           await addTableColumnConstraint(
-            db,
+            wildebeest,
             {
               tableName,
               columnName,

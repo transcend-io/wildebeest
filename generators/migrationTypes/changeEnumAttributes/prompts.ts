@@ -20,8 +20,8 @@ let useModelPath;
 /**
  * Determine the attributes to add or remove
  *
- * @param {module:commons--Repository.Repository} repo - The repository configuration
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @param repo - The repository configuration
+ * @returns The prompt
  */
 export const attributes = (repo, { attributesSuggestOnly = false }) => ({
   message: 'Choose another attribute?',

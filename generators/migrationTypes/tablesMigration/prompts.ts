@@ -10,7 +10,7 @@
 /**
  * The tables to modify
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const tables = {
   childName: 'table',

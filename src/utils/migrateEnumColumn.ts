@@ -2,11 +2,8 @@
 import { Op } from 'sequelize';
 
 // wildebeest
-import { defaultEnumName } from '@wildebeest/utils';
-import {
-  MigrationTransactionOptions,
-  SequelizeMigrator,
-} from '@wildebeest/types';
+import { MigrationTransactionOptions } from '@wildebeest/types';
+import Wildebeest from '@wildebeest';
 
 // local
 import dropEnum from './dropEnum';
@@ -34,19 +31,20 @@ export type MigrateEnumOptions = {
 /**
  * Migrate an enum column from one enum to another
  *
- * @param db - The database to migrate against
+ * @param wildebeest - The database to migrate against
+ * @param enumValue - Theexpected enum
  * @param options - The options for migrating an enum column
  * @param transactionOptions - The current transaction
  * @returns The migrated enum promise
  */
 export default async function migrateEnumColumn(
-  db: SequelizeMigrator,
+  wildebeest: Wildebeest,
   enumValue: { [key in string]: string },
   options: MigrateEnumOptions,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   // Raw query interface
-  const { queryInterface, DataTypes } = db;
+  const { queryInterface, DataTypes } = wildebeest.db;
   const { queryT } = transactionOptions;
   const {
     tableName,
@@ -59,7 +57,8 @@ export default async function migrateEnumColumn(
   } = options;
 
   // The name of the enum constraint
-  const enumName = constraintName || defaultEnumName(tableName, columnName);
+  const enumName =
+    constraintName || wildebeest.namingConventions.enum(tableName, columnName);
 
   // Temporarily make the column a string
   await queryInterface.changeColumn(
@@ -94,7 +93,7 @@ export default async function migrateEnumColumn(
   }
 
   // Drop the old enum
-  await dropEnum(db, enumName, transactionOptions);
+  await dropEnum(wildebeest.db, enumName, transactionOptions);
 
   // Make the column an enum
   await queryInterface.changeColumn(

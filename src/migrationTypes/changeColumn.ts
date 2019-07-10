@@ -8,6 +8,7 @@ import {
   SequelizeMigrator,
 } from '@wildebeest/types';
 import { dropEnum, isEnum, migrateEnumColumn } from '@wildebeest/utils';
+import Wildebeest from '@wildebeest';
 
 /**
  * Change a single column in a table
@@ -30,7 +31,7 @@ export type ChangeColumnOptions = {
  */
 export type ChangeTableColumnOptions = {
   /** The name(S) of the table to change the column on */
-  tableName: string | string[];
+  tableName: string | TableName[];
 } & ChangeColumnOptions;
 
 /**
@@ -48,12 +49,12 @@ export type ChangeSingleColumnOptions = {
  * @returns The change column promise
  */
 export async function changeColumnDefinition(
-  db: SequelizeMigrator,
+  wildebeest: Wildebeest,
   options: ChangeSingleColumnOptions,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   // Raw query interface
-  const { queryInterface } = db;
+  const { queryInterface } = wildebeest.db;
   const { queryT } = transactionOptions;
   const {
     tableName,
@@ -64,8 +65,8 @@ export async function changeColumnDefinition(
     destroy = false,
   } = options;
 
-  const newColumn = getNewColumn(db);
-  const oldColumn = getOldColumn(db) as ModelAttributeColumnOptions;
+  const newColumn = getNewColumn(wildebeest.db);
+  const oldColumn = getOldColumn(wildebeest.db) as ModelAttributeColumnOptions;
 
   // Check to see if changing to non null and a default value is provided
   const updatedNulls =
@@ -90,8 +91,11 @@ export async function changeColumnDefinition(
   // Change the column definition
   if (isEnum(newColumn)) {
     await migrateEnumColumn(
-      db,
-      Enum.create<string, string>(newColumn.values),
+      wildebeest,
+      (newColumn.values || []).reduce(
+        (acc, val) => Object.assign(acc, { [val]: val }),
+        {},
+      ),
       {
         tableName,
         columnName,
@@ -112,8 +116,8 @@ export async function changeColumnDefinition(
   // If migrating away from an enum, remove the enum
   if (isEnum(oldColumn) && !isEnum(newColumn)) {
     await dropEnum(
-      db,
-      defaultEnumName(tableName, columnName),
+      wildebeest.db,
+      wildebeest.namingConventions.enum(tableName, columnName),
       transactionOptions,
       true, // TODO remove need for cascade on changeColumn enum
     );
@@ -144,7 +148,7 @@ export default function changeColumn(
         Promise.all(
           tableNames.map((table) =>
             changeColumnDefinition(
-              db,
+              wildebeest,
               {
                 tableName: table,
                 getNewColumn,
@@ -162,7 +166,7 @@ export default function changeColumn(
         Promise.all(
           tableNames.map((table) =>
             changeColumnDefinition(
-              db,
+              wildebeest,
               {
                 tableName: table,
                 getOldColumn: getNewColumn,

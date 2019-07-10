@@ -1,5 +1,8 @@
 // wildebeest
-import { MigrationTransactionOptions, SequelizeMigrator } from '@wildebeest/types';
+import {
+  MigrationTransactionOptions,
+  SequelizeMigrator,
+} from '@wildebeest/types';
 
 /**
  * Drop an enum from the db

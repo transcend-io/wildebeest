@@ -10,7 +10,7 @@
 /**
  * Determine the name of the migration
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const name = {
   message: 'What is the migration name?',
@@ -21,7 +21,7 @@ export const name = {
 /**
  * What is the migration comment?
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const comment = {
   message: 'What is the migration comment?',

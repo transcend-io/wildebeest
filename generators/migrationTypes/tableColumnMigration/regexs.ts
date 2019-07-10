@@ -15,17 +15,17 @@ export const CLASS_EXTENDS_REGEX = /extends ((?!Model).+?) {/;
 /**
  * Determine the location of the class import
  *
- * @param {string}  type - The class type
- * @returns {module:commons--typeDefs~RegEx} The regex
+ * @param type - The class type
+ * @returns The regex
  */
-export const CLASS_IMPORT_REGEX = (type) =>
+export const CLASS_IMPORT_REGEX = (type: string): RegExp =>
   new RegExp(`const ${type} = require\\('(.+?)'\\);`);
 
 /**
  * Determine the class type
  *
- * @param {string}  exportType - The way the definition is exported
- * @returns {module:commons--typeDefs~RegEx} The regex
+ * @param exportType - The way the definition is exported
+ * @returns The regex
  */
-export const CLASS_TYPE_REGEX = (exportType) =>
+export const CLASS_TYPE_REGEX = (exportType: string): RegExp =>
   new RegExp(`${exportType.replace('.', '\\.')}type = '(.+?)';`);

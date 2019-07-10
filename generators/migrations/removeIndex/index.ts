@@ -11,9 +11,9 @@
 import linkToClass from '@generators/utils/linkToClass';
 
 // local
-import prompts from './prompts';
+import * as prompts from './prompts';
 
-module.exports = {
+export default {
   configure: ({ columns, modelContainer, model }) => ({
     name: `remove-index-${columns
       .map(({ columnName }) => columnName)

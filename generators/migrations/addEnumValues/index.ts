@@ -6,7 +6,7 @@
  * @module addEnumValues
  */
 
-module.exports = {
+export default {
   configure: ({ attributes, enumName }) => ({
     name: `add-enum-values-to-${enumName}`,
     comment: `Add the attributes: ${attributes

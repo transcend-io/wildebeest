@@ -77,7 +77,7 @@ export async function createNewTable(
                 ? {}
                 : {
                     references: {
-                      table: constraintConfig.tableName,
+                      table: constraintConfig.tableName as string,
                       field: 'id',
                     },
                   }),
@@ -93,11 +93,13 @@ export async function createNewTable(
 /**
  * Remove a table from the db and all associated parts
  *
+ * @param wildebeest - The wildebeest configuration
  * @param options - The table & column definitions
+ * @param transactionOptions - The current transaction
  * @returns The remove table promise
  */
 export async function dropTable(
-  db: SequelizeMigrator,
+  { db, namingConventions }: Wildebeest,
   options: DropTableOptions,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
@@ -116,7 +118,7 @@ export async function dropTable(
       .map(([columnName]) =>
         dropEnum(
           db,
-          defaultEnumName(tableName, columnName),
+          namingConventions.enum(tableName, columnName),
           transactionOptions,
         ),
       ),
@@ -143,7 +145,7 @@ export default function createTable(
   // Get the default columns for all models (can be skipped with `noDefaults`)
   const getDefaults = noDefaults
     ? () => ({})
-    : ({ DataTypes }) => ({
+    : ({ DataTypes }: SequelizeMigrator) => ({
         // UUID
         id: {
           primaryKey: true,
@@ -163,7 +165,7 @@ export default function createTable(
       });
 
   // Get default columns combined with provided columns
-  const getAllColumns = (db): Attributes =>
+  const getAllColumns = (db: SequelizeMigrator): Attributes =>
     Object.assign(getDefaults(db), getColumns(db));
 
   return {
@@ -171,7 +173,7 @@ export default function createTable(
     up: async (wildebeest, withTransaction) =>
       withTransaction(async (transactionOptions) =>
         createNewTable(
-          db,
+          wildebeest,
           { tableName, getColumns: getAllColumns, constraints },
           transactionOptions,
         ),
@@ -180,7 +182,7 @@ export default function createTable(
     down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         dropTable(
-          db,
+          wildebeest,
           { tableName, getColumns: getAllColumns },
           transactionOptions,
         ),

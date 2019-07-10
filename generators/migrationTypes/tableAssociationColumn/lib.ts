@@ -16,11 +16,14 @@ import modelPathToAssociationPath from '@generators/utils/modelPathToAssociation
 /**
  * Get the associations from a modelPath
  *
- * @param {string}                                modelPath - The path to the model definition index file
- * @param {module:commons--Repository.Repository} repo - The repository configuration
- * @returns {module:commons--utils/typeDefs~AssociationConfig[]} The associations
+ * @param modelPath - The path to the model definition index file
+ * @param repo - The repository configuration
+ * @returns The associations
  */
-export const getAssociations = function getAssociations(modelPath, repo) {
+export const getAssociations = function getAssociations(
+  modelPath,
+  repo,
+): AssociationConfig[] {
   const loc = modelPathToAssociationPath(modelPath);
   if (!repo.hasEntryFile(loc)) {
     return [];

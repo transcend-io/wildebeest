@@ -28,6 +28,7 @@
       "no-bitwise": true,
       "no-conditional-assignment": true,
       "no-consecutive-blank-lines": false,
+      "no-relative-imports": [true, "allow-siblings"],
       "no-console": false,
       "no-namespace": false,
       "no-shadowed-variable": false,

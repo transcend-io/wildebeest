@@ -9,7 +9,7 @@
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
-module.exports = {
+export default {
   configure: ({ modelTableName, columnName, modelContainer, model }) => ({
     name: `make-column-unique-${modelTableName}-${columnName}`,
     comment: `Add a constraint to make ${linkToClass(

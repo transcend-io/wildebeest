@@ -9,7 +9,7 @@
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
-module.exports = {
+export default {
   configure: ({ modelTableName, columnName, modelContainer, model }) => ({
     name: `make-column-non-null-${modelTableName}-${columnName}`,
     comment: `Make the column ${linkToClass(

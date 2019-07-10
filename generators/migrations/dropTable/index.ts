@@ -9,7 +9,7 @@
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
-module.exports = {
+export default {
   configure: ({ modelTableName, modelContainer, model }) => ({
     name: `drop-table-${modelTableName}`,
     comment: `Drop the ${linkToClass(modelContainer, model)} table.`,

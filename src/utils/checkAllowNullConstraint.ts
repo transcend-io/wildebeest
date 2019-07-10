@@ -2,8 +2,7 @@
 import { ModelAttributeColumnOptions } from 'sequelize';
 
 // wildebeest
-import logger from '@wildebeest/logger';
-import { SequelizeMigrator } from '@wildebeest/types';
+import Wildebeest from '@wildebeest';
 
 // local
 import columnAllowsNull from './columnAllowsNull';
@@ -18,7 +17,7 @@ import columnAllowsNull from './columnAllowsNull';
  * @returns True if the allowNull constraint is set properly
  */
 export default async function checkAllowNullConstraint(
-  db: SequelizeMigrator,
+  wildebeest: Wildebeest,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,
@@ -27,12 +26,12 @@ export default async function checkAllowNullConstraint(
   const allowsNull = definition.allowNull === true;
 
   // Check if the column allows null values exists
-  const dbAllowsNull = await columnAllowsNull(db, tableName, name);
+  const dbAllowsNull = await columnAllowsNull(wildebeest.db, tableName, name);
 
   // Log error if misaligned
   const isInvalid = allowsNull !== dbAllowsNull;
   if (isInvalid) {
-    logger.error(
+    wildebeest.logger.error(
       dbAllowsNull
         ? `Missing nonNull constraint for column "${name}" in table "${tableName}"`
         : `Extra nonNull constraint for column "${name}" in table "${tableName}"`,

@@ -1,10 +1,7 @@
 // wildebeest
-import { MigrationDefinition } from '@wildebeest/types';
+import { MigrationDefinition, OnDelete } from '@wildebeest/types';
 import addTableColumnConstraint from '@wildebeest/utils/addTableColumnConstraint';
 import { TableReference } from '@wildebeest/utils/inferTableReference';
-
-// local
-import { OnDelete } from './changeOnDelete';
 
 /**
  * Options for changing the cascade on a foreign key
@@ -27,7 +24,7 @@ export type CascadeWithParentOptions = {
  *
  * @memberof module:migrationTypes
  *
- * @param {module:migrations/typeDefs~CascadeWithParentOptions} options - The add cascade with parent migrator options
+ * @param options - The add cascade with parent migrator options
  * @returns The cascade with parent migrator
  */
 export default function cascadeWithParent(
@@ -44,7 +41,7 @@ export default function cascadeWithParent(
     up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         addTableColumnConstraint(
-          db,
+          wildebeest,
           {
             tableName,
             columnName,
@@ -63,7 +60,7 @@ export default function cascadeWithParent(
     down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         addTableColumnConstraint(
-          db,
+          wildebeest,
           {
             tableName,
             columnName,

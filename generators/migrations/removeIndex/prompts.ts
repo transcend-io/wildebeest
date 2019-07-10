@@ -14,6 +14,6 @@ import { method } from '../addIndex/prompts';
  *
  * @see module:addIndex/prompts.method
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const method = method;

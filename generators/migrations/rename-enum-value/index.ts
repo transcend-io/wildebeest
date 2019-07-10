@@ -8,9 +8,9 @@
  */
 
 // local
-import prompts from './prompts';
+import * as prompts from './prompts';
 
-module.exports = {
+export default {
   configure: ({ enumName, oldValue, newValue }) => ({
     name: `rename-enum-${enumName}-value-${oldValue}-to-${newValue}`,
     comment: `Rename ${oldValue} to ${newValue} on enum ${enumName}`,

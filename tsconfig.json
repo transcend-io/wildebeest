@@ -21,7 +21,7 @@
   },
   "include": [
     "src/**/*",
-    "generators/**/*"
+    // "generators/**/*" TODO
   ],
   "exclude": [
     "node_modules",

@@ -3,6 +3,7 @@ import { QueryTypes } from 'sequelize';
 
 // wildebeest
 import { SequelizeMigrator } from '@wildebeest/types';
+import Wildebeest from '@wildebeest';
 
 /**
  * The configuration for a primary key
@@ -61,20 +62,20 @@ export async function getTablePrimaryKey(
  * @returns True if the primary key config is valid for the specified column
  */
 export default async function checkPrimaryKeyDefinition(
-  db: SequelizeMigrator,
+  wildebeest: Wildebeest,
   tableName: string,
   name: string,
 ): Promise<boolean> {
   // Get the primary key definition
   const { column_name, constraint_name } = await getTablePrimaryKey(
-    db,
+    wildebeest.db,
     tableName,
   );
 
   // Ensure the primary key is the same column
   const isSameColumn = name === column_name;
   if (!isSameColumn) {
-    logger.error(
+    wildebeest.logger.error(
       `Wrong column is primary key in "${tableName}" Got "${column_name}", expected "${name}`,
     );
   }
@@ -83,7 +84,7 @@ export default async function checkPrimaryKeyDefinition(
   const expectedIndexName = `${tableName}_pkey`;
   const indexNameValid = expectedIndexName === constraint_name;
   if (!indexNameValid) {
-    logger.error(
+    wildebeest.logger.error(
       `Invalid primary index name or table "${tableName}" Got "${constraint_name}", expected "${expectedIndexName}`,
     );
   }

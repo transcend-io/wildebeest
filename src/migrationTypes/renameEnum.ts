@@ -45,17 +45,19 @@ export async function changeEnumName(
  * @param options - The change enum options
  * @returns The rename enum migrator
  */
-export default function renameEnum(options): MigrationDefinition {
+export default function renameEnum(
+  options: RenameEnumOptions,
+): MigrationDefinition {
   const { oldName, newName } = options;
   return {
     up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
-        changeEnumName(db, { oldName, newName }, transactionOptions),
+        changeEnumName(wildebeest.db, { oldName, newName }, transactionOptions),
       ),
     down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeEnumName(
-          db,
+          wildebeest.db,
           { newName: oldName, oldName: newName },
           transactionOptions,
         ),

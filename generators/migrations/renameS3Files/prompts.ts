@@ -13,7 +13,7 @@ import { NOT_EMPTY_REGEX } from '@generators/regexs';
 /**
  * The extension to add to the migration name
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const nameExt = {
   message:
@@ -24,7 +24,7 @@ export const nameExt = {
 /**
  * The name of the enum attribute on AWS_BUCKET that identifies which bucket to look for files in
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const bucket = {
   message: "What is the bucket? AWS_BUCKET['??']",
@@ -36,7 +36,7 @@ export const bucket = {
 /**
  * What attributes should be fetched for each row of the table, used to determine its old and new keys
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const attributes = {
   default: 'id',
@@ -60,7 +60,7 @@ const getAttributes = (attributes) =>
 /**
  * Function for determining the old key
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const getOldKey = {
   default: ({ attributes }) =>
@@ -74,7 +74,7 @@ export const getOldKey = {
 /**
  * Function for determining the new key
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const getNewKey = {
   default: ({ attributes }) =>
@@ -88,7 +88,7 @@ export const getNewKey = {
 /**
  * Determine whether to remove the files that are not found
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const remove = {
   default: false,

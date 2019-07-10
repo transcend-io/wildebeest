@@ -6,10 +6,10 @@ import uniq from 'lodash/uniq';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  SequelizeMigrator,
 } from '@wildebeest/types';
 import listEnumAttributes from '@wildebeest/utils/listEnumAttributes';
 import migrateEnumValues from '@wildebeest/utils/migrateEnumValues';
+import Wildebeest from '@wildebeest';
 
 /**
  * Options for adding or removing enum values
@@ -32,14 +32,14 @@ export type ChangeEnumAttributeOptions = {
 /**
  * Add attributes to an enum
  *
- * @param db - The database to migrate against
+ * @param wildebeest - The wildebeest configuration
  * @param name - The name of the enum
  * @param attributes - The enum attributes to add
  * @param transactionOptions - The raw transaction options
  * @returns The change enum promise
  */
 export async function addValuesToEnum(
-  db: SequelizeMigrator,
+  wildebeest: Wildebeest,
   options: ChangeEnumAttributeOptions,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
@@ -48,7 +48,7 @@ export async function addValuesToEnum(
 
   // Get the existing enum values
   const existingEnumValues = await listEnumAttributes(
-    db,
+    wildebeest.db,
     name,
     transactionOptions,
   );
@@ -58,7 +58,7 @@ export async function addValuesToEnum(
 
   // Migrate the enum values
   await migrateEnumValues(
-    db,
+    wildebeest,
     newEnumValues,
     { tableName, columnName },
     transactionOptions,
@@ -68,13 +68,13 @@ export async function addValuesToEnum(
 /**
  * Remove attributes from an enum
  *
- * @param db - The db to migrate against
+ * @param wildebeest - The wildebeest configuration
  * @param options - The change enum attribute options
  * @param transactionOptions - The current transaction options
  * @returns The change enum promise
  */
 export async function removeValuesFromEnum(
-  db: SequelizeMigrator,
+  wildebeest: Wildebeest,
   options: ChangeEnumAttributeOptions,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
@@ -91,7 +91,7 @@ export async function removeValuesFromEnum(
 
   // Get the existing enum values
   const existingEnumValues = await listEnumAttributes(
-    db,
+    wildebeest.db,
     name,
     transactionOptions,
   );
@@ -108,7 +108,7 @@ export async function removeValuesFromEnum(
 
   // Migrate the enum values
   await migrateEnumValues(
-    db,
+    wildebeest,
     newEnumValues,
     { tableName, columnName, convertEnum },
     transactionOptions,
@@ -129,11 +129,11 @@ export default function addEnumValues(
   return {
     up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
-        addValuesToEnum(db, options, transactionOptions),
+        addValuesToEnum(wildebeest, options, transactionOptions),
       ),
     down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
-        removeValuesFromEnum(db, options, transactionOptions),
+        removeValuesFromEnum(wildebeest, options, transactionOptions),
       ),
   };
 }

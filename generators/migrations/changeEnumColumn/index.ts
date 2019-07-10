@@ -11,9 +11,9 @@
 import linkToClass from '@generators/utils/linkToClass';
 
 // local
-import prompts from './prompts';
+import * as prompts from './prompts';
 
-module.exports = {
+export default {
   configure: ({ columnName, modelTableName, modelContainer, model }) => ({
     name: `change-enum-column-${columnName}-${modelTableName}`,
     comment: `Change enum column ${columnName} on table ${linkToClass(

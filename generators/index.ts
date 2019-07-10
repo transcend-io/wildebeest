@@ -15,7 +15,7 @@ import logger from '@generators/logger';
 import convertToPlop from '@generators/utils/convertToPlop';
 
 // Get the generators
-module.exports = {
+export default {
   description: 'Run a db migration',
   getGenerators: (
     { actions, cwdFilter, description, generatorName, location, prompts },

@@ -9,7 +9,7 @@
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
-module.exports = {
+export default {
   configure: ({ modelTableName, columns, modelContainer, model }) => ({
     name: `remove-columns-${modelTableName}-${columns
       .map(({ columnName }) => columnName)

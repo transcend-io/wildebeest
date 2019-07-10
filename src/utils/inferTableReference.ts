@@ -21,7 +21,7 @@ export type TableReference = {
  * @param column - The name of the column to add the cascade to
  * @returns The table and field extracted from the column
  */
-export default function inferTableReference(column): TableReference {
+export default function inferTableReference(column: string): TableReference {
   // Split the column by camel case
   const splitColumn = column.split(/(?=[A-Z])/);
 

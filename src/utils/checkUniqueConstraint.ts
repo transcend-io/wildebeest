@@ -3,6 +3,7 @@ import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
 // wildebeest
 import { SequelizeMigrator } from '@wildebeest/types';
+import Wildebeest from '@wildebeest';
 
 /**
  * Check if the database has a unique constraint
@@ -41,7 +42,7 @@ export async function hasUniqueConstraint(
  * @returns True if the unique constraint is set properly
  */
 export default async function checkUniqueConstraint(
-  db: SequelizeMigrator,
+  wildebeest: Wildebeest,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,
@@ -51,11 +52,14 @@ export default async function checkUniqueConstraint(
     !!definition.unique && definition.unique && !definition.primaryKey;
 
   // The name of the constraint
-  const uniqueConstraintName = defaultUniqueConstraintName(tableName, name);
+  const uniqueConstraintName = wildebeest.namingConventions.uniqueConstraint(
+    tableName,
+    name,
+  );
 
   // Check if the constraint exists
   const constraintExists = await hasUniqueConstraint(
-    db,
+    wildebeest.db,
     tableName,
     uniqueConstraintName,
   );
@@ -63,13 +67,17 @@ export default async function checkUniqueConstraint(
   // Determine if a constraint exists when it should not
   const hasConstraintWhenNot = !isUnique && constraintExists;
   if (hasConstraintWhenNot) {
-    logger.error(`Has unexpected constraint: "${uniqueConstraintName}"`);
+    wildebeest.logger.error(
+      `Has unexpected constraint: "${uniqueConstraintName}"`,
+    );
   }
 
   // Determine if a constraint does not exist when expected
   const missingConstraintWhenHas = isUnique && !constraintExists;
   if (missingConstraintWhenHas) {
-    logger.error(`Missing expected constraint: "${uniqueConstraintName}"`);
+    wildebeest.logger.error(
+      `Missing expected constraint: "${uniqueConstraintName}"`,
+    );
   }
 
   // Return true when setup properly

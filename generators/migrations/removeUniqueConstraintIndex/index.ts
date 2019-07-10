@@ -9,7 +9,7 @@
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
-module.exports = {
+export default {
   configure: ({ columns, modelContainer, model }) => ({
     name: `remove-unique-constraint-index-${columns
       .map(({ columnName }) => columnName)

@@ -8,9 +8,9 @@
  */
 
 // local
-import prompts from './prompts';
+import * as prompts from './prompts';
 
-module.exports = {
+export default {
   configure: ({ modelTableName, modelContainer, nameExt }) => ({
     name: `bulk-delete-${modelTableName}${nameExt ? `-${nameExt}` : ''}`,
     comment: `Bulk delete from table [${modelTableName}]{@link module:${modelContainer}}`,

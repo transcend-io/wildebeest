@@ -12,9 +12,9 @@
  */
 
 // local
-import prompts from './prompts';
+import * as prompts from './prompts';
 
-module.exports = {
+export default {
   parentType: 'alterEnum',
   prompts,
 };

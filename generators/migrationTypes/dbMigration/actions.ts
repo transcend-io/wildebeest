@@ -10,9 +10,9 @@
 /**
  * Add a new migration file
  *
- * @param {module:typeDefs~Answers}               data - The prompt answers
- * @param {module:commons--Repository.Repository} repo - The repository configuration
- * @returns {module:typeDefs~PlopAction} The action
+ * @param data - The prompt answers
+ * @param repo - The repository configuration
+ * @returns The action
  */
 export const ADD_MIGRATION_FILE = ({ templateName }) => ({
   path: '{{ location }}/{{ migrationNumber }}-{{ name }}',

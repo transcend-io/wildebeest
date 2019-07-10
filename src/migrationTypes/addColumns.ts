@@ -25,6 +25,7 @@ import { RowUpdater } from '@wildebeest/utils/updateRows';
 
 // local
 import { OnDelete } from './changeOnDelete';
+import Wildebeest from '@wildebeest';
 
 // TODO cleanup types
 /**
@@ -77,7 +78,7 @@ export type AddColumnsOptions<P, T> = Omit<
   'tableName'
 > & {
   /** The name of the table */
-  tableName: string | string[];
+  tableName: string | TableName[];
 };
 
 /**
@@ -122,7 +123,7 @@ export async function addColumn(
  * @returns The add column promise
  */
 export async function setColumn(
-  db: SequelizeMigrator,
+  wildebeest: Wildebeest,
   options: AddTableColumnOptions,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
@@ -134,7 +135,7 @@ export async function setColumn(
     onDelete = 'SET NULL', // TODO constant
   } = options;
   // Pull apart column config
-  const { queryInterface } = db;
+  const { queryInterface } = wildebeest.db;
   const { allowNull, defaultValue, ...rest } = column;
 
   // Change enum column if an enum
@@ -144,7 +145,7 @@ export async function setColumn(
       {},
     );
     await migrateEnumColumn(
-      db,
+      wildebeest,
       enumValue,
       {
         tableName,
@@ -167,7 +168,7 @@ export async function setColumn(
   // Add a cascade constraint
   if (constraint) {
     await addTableColumnConstraint(
-      db,
+      wildebeest,
       {
         tableName,
         columnName: constraint.columnName,
@@ -387,7 +388,7 @@ export async function removeTableColumns<P, T>(
  *
  * @memberof module:migrationTypes
  *
- * @param {module:migrations/typeDefs~AddColumnsOptions}  options - Options for adding new columns to a table
+ * @param options - Options for adding new columns to a table
  * @returns The add columns migrator
  */
 export default function addColumns<P, T>(

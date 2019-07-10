@@ -10,7 +10,7 @@
 /**
  * Extension on name
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const nameExt = {
   message:

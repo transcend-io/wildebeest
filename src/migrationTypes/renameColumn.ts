@@ -2,9 +2,9 @@
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  SequelizeMigrator,
 } from '@wildebeest/types';
 import { listIndexNames } from '@wildebeest/utils';
+import Wildebeest from '@wildebeest';
 
 // local
 import { renameTableIndex } from './renameIndex';
@@ -25,12 +25,12 @@ export type RenameColumnOptions = {
 
 /**
  * Rename a column and optionally its constraints as well
- * @param db - The db to migrate
+ * @param wildebeest - The wildebeest configuration
  * @param options - The rename options
  * @param transactionOptions - The transaction options
  */
 export async function renameColumnAndConstraints(
-  db: SequelizeMigrator,
+  { db }: Wildebeest,
   options: RenameColumnOptions,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
@@ -77,7 +77,7 @@ export default function renameColumn(
     up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         renameColumnAndConstraints(
-          db,
+          wildebeest,
           {
             oldName,
             newName,
@@ -89,7 +89,7 @@ export default function renameColumn(
     down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         renameColumnAndConstraints(
-          db,
+          wildebeest,
           {
             newName: oldName,
             oldName: newName,

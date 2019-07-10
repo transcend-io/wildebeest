@@ -26,16 +26,14 @@ export default function addIndex(
   options: AddIndexOptions,
 ): MigrationDefinition {
   const { tableName, fields, constraintName } = options;
-  // Determine the name of the constraint
-  const name = constraintName || defaultFieldsConstraintName(tableName, fields);
-
   return {
     // Add the unique index
-    up: async (wildebeest, withTransaction) =>
+    up: async ({ db, namingConventions }, withTransaction) =>
       withTransaction((transactionOptions) =>
         createIndex(
           db,
-          name,
+          constraintName ||
+            namingConventions.fieldsConstraint(tableName, fields),
           {
             tableName,
             fields,
@@ -44,9 +42,14 @@ export default function addIndex(
         ),
       ),
     // Remove the index
-    down: async (db) =>
-      db.transaction((transaction) =>
-        db.queryInterface.removeIndex(tableName, name, { transaction }),
+    down: async ({ db, namingConventions }, withTransaction) =>
+      withTransaction((transactionOptions) =>
+        db.queryInterface.removeIndex(
+          tableName,
+          constraintName ||
+            namingConventions.fieldsConstraint(tableName, fields),
+          transactionOptions,
+        ),
       ),
   };
 }

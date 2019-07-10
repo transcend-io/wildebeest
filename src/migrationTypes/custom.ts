@@ -35,8 +35,12 @@ export default function custom(
   const { up, down } = options;
   return {
     up: async (wildebeest, withTransaction) =>
-      withTransaction((transactionOptions) => up(transactionOptions, db)),
+      withTransaction((transactionOptions) =>
+        up(transactionOptions, wildebeest.db),
+      ),
     down: async (wildebeest, withTransaction) =>
-      withTransaction((transactionOptions) => down(transactionOptions, db)),
+      withTransaction((transactionOptions) =>
+        down(transactionOptions, wildebeest.db),
+      ),
   };
 }

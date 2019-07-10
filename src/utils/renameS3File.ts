@@ -1,3 +1,9 @@
+// external modules
+import { S3 } from 'aws-sdk';
+
+// wildebeest
+import Wildebeest from '@wildebeest';
+
 /**
  * Rename an s3 file
  *
@@ -8,10 +14,13 @@
  * @returns The rename promise
  */
 export default async function renameS3File(
+  wildebeest: Wildebeest,
+  s3: S3,
   Bucket: string,
   oldKey: string,
   newKey: string,
   mimetype?: string,
+  isDryRun = process.env.DRY_RUN === 'true',
 ): Promise<void> {
   // The copy parameters
   const copyParams = {
@@ -23,8 +32,8 @@ export default async function renameS3File(
   };
 
   // Copy the object
-  if (DRY_RUN) {
-    logger.success(`Copied: "${oldKey}" to "${newKey}"`);
+  if (isDryRun) {
+    wildebeest.logger.info(`Copied: "${oldKey}" to "${newKey}"`);
   } else {
     await s3.copyObject(copyParams).promise();
   }
@@ -36,8 +45,8 @@ export default async function renameS3File(
   };
 
   // Delete the old object
-  if (DRY_RUN) {
-    logger.success(`Deleted: "${oldKey}"`);
+  if (isDryRun) {
+    wildebeest.logger.info(`Deleted: "${oldKey}"`);
   } else {
     await s3.deleteObjects(deleteParams).promise();
   }

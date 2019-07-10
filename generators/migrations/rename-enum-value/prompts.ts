@@ -13,7 +13,7 @@ import { NOT_EMPTY_REGEX } from '@generators/regexs';
 /**
  * The old value of the enum
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const oldValue = {
   message: 'What is the old value?',
@@ -25,7 +25,7 @@ export const oldValue = {
 /**
  * The new value of the enum
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const newValue = {
   message: 'What is the new value?',

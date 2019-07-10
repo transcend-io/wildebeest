@@ -13,7 +13,7 @@ import { NOT_EMPTY_REGEX } from '@generators/regexs';
 /**
  * The old column name
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const oldName = {
   message: 'What was the old column name?',
@@ -25,7 +25,7 @@ export const oldName = {
 /**
  * What is the new column name?
  *
- * @returns {module:typeDefs~PlopPrompt} The prompt
+ * @returns The prompt
  */
 export const newName = {
   message: 'What is the new column name?',

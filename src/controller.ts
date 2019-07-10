@@ -94,8 +94,8 @@ export async function current(
 /**
  * Migrate back to a migration
  *
- * @param {module:typeDefs~ExpressReq}  req - Express request object
- * @param {module:typeDefs~ExpressRes}  res - Express response object
+ * @param req - Express request object
+ * @param res - Express response object
  */
 export async function down(
   req: express.Request,
@@ -121,8 +121,8 @@ export async function down(
 /**
  * Migrate all the way back to an empty db
  *
- * @param {module:typeDefs~ExpressReq}  req - Express request object
- * @param {module:typeDefs~ExpressRes}  res - Express response object
+ * @param req - Express request object
+ * @param res - Express response object
  * @returns The empty promise
  */
 export async function empty(
@@ -148,8 +148,8 @@ export async function empty(
 /**
  * Display all of the migration routes
  *
- * @param {module:typeDefs~ExpressReq}  req - Express request object
- * @param {module:typeDefs~ExpressRes}  res - Express response object
+ * @param req - Express request object
+ * @param res - Express response object
  */
 export async function renderRoutes(
   req: express.Request,
@@ -201,8 +201,8 @@ export async function renderRoutes(
 /**
  * Test that the db is in sync with the code
  *
- * @param {module:typeDefs~ExpressReq}  req - Express request object
- * @param {module:typeDefs~ExpressRes}  res - Express response object
+ * @param req - Express request object
+ * @param res - Express response object
  */
 export async function sync(
   req: express.Request,
@@ -245,8 +245,8 @@ export async function sync(
 /**
  * Migrate to 0 down, then all the way up, all the way down and then back up
  *
- * @param {module:typeDefs~ExpressReq}  req - Express request object
- * @param {module:typeDefs~ExpressRes}  res - Express response object
+ * @param req - Express request object
+ * @param res - Express response object
  */
 export async function test(
   req: express.Request,
@@ -274,8 +274,8 @@ export async function test(
 /**
  * Migrate up to a migration
  *
- * @param {module:typeDefs~ExpressReq}  req - Express request object
- * @param {module:typeDefs~ExpressRes}  res - Express response object
+ * @param req - Express request object
+ * @param res - Express response object
  */
 export async function up(
   req: express.Request,

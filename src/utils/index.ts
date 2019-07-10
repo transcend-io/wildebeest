@@ -49,7 +49,6 @@ export { default as migrateEnumValues } from './migrateEnumValues';
 export { default as renameS3File } from './renameS3File';
 export { default as restoreFromDump } from './restoreFromDump';
 export { default as reverseMigrator } from './reverseMigrator';
-export { default as runMigrations } from './runMigrations';
 export { default as tableExists } from './tableExists';
 export { default as updateRows } from './updateRows';
 export { default as writeSchema } from './writeSchema';

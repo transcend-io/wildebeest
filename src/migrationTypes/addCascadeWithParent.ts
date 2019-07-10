@@ -1,10 +1,7 @@
 // wildebeest
-import { MigrationDefinition } from '@wildebeest/types';
+import { MigrationDefinition, OnDelete } from '@wildebeest/types';
 import addTableColumnConstraint from '@wildebeest/utils/addTableColumnConstraint';
 import { TableReference } from '@wildebeest/utils/inferTableReference';
-
-// local
-import { OnDelete } from './changeOnDelete';
 
 /**
  * Options for making a column cascade with its parent
@@ -40,16 +37,12 @@ export default function addCascadeWithParent(
     constraintName,
     onDelete = 'CASCADE',
   } = options;
-  // The name of the constraint
-  const useConstraintName =
-    constraintName || defaultForeignKeyConstraintName(tableName, columnName);
-
   return {
     // Add the constraint
     up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         addTableColumnConstraint(
-          db,
+          wildebeest,
           {
             tableName,
             columnName,
@@ -59,7 +52,12 @@ export default function addCascadeWithParent(
               onUpdate: 'CASCADE',
               references,
             },
-            constraintName: useConstraintName,
+            constraintName:
+              constraintName ||
+              wildebeest.namingConventions.foreignKeyConstraint(
+                tableName,
+                columnName,
+              ),
           },
           transactionOptions,
         ),
@@ -68,7 +66,11 @@ export default function addCascadeWithParent(
     down: async (wildebeest, withTransaction) =>
       withTransaction(({ queryT }) =>
         queryT.raw(
-          `ALTER TABLE "${tableName}" DROP CONSTRAINT IF EXISTS "${useConstraintName}";`,
+          `ALTER TABLE "${tableName}" DROP CONSTRAINT IF EXISTS "${constraintName ||
+            wildebeest.namingConventions.foreignKeyConstraint(
+              tableName,
+              columnName,
+            )}";`,
         ),
       ),
   };

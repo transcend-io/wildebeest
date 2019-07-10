@@ -1,5 +1,6 @@
 // wildebeest
-import { MigrationTransactionOptions, SequelizeMigrator } from '@wildebeest/types';
+import { MigrationTransactionOptions } from '@wildebeest/types';
+import Wildebeest from '@wildebeest';
 
 // local
 import columnAllowsNull from './columnAllowsNull';
@@ -11,17 +12,17 @@ import migrateEnumColumn, { MigrateEnumOptions } from './migrateEnumColumn';
  *
  * This is done to preserve proper non-superuser postgres admin privilege during migrations.
  *
- * @param {string}                                        tableName - The name of the table
- * @param {string}                                        columnName - The name of the column where enum is applied
- * @param {string[]}                                      enumValueList - The new enum values
- * @param {module:migrations/typeDefs~MigrateEnumOptions} [options={}] - Specify additional options to pass to migrateEnumColumn
+ * @param tableName - The name of the table
+ * @param columnName - The name of the column where enum is applied
+ * @param enumValueList - The new enum values
+ * @param options - Specify additional options to pass to migrateEnumColumn
  * @returns The change enum promise
  */
 export default async function migrateEnumValues(
-  db: SequelizeMigrator,
-  enumValueList,
+  wildebeest: Wildebeest,
+  enumValueList: string[],
   migrateEnumOptions: MigrateEnumOptions,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const { tableName, columnName } = migrateEnumOptions;
 
@@ -33,8 +34,8 @@ export default async function migrateEnumValues(
 
   // Keep the same allowNull and defaultValue
   const [allowNull, defaultValue] = await Promise.all([
-    columnAllowsNull(db, tableName, columnName, transactionOptions),
-    getColumnDefault(db, tableName, columnName, transactionOptions),
+    columnAllowsNull(wildebeest.db, tableName, columnName, transactionOptions),
+    getColumnDefault(wildebeest.db, tableName, columnName, transactionOptions),
   ]);
 
   // Determine the new default value (it is either the existing defaultValue or the converted default value)
@@ -53,7 +54,7 @@ export default async function migrateEnumValues(
 
   // Migrate the column
   await migrateEnumColumn(
-    db,
+    wildebeest,
     enumValue,
     {
       ...migrateEnumOptions,

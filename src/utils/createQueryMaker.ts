@@ -6,8 +6,8 @@ import {
   MigrationTransactionOptions,
   QueryHelpers,
   QueryWithTransaction,
-  SequelizeMigrator,
 } from '@wildebeest/types';
+import Wildebeest from '@wildebeest';
 
 // local
 import batchProcess from './batchProcess';
@@ -36,7 +36,10 @@ export type WithTransaction = (
  */
 export default function createQueryMaker(
   queryInterface: sequelize.QueryInterface,
-  transactionOptions: { transaction: sequelize.Transaction },
+  transactionOptions: {
+    /** The transaction */
+    transaction: sequelize.Transaction;
+  },
   type: sequelize.QueryTypes = sequelize.QueryTypes.SELECT,
 ): QueryWithTransaction {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,8 +61,9 @@ export default function createQueryMaker(
  * @returns A function that takes in the argument of db.transaction but wrapped with extras
  */
 export function transactionWrapper(
-  db: SequelizeMigrator,
+  wildebeest: Wildebeest,
 ): (runInTransaction: RunInTransaction) => PromiseLike<any> {
+  const { db } = wildebeest;
   return async <BP>(runInTransaction: RunInTransaction) =>
     db.transaction(async (transaction) => {
       const tOpt = { transaction };
@@ -85,13 +89,13 @@ export function transactionWrapper(
           sequelize.QueryTypes.RAW,
         ),
         batchProcess: (tableName, whereOptions, processRow) =>
-          batchProcess<BP>(db, tableName, whereOptions, processRow, {
+          batchProcess<BP>(wildebeest, tableName, whereOptions, processRow, {
             queryT: qT,
             ...tOpt,
           }),
         batchUpdate: (tableName, getRowDefaults, columnDefinitions, options) =>
           updateRows(
-            db,
+            wildebeest,
             tableName,
             getRowDefaults,
             columnDefinitions,

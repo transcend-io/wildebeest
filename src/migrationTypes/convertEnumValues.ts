@@ -6,13 +6,13 @@ import flatten from 'lodash/flatten';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  SequelizeMigrator,
 } from '@wildebeest/types';
 import {
   listEnumAttributes,
   migrateEnumValues,
   invert,
 } from '@wildebeest/utils';
+import Wildebeest from '@wildebeest';
 
 /**
  * A migration that should run on the db
@@ -25,23 +25,28 @@ export type ConvertEnumValuesOptions = {
 
 /**
  * Rename enum values in a column
- * @param options - The enum values to rename
+ *
+ * @param wildebeest - The wildebeest configuration
+ * @param tableName - The name of the table to rename the column in
+ * @param columnName - The name of the column to rename
+ * @param renameValues - The enum value maps to rename
+ * @param transactionOptions - The current transaction
  */
 export async function renameColumnEnumValues(
+  wildebeest: Wildebeest,
   tableName: string,
   columnName: string,
   renameValues: { [oldValue in string]: string },
-  db: SequelizeMigrator,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
-  const name = defaultEnumName(tableName, columnName);
+  const name = wildebeest.namingConventions.enum(tableName, columnName);
 
   const newValues = Object.values(renameValues);
   const oldValues = Object.keys(renameValues);
 
   // Get the existing enum values
   const existingEnumValues = await listEnumAttributes(
-    db,
+    wildebeest.db,
     name,
     transactionOptions,
   );
@@ -54,7 +59,7 @@ export async function renameColumnEnumValues(
 
   // Migrate the enum values and convert
   await migrateEnumValues(
-    db,
+    wildebeest,
     keepEnumValues,
     {
       tableName,
@@ -71,18 +76,18 @@ export async function renameColumnEnumValues(
  * @param options - The enum values to rename
  */
 export async function renameManyEnumValues(
+  wildebeest: Wildebeest,
   options: ConvertEnumValuesOptions,
-  db: SequelizeMigrator,
   transactionOptions: MigrationTransactionOptions,
   invertValues = false,
 ): Promise<void> {
   const changePromises = Object.entries(options).map(([tableName, columns]) =>
     Object.entries(columns).map(([columnName, column]) =>
       renameColumnEnumValues(
+        wildebeest,
         tableName,
         columnName,
         invertValues ? invert(column) : column,
-        db,
         transactionOptions,
       ),
     ),
@@ -105,11 +110,11 @@ export default function convertEnumValues(
   return {
     up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
-        renameManyEnumValues(options, db, transactionOptions),
+        renameManyEnumValues(wildebeest, options, transactionOptions),
       ),
     down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
-        renameManyEnumValues(options, db, transactionOptions, true),
+        renameManyEnumValues(wildebeest, options, transactionOptions, true),
       ),
   };
 }

@@ -3,10 +3,8 @@ import { QueryTypes } from 'sequelize';
 
 // wildebeest
 import { ONE_MINUTE, ONE_SECOND } from '@wildebeest/constants';
-import {
-  MigrationTransactionOptions,
-  SequelizeMigrator,
-} from '@wildebeest/types';
+import { MigrationTransactionOptions } from '@wildebeest/types';
+import Wildebeest from '@wildebeest';
 
 /**
  * Options to define which rows to process
@@ -33,8 +31,8 @@ export type WhereOptions = {
  * @param logThreshold - A threshold to log the results when the processing takes longer than this about of time in ms
  * @returns The total number of processed rows
  */
-export default async function batchProcess<T>(
-  db: SequelizeMigrator,
+export default async function batchProcess<T extends {}>(
+  { db, logger }: Wildebeest,
   tableName: string,
   whereOptions: WhereOptions = {},
   processRow: (row: T) => void,
@@ -61,7 +59,7 @@ export default async function batchProcess<T>(
   while (remaining) {
     /* eslint-disable no-await-in-loop */
     // Get the next batch of rows to process
-    const rows: any[] = await queryInterface.sequelize.query(
+    const rows: T[] = await queryInterface.sequelize.query(
       `
         SELECT ${attributes}
         FROM "${tableName}"

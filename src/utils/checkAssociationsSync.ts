@@ -2,6 +2,10 @@
 import { getAssociationAs } from '@bk/db/helpers';
 import { Association } from '@bk/db/types';
 
+// wildebeest
+import { ModelDefinition } from '@wildebeest/types';
+import Wildebeest from '@wildebeest';
+
 /**
  * Check if the model associations are synced
  *
@@ -11,7 +15,8 @@ import { Association } from '@bk/db/types';
  * @returns True if all associations are setup as expected
  */
 export default async function checkAssociationsSync(
-  model: Model,
+  wildebeest: Wildebeest,
+  model: ModelDefinition,
 ): Promise<boolean> {
   let valid = true;
 

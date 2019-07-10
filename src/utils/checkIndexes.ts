@@ -1,10 +1,11 @@
 // external modules
 import difference from 'lodash/difference';
 import uniq from 'lodash/uniq';
-import { QueryTypes } from 'sequelize';
+import { QueryTypes, ModelAttributeColumnOptions } from 'sequelize';
 
 // wildebeest
-import { SequelizeMigrator } from '@wildebeest/types';
+import { ModelDefinition, SequelizeMigrator } from '@wildebeest/types';
+import Wildebeest from '@wildebeest';
 
 // local
 import listIndexNames from './listIndexNames';
@@ -54,38 +55,45 @@ export async function hasIndex(
  *
  * @memberof module:migrations/helpers
  *
- * @param model - The database model to verify
+ * @param wildebeest - The wildebeest configuration
+ * @param model - The database model definition to verify
  * @returns True if the model has indexes setup matching sequelize definitions
  */
-export default async function checkIndexes(model: Model): Promise<boolean> {
+export default async function checkIndexes(
+  wildebeest: Wildebeest,
+  { options, attributes, tableName }: ModelDefinition,
+): Promise<boolean> {
   // Get the indexes
-  const { indexes = [] } = model.modelOptions;
+  const { indexes = [] } = options;
 
   // Get the existing indexes
-  const existingIndexes = await listIndexNames(model.db, model.tableName);
+  const existingIndexes = await listIndexNames(wildebeest.db, tableName);
 
   // Get the expected indexes
   const expectedIndexes = indexes.map(({ fields }) =>
-    defaultFieldsConstraintName(model.tableName, fields).slice(0, 63),
+    wildebeest.namingConventions
+      .fieldsConstraint(tableName, fields || [])
+      .slice(0, 63),
   );
-  Object.entries(model.modelAttributes).forEach(
-    ([columnName, { primaryKey, unique }]) => {
-      if (primaryKey) {
-        expectedIndexes.push(`${model.tableName}_pkey`);
-      } else if (unique) {
-        expectedIndexes.push(`${model.tableName}_${columnName}_key`);
-      }
-    },
-  );
+  Object.keys(attributes).forEach((columnName) => {
+    const column = attributes[columnName] as (
+      | string
+      | ModelAttributeColumnOptions);
+    if (typeof column === 'object' && column.primaryKey) {
+      expectedIndexes.push(`${tableName}_pkey`);
+    } else if (typeof column === 'object' && column.unique) {
+      expectedIndexes.push(`${tableName}_${columnName}_key`);
+    }
+  });
 
   // Look for missing indexes
   const missingIndexes = difference(expectedIndexes, existingIndexes);
   const hasMissingIndexes = missingIndexes.length > 0;
   if (hasMissingIndexes) {
-    logger.error(
-      `Missing indexes: "${uniq(missingIndexes).join('", "')}" in table: ${
-        model.tableName
-      }`,
+    wildebeest.logger.error(
+      `Missing indexes: "${uniq(missingIndexes).join(
+        '", "',
+      )}" in table: ${tableName}`,
     );
   }
 
@@ -93,10 +101,10 @@ export default async function checkIndexes(model: Model): Promise<boolean> {
   const extraIndexes = difference(existingIndexes, expectedIndexes);
   const hasExtraIndexes = extraIndexes.length > 0;
   if (hasExtraIndexes) {
-    logger.error(
-      `Extra indexes: "${uniq(extraIndexes).join('", "')}" in table: ${
-        model.tableName
-      }`,
+    wildebeest.logger.error(
+      `Extra indexes: "${uniq(extraIndexes).join(
+        '", "',
+      )}" in table: ${tableName}`,
     );
   }
 

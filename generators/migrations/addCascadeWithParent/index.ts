@@ -9,7 +9,7 @@
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
-module.exports = {
+export default {
   configure: ({ modelTableName, modelContainer, columnName, model }) => ({
     name: `add-cascade-with-parent-${modelTableName}-${columnName}`,
     comment: `Add cascade with parent constraint to ${linkToClass(

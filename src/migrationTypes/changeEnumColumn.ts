@@ -34,7 +34,7 @@ export type ChangeEnumColumnOptions = {
  *
  * @memberof module:migrationTypes
  *
- * @param {module:migrations/typeDefs~ChangeEnumColumnOptions}  options - Options for changing a column thats an enum
+ * @param options - Options for changing a column thats an enum
  * @returns The change enum column migrator
  */
 export default function changeEnumColumn(
@@ -64,9 +64,12 @@ export default function changeEnumColumn(
         Promise.all(
           tableNames.map((table) =>
             migrateEnumColumn(
-              db,
+              wildebeest,
               Array.isArray(newEnum)
-                ? Enum.create<string, string>(newEnum)
+                ? newEnum.reduce(
+                    (acc, val) => Object.assign(acc, { [val]: val }),
+                    {},
+                  )
                 : newEnum,
               {
                 tableName: table,
@@ -89,9 +92,12 @@ export default function changeEnumColumn(
             const enumConverter =
               convertEnumInverse || (convertEnum ? invert(convertEnum) : null);
             return migrateEnumColumn(
-              db,
+              wildebeest,
               Array.isArray(oldEnum)
-                ? Enum.create<string, string>(oldEnum)
+                ? oldEnum.reduce(
+                    (acc, val) => Object.assign(acc, { [val]: val }),
+                    {},
+                  )
                 : oldEnum,
               {
                 tableName: table,

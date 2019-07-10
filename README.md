@@ -4,6 +4,8 @@
 
 TODO Cleanup migration docs and increase readability
 
+## TODO
+
 A migration framework for [sequelize](http://docs.sequelizejs.com/).
 
 Although we are using Sequelize as our ORM, we still need to write database migrations manually.
@@ -35,7 +37,9 @@ A good example of migration-types that can be useful are `addColumns` and `remov
 These two migration types can be configured the exact same way because they are actually the same migration except up and down are swapped.
 Take this example of an `addColumns` migration:
 
-@example <caption>Add Columns to Existing Table with Data</caption>
+### Add Columns to Existing Table with Data
+
+```ts
 export default addColumns({
    tableName: 'requests',
    getColumns: ({ DataTypes }) => ({
@@ -53,7 +57,7 @@ export default addColumns({
     },
    }),
    getRowDefaults: ({ organizationId }, db, { queryT }) => queryT.select(
-     `SELECTFROM "requestSettingses" WHERE "organizationId"='${organizationId}'`
+     `SELECT FROM "requestSettingses" WHERE "organizationId"='${organizationId}'`
    )
      .then(([{ id }]) => queryT.select(
       `SELECT id,"requestSettingsId","type","name" FROM "subjects" WHERE "requestSettingsId"='${id}' AND "type"='customer'`
@@ -64,8 +68,7 @@ export default addColumns({
      ),
    constraints: ['subjectId'],
 });
-
-@see https://github.com/transcend-io/main/blob/dev/backend/src/migrations/migrations/0350-add-columns-requests-subjectName-subjectId.ts
+```
 
 Here we are adding two columns to the `requests` table: `subjectName` and `subjectId`.
 Note that `subjectName` is non-null and `subjectId` should have a foreign key constraint to the `subjects` table.

@@ -1,6 +1,3 @@
-// local
-import verifyNumberedFiles from './verifyNumberedFiles';
-
 /**
  * Numbered Folder
  *
@@ -25,6 +22,43 @@ export const parseNumber = (item: string): number => {
 };
 
 /**
+ * Verify that there are no duplicate numbered files and they are ordered 1, 2, ... N
+ *
+ * ```typescript
+ * // Returns true
+ * verifyNumberedFiles(['0001-file.ts', '0002-file2.ts']);
+ * ```
+ *
+ * @throws {Error} If migration files are not ordered properly
+ * @param files - The list of files to verify
+ * @param throwError - Throw an error if invalid
+ * @returns When throwError is false and there is an error, this will return what index the conflicts exist at
+ */
+export function verifyNumberedFiles(
+  files: string[],
+  throwError = true,
+): number {
+  let invalidIndex = -1;
+
+  // Pull off the number
+  files
+    .map((fil) => fil.split('-')[0])
+    // Ensure that the numbers are increasing in order
+    .forEach((num, ind) => {
+      if (parseInt(num, 10) !== ind + 1) {
+        if (throwError) {
+          throw new Error(`Migration file naming convention wrong at ${ind}`);
+        } else if (!invalidIndex) {
+          invalidIndex = ind;
+        }
+      }
+    });
+
+  // Return the invalid index if not throwing an error
+  return invalidIndex;
+}
+
+/**
  * Given a list of potential numbered files or folders (i.e. migrations), filter for those that follow the number pattern
  *
  * @memberof module:utils
@@ -34,16 +68,13 @@ export const parseNumber = (item: string): number => {
  */
 export default function getNumberedList(
   listItems: string[],
-  verify = true,
   regex = NUMBERED_REGEX,
 ): string[] {
   // Filter by regex
   const migrations = listItems.filter((item) => regex.test(item));
 
   // Verify that they are valid
-  if (verify) {
-    verifyNumberedFiles(migrations);
-  }
+  verifyNumberedFiles(migrations);
 
   return migrations;
 }
