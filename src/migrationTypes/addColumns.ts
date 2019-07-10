@@ -4,11 +4,11 @@ import difference from 'lodash/difference';
 import { DataType, ModelAttributeColumnOptions, WhereOptions } from 'sequelize';
 
 // global
+import { OnDelete } from '@wildebeest/enums';
 import {
   DefineColumns,
   MigrationDefinition,
   MigrationTransactionOptions,
-  OnDelete,
 } from '@wildebeest/types';
 import {
   addTableColumnConstraint,

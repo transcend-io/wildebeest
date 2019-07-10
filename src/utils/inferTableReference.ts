@@ -19,9 +19,13 @@ export type TableReference = {
  * inferTableReference('organizationId');
  *
  * @param column - The name of the column to add the cascade to
+ * @param modelNameToTableName - A function that will convert a model name to table name
  * @returns The table and field extracted from the column
  */
-export default function inferTableReference(column: string): TableReference {
+export default function inferTableReference(
+  column: string,
+  modelNameToTableName: (word: string) => string,
+): TableReference {
   // Split the column by camel case
   const splitColumn = column.split(/(?=[A-Z])/);
 
@@ -29,7 +33,7 @@ export default function inferTableReference(column: string): TableReference {
   const field = camelCase(splitColumn.pop());
 
   // Determine the name of the reference table
-  const table = cases.pluralCase(splitColumn.join(''));
+  const table = modelNameToTableName(splitColumn.join(''));
 
   return { table, field };
 }

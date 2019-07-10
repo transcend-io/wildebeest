@@ -95,3 +95,24 @@ export const MAX_LOCK_ATTEMPTS = 20;
  * The maximum random timeout that should occur between attempts to acquire the migration lock
  */
 export const MIGRATION_TIMEOUT = ONE_SECOND * 5;
+
+/**
+ * The exit events to handle
+ */
+export const EXIT_EVENTS = [
+  'exit',
+  'SIGINT',
+  'SIGUSR1',
+  'SIGUSR2',
+  'uncaughtException',
+  'SIGTERM',
+];
+
+/**
+ * Skip these strings when logging
+ */
+export const LOG_SKIPS = [
+  'File:  does not match pattern:',
+  'File: does not match pattern:',
+  'File: index.js does not match pattern:',
+];

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  *
  * ## Wildebeest Class Definition
@@ -9,20 +10,39 @@
 // external modules
 import { S3 } from 'aws-sdk';
 import { existsSync, readdirSync } from 'fs';
+import keyBy from 'lodash/keyBy';
 import { join } from 'path';
+import pluralize from 'pluralize';
 import { DataTypes, Sequelize } from 'sequelize';
+import Umzug from 'umzug';
 
 // utils
+import { transactionWrapper } from '@wildebeest/utils/createQueryMaker';
+import createUmzugLogger from '@wildebeest/utils/createUmzugLogger';
+import getBackoffTime from '@wildebeest/utils/getBackoffTime';
+import getNumberedList, {
+  NUMBERED_REGEX,
+} from '@wildebeest/utils/getNumberedList';
+import restoreFromDump from '@wildebeest/utils/restoreFromDump';
+import sleepPromise from '@wildebeest/utils/sleepPromise';
+import tableExists from '@wildebeest/utils/tableExists';
+
+// checks
 import { checkExtraneousTables, checkModel } from '@wildebeest/checks';
-import getNumberedList from '@wildebeest/utils/getNumberedList';
 
 // models
-import Migration from '@wildebeest/models/migration/Migration';
-import MigrationLock from '@wildebeest/models/migrationLock/MigrationLock';
+import Migration from '@wildebeest/models/migration';
+import MigrationLock from '@wildebeest/models/migrationLock';
 
 // local
-import { DEFAULT_NAMING_CONVENTIONS, MAX_MIGRATION_DISPLAY } from './constants';
-import { DefaultModelNames } from './enums';
+import {
+  DEFAULT_NAMING_CONVENTIONS,
+  MAX_LOCK_ATTEMPTS,
+  MAX_MIGRATION_DISPLAY,
+  MIGRATION_TIMEOUT,
+  ONE_SECOND,
+} from './constants';
+import { DefaultTableNames } from './enums';
 import Logger, { verboseLoggerDefault } from './Logger';
 import { MigrationConfig, ModelDefinition, SequelizeMigrator } from './types';
 
@@ -45,12 +65,14 @@ export type WildebeestOptions = {
   schemaDirectory: string;
   /** The name of the schehma file to be used to restore the database to when it is completed empty */
   restoreSchemaOnEmpty: string;
+  /** The database model definitions to be validated */
+  models: ModelDefinition[];
   /** A logger that that should always log results. This is used mainly for logging errors and critical information */
   logger?: Logger;
   /** A logger that that should only log when verbose is true */
   verboseLogger?: Logger;
-  /** Override the names of the db models */
-  modelNames?: typeof DefaultModelNames;
+  /** Override the names of the db model tables */
+  tableNames?: typeof DefaultTableNames;
   /** One can override the naming conventions */
   namingConventions?: Partial<NamingConventions>;
   /** The maximum number of migrations to display on a page when rendered */
@@ -61,11 +83,18 @@ export type WildebeestOptions = {
   s3?: S3;
   /** Can forcefully unlock the migration lock table (useful in testing or auto-reloading environment) */
   forceUnlock?: boolean;
+  /** A function that will convert a model name to a table name, when inferring a table */
+  modelNameToTableName?: (word: string) => string;
+  /** Expose a route that will allow schemas to be written to file (defaults to NODE_ENV === 'development') */
+  allowSchemaWrites?: boolean;
+  /** When true, anytime the migration lock is released, a sync check will be performed */
+  alwaysCheckSync?: boolean;
+  /** When testing migrations, this shold be the bottom migration to run down to. Defaults to 2 since 1 must be a genesis migration */
+  bottomTest?: number;
 };
 
 /**
  * A migration runner interface
- * TODO move to own file
  */
 export default class Wildebeest {
   /**
@@ -94,6 +123,9 @@ export default class Wildebeest {
   /** The database to migrate against */
   public db: SequelizeMigrator;
 
+  /** The database model definitions to be validated */
+  public models: ModelDefinition[];
+
   /** Needed to restore schema dumps using pg_restore and pg_dump */
   public databaseUri: string;
 
@@ -101,7 +133,7 @@ export default class Wildebeest {
   public namingConventions: NamingConventions;
 
   /** Names of the db models */
-  public modelNames: typeof DefaultModelNames;
+  public tableNames: typeof DefaultTableNames;
 
   /** The name of the schehma file to be used to restore the database to when it is completed empty */
   public restoreSchemaOnEmpty: string;
@@ -150,8 +182,26 @@ export default class Wildebeest {
   /** The list of migrations to run */
   public migrations: MigrationConfig[];
 
+  /** Lookup from number to migration config */
+  public lookupMigration: { [num in number]: MigrationConfig };
+
   /** Blacklisted tables that should be ignored when syncing table */
   public ignoredTableNames: string[];
+
+  /** A function that will convert a model name to a table name, when inferring a table */
+  public modelNameToTableName: (word: string) => string;
+
+  /** When true, expose a route to allow schema writes */
+  public allowSchemaWrites: boolean;
+
+  /** When true, anytime the migration lock is released, a sync check will be performed */
+  public alwaysCheckSync: boolean;
+
+  /** When testing migrations, this shold be the bottom migration to run down to */
+  public bottomTest: number;
+
+  /** The umzug instance that will run the migrations up and down */
+  public umzug: Umzug.Umzug;
 
   /**
    * Initialize a wildebeest migration runner
@@ -162,24 +212,34 @@ export default class Wildebeest {
     schemaDirectory,
     databaseUri,
     restoreSchemaOnEmpty,
+    models,
+    bottomTest = 2,
     s3 = new S3(),
     ignoredTableNames = [],
     namingConventions = {},
     logger = new Logger(),
     verboseLogger = verboseLoggerDefault,
-    modelNames = DefaultModelNames,
+    tableNames = DefaultTableNames,
     maxMigrationDisplay = MAX_MIGRATION_DISPLAY,
     forceUnlock = false,
+    modelNameToTableName = pluralize,
+    allowSchemaWrites = process.env.NODE_ENV === 'development',
+    alwaysCheckSync = process.env.NODE_ENV === 'production',
   }: WildebeestOptions) {
     // The db as a sequelize migrator
     this.db = Object.assign(db, {
       DataTypes,
       queryInterface: db.getQueryInterface(),
     });
-    this.modelNames = modelNames;
+    this.tableNames = tableNames;
     this.databaseUri = databaseUri;
     this.ignoredTableNames = ignoredTableNames;
     this.forceUnlock = forceUnlock;
+    this.modelNameToTableName = modelNameToTableName;
+    this.allowSchemaWrites = allowSchemaWrites;
+    this.models = models;
+    this.alwaysCheckSync = alwaysCheckSync;
+    this.bottomTest = bottomTest;
 
     // Save the loggers
     this.logger = logger;
@@ -194,6 +254,7 @@ export default class Wildebeest {
     // Index the migrations
     this.directory = directory;
     this.migrations = Wildebeest.indexMigrations(directory);
+    this.lookupMigration = keyBy(this.migrations, 'numInt');
 
     // schema
     this.schemaDirectory = schemaDirectory;
@@ -211,6 +272,67 @@ export default class Wildebeest {
 
     // The default s3
     this.s3 = s3;
+
+    // Initialize the models
+    Migration.customInit(
+      { ...Migration.definition, tableName: this.tableNames.migration },
+      this,
+    );
+    MigrationLock.customInit(
+      { ...MigrationLock.definition, tableName: this.tableNames.migrationLock },
+      this,
+    );
+
+    // Initialize the umzug instance
+    this.umzug = new Umzug({
+      storage: 'sequelize',
+      // The table to hold the migrations
+      storageOptions: {
+        sequelize: this.db,
+        modelName: 'migration',
+        tableName: this.tableNames.migration,
+        columnName: 'name',
+      },
+      // Migration logger
+      logging: createUmzugLogger(this.logger),
+      // The migrations to run
+      migrations: {
+        pattern: NUMBERED_REGEX,
+        params: [
+          // The database
+          this,
+          // A transaction wrapper
+          transactionWrapper(this),
+          // This
+          this,
+        ],
+        path: this.directory,
+      },
+    });
+  }
+
+  /**
+   * Ensure that the migration tables are setup
+   *
+   * @returns The setup promise
+   */
+  public async setup(): Promise<void> {
+    // Check if the migrations table exists
+    const exists = await tableExists(this.db, this.tableNames.migration);
+
+    // If the table does not exist yet, restore the genesis migration and indicate the first migration ocurred
+    if (!exists) {
+      restoreFromDump(this, this.restoreSchemaOnEmpty);
+    }
+
+    // Run the first migration if it has not been run yet
+    const hasMigrations = await Migration.count().then((cnt) => cnt > 0);
+    if (!hasMigrations) {
+      await Migration.execute({
+        migrations: [this.lookupMigration[1].fileName],
+        method: 'up',
+      });
+    }
   }
 
   /**
@@ -220,7 +342,7 @@ export default class Wildebeest {
    */
   public async migrate(): Promise<void> {
     // Ensure the migrations table it setup
-    await Migration.setup();
+    await this.setup();
 
     // Unlock if force is un
     if (this.forceUnlock) {
@@ -228,23 +350,24 @@ export default class Wildebeest {
     }
 
     // Run the new migrations if auto migrate is on
-    await MigrationLock.runWithLock((lock) => lock.migrate());
+    await this.runWithLock((lock) => lock.migrate());
   }
 
   /**
    * Test whether the sequelize definitions are in sync with postgres
    *
-   * @param models - The model definitions to check for
    * @returns True if the model definitions are exactly defined in the db
    */
-  public async isSynced(models: ModelDefinition[]): Promise<boolean> {
+  public async isSynced(): Promise<boolean> {
     const results = await Promise.all([
       // Check that each model is in sync
-      ...models.map((model) => checkModel(this, model)),
+      ...this.models.map((model) => checkModel(this, model)),
       // Check for extra tables
       checkExtraneousTables(
         this,
-        models.map(({ tableName }) => tableName).concat(this.ignoredTableNames),
+        this.models
+          .map(({ tableName }) => tableName)
+          .concat(this.ignoredTableNames),
       ),
     ]);
     return results.filter((synced) => !synced).length === 0;
@@ -268,5 +391,112 @@ export default class Wildebeest {
    */
   public getSchemaFile(schemaName: string): string {
     return join(this.schemaDirectory, `${schemaName}.dump`);
+  }
+
+  /**
+   * Run a function within the acquired migration lock.
+   *
+   * Will acquire the lock and wait when the lock is already acquired.
+   * Once the lock is acquired, it will run the function provided
+   *
+   * @param cb - The function to run with the acquired lock
+   * @returns The amount of time it took to run in ms
+   */
+  public async runWithLock(
+    cb: (lock: MigrationLock) => Promise<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+  ): Promise<number> {
+    // Timer start
+    const start = new Date().getTime();
+
+    // We will repeatedly attempt to acquire the migrationLock.
+    // Only one server at a time should be able to run migrations
+    let lock;
+    let attempts = 0;
+
+    try {
+      // Start the server
+      while (!lock) {
+        /* eslint-disable no-await-in-loop */
+        // Only try MAX_LOCK_ATTEMPTS times
+        attempts += 1;
+        if (attempts > MAX_LOCK_ATTEMPTS) {
+          throw new Error('Unable to acquire migration lock.');
+        }
+
+        // Wait a random amount of time with expo backoff
+        const sleepTime = getBackoffTime(attempts, MIGRATION_TIMEOUT);
+        await sleepPromise(sleepTime);
+
+        // Attempt to acquire the lock
+        lock = await MigrationLock.acquireLock();
+
+        // Log when lock is not acquired
+        if (!lock) {
+          this.logger.info(
+            `Detected migration occurring, sleeping randomly up to ${sleepTime /
+              ONE_SECOND} seconds`,
+          );
+        }
+      } /* eslint-enable */
+
+      this.verboseLogger.success('~Acquired migration lock~');
+
+      // Run the callback function
+      await Promise.resolve(cb(lock));
+
+      // Release the lock
+      await MigrationLock.releaseLock();
+
+      this.verboseLogger.success('~Released migration lock~');
+    } catch (err) {
+      // Unlock if error occurred while running
+      if (lock) {
+        await MigrationLock.releaseLock();
+        lock = null;
+      }
+
+      // Still throw the error
+      throw err;
+    }
+    // Timer end
+    const end = new Date().getTime();
+
+    // Check that the db is in sync
+    if (this.alwaysCheckSync) {
+      await this.syncTest();
+    }
+
+    // The time it took
+    return end - start;
+  }
+
+  /**
+   * Test if the model definitions are properly setup
+   *
+   * @returns True on success. Will throw an error if alwaysCheckSync=true
+   */
+  public async syncTest(): Promise<boolean> {
+    this.logger.info('Checking if the db is in sync...');
+
+    // Determine if the db is out of sync
+    const isSynced = await this.isSynced();
+
+    // throw an error if the setup is invalid
+    if (!isSynced) {
+      const msg =
+        'The db is out of sync with Sequelize definitions. View output above to see where.';
+      if (this.alwaysCheckSync) {
+        throw new Error(msg);
+      } else {
+        this.logger.error(msg);
+      }
+
+      // Log success
+    } else {
+      this.logger.success('Database is in sync with sequelize definitions :)');
+    }
+
+    // Return true if in sync
+    return isSynced;
   }
 }

@@ -23,16 +23,6 @@ export enum IndexType {
 }
 
 /**
- * Input for creating an index
- */
-export type IndexConfig = {
-  /** The type of index */
-  type: IndexType;
-  /** The name of the index */
-  name: string;
-};
-
-/**
  * The supported postgres index methods
  */
 export enum IndexMethod {
@@ -53,7 +43,7 @@ export enum IndexMethod {
 /**
  * The names of the db models can be overwritten
  */
-export const DefaultModelNames = mkEnum({
+export const DefaultTableNames = mkEnum({
   migrationLock: 'migrationLocks',
   migration: 'migrations',
 });

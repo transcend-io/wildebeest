@@ -1,7 +1,7 @@
 // global
+import { IndexType } from '@wildebeest/enums';
 import {
   IndexConfig,
-  IndexType,
   MigrationDefinition,
   MigrationTransactionOptions,
 } from '@wildebeest/types';

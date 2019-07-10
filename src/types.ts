@@ -9,8 +9,10 @@
 
 // external modules
 import * as sequelize from 'sequelize';
+import * as umzug from 'umzug';
 
 // local
+import { IndexType } from './enums';
 import Wildebeest from './index';
 import { WhereOptions } from './utils/batchProcess';
 import { WithTransaction } from './utils/createQueryMaker';
@@ -28,6 +30,16 @@ export type AnyArray = any[]; // eslint-disable-line @typescript-eslint/no-expli
 // ///////// //
 // Sequelize //
 // ///////// //
+
+/**
+ * Input for creating an index
+ */
+export type IndexConfig = {
+  /** The type of index */
+  type: IndexType;
+  /** The name of the index */
+  name: string;
+};
 
 /**
  * A db model column attribute, adds some extra configs for associations
@@ -116,11 +128,11 @@ export type ModelDefinition = {
   /** The name of the table */
   tableName: string;
   /** The sequelize db model attribute definitions */
-  attributes: Attributes;
+  attributes?: Attributes;
   /** The associations for that db model */
-  associations: Associations;
+  associations?: Associations;
   /** The sequelize db model options */
-  options: sequelize.ModelOptions;
+  options?: sequelize.ModelOptions;
   /** Indicate if the model is a join table and extra checks will be enforced */
   isJoin?: boolean;
   /** You can skip the sync check by setting this to true */
@@ -146,9 +158,15 @@ export type SequelizeMigrator = sequelize.Sequelize & {
  */
 export type MigrationDefinition = {
   /** The up migration (there should be no loss of data) */
-  up: (db: Wildebeest, withTransaction: WithTransaction) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any,max-len
+  up: (
+    wildebeest: Wildebeest,
+    withTransaction: WithTransaction,
+  ) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any,max-len
   /** The down migration to reverse the up migration, with potential loss of data */
-  down: (db: Wildebeest, withTransaction: WithTransaction) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any,max-len
+  down: (
+    wildebeest: Wildebeest,
+    withTransaction: WithTransaction,
+  ) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any,max-len
 };
 
 /**
@@ -167,7 +185,15 @@ export type MigrationConfig = {
   fullPath: string;
 };
 
-// ///////////// //
+/**
+ * Custom up to
+ */
+export type UpToOptions = Partial<umzug.UpToOptions> & {
+  /** Umzug types are missing from */
+  from?: string;
+};
+
+// //////////// //
 // Transactions //
 // //////////// //
 

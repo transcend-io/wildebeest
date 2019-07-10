@@ -12,38 +12,43 @@ import express from 'express';
 
 // local
 import * as controller from './controller';
+import Wildebeest from './Wildebeest';
 
-// instantiate a router
-const router = express.Router();
+/**
+ * Construct a router
+ */
+export default (wildebeest: Wildebeest): express.Router => {
+  // instantiate a router
+  const router = express.Router();
 
-// /////////// //
-// CONTROLLERS //
-// /////////// //
+  // /////////// //
+  // CONTROLLERS //
+  // /////////// //
 
-// Display the seed routes
-router.get('/', controller.renderRoutes);
+  // Display the seed routes
+  router.get('/', controller.renderRoutes);
 
-// Migrate all the way forward
-router.get('/current', controller.current as express.RequestHandler);
+  // Migrate all the way forward
+  router.get('/current', controller.current as express.RequestHandler);
 
-// Migrate all the way back
-router.get('/empty', controller.empty);
+  // Migrate all the way back
+  router.get('/empty', controller.empty);
 
-// Check if the db is in sync with code
-router.get('/sync', controller.sync);
+  // Check if the db is in sync with code
+  router.get('/sync', controller.sync);
 
-// Run genesis down, then all the way up, down up, down, up
-router.get('/test', controller.test);
+  // Run genesis down, then all the way up, down up, down, up
+  router.get('/test', controller.test);
 
-// Run up to this migration
-router.get('/up/:num', controller.up);
+  // Run up to this migration
+  router.get('/up/:num', controller.up);
 
-// Run down to this migration
-router.get('/down/:num', controller.down);
+  // Run down to this migration
+  router.get('/down/:num', controller.down);
 
-// Write the current schema to file
-if (ALLOW_WRITE_SCHEMA_ROUTE) {
-  router.get('/write-schema/:name', controller.writeSchemaByName);
-}
-
-export default router;
+  // Write the current schema to file
+  if (wildebeest.allowSchemaWrites) {
+    router.get('/write-schema/:name', controller.writeSchemaByName);
+  }
+  return router;
+};

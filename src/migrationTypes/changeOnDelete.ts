@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
 
 // global
+import { OnDelete } from '@wildebeest/enums';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  OnDelete,
   SequelizeMigrator,
 } from '@wildebeest/types';
 import getForeignKeyConfig from '@wildebeest/utils/getForeignKeyConfig';

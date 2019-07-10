@@ -31,7 +31,7 @@ export type AddTableConstraintOptions = {
  * @returns The create constraint promise
  */
 export default async function addTableColumnConstraint(
-  { db, namingConventions }: Wildebeest,
+  { db, namingConventions, modelNameToTableName }: Wildebeest,
   options: AddTableConstraintOptions,
   transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
@@ -62,7 +62,8 @@ export default async function addTableColumnConstraint(
   await queryInterface.addConstraint(tableName, [columnName], {
     type: 'foreign key', // default constraint is a foreign key
     name: useConstraintName,
-    references: references || inferTableReference(columnName),
+    references:
+      references || inferTableReference(columnName, modelNameToTableName),
     ...otherConstraintOptions,
     ...transactionOptions,
   });
