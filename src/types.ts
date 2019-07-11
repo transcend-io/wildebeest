@@ -66,49 +66,39 @@ export type Attributes = { [columnName in string]: Attribute };
 export type DefineColumns = (db: SequelizeMigrator) => Attributes;
 
 /**
- * Custom association options added by wildebeest
- */
-export type WildebeestCustomAssociationOptions = {
-  /**
-   * When true, the association is only used in lookups and is not a 2-way association
-   *
-   * This is useful when there is a hasMany or belongsToMany association but we only care if there is at least 1
-   *
-   * (this is really only used with `hasOne`)
-   */
-  lookupOnly?: boolean;
-};
-
-/**
- * A generalized association definition. When the string `CASCADE` is provided, the default options are taken. The default options vary by association type.
- */
-export type Association<
-  TSequelizeOptions extends sequelize.AssociationOptions = sequelize.AssociationOptions
-> = (TSequelizeOptions & WildebeestCustomAssociationOptions) | 'CASCADE';
-
-/**
  * This model belongsTo another model. This adds `{{name}}Id` to this model.
- * Can simply provide the name of the model to take the default options.
+ *
+ * When `CASCADE` is provided, the options will be set to [NON_NULL]{@link module:constants.NON_NULL}
  */
-export type BelongsToAssociation = Association<sequelize.BelongsToOptions>;
+export type BelongsToAssociation = sequelize.BelongsToOptions | 'CASCADE';
 
 /**
- * This model hasOne of another model. This adds `{{this}}Id` to the association model defined by `name`.
- * Can simply provide the name of the model to take the default options
+ * This model hasOne of another model. This adds `{{this}}Id` to the opposing association model.
+ *
+ * When `CASCADE` is provided, the options will be set to [CASCADE_HOOKS]{@link module:constants.CASCADE_HOOKS}
  */
-export type HasOneAssociation = Association<sequelize.HasOneOptions>;
+export type HasOneAssociation = sequelize.HasOneOptions | 'CASCADE';
 
 /**
  * This model hasMany of another model. This adds `{{this}}Id` to the association model defined by `name`
+ *
+ * When `CASCADE` is provided, the options will be set to [CASCADE_HOOKS]{@link module:constants.CASCADE_HOOKS}
  */
-export type HasManyAssociation = Association<sequelize.HasManyOptions>;
+export type HasManyAssociation = sequelize.HasManyOptions | 'CASCADE';
 
 /**
- * This model belongsToMany of another model. This adds a join table between the models
+ * This model belongsToMany of another model. This adds a join table between the models.
  */
-export type BelongsToManyAssociation = Association<
-  sequelize.BelongsToManyOptions
->;
+export type BelongsToManyAssociation = sequelize.BelongsToManyOptions;
+
+/**
+ * The intersection of all of the different association types
+ */
+export type Association =
+  | BelongsToAssociation
+  | HasOneAssociation
+  | HasManyAssociation
+  | BelongsToManyAssociation;
 
 /**
  * The associations for a model
@@ -140,6 +130,8 @@ export type ModelDefinition = {
   isJoin?: boolean;
   /** You can skip the sync check by setting this to true */
   skip?: boolean;
+  /** When ture, this model does not need an opposite hasOne or hasMany association for opposing belongsTo associations */
+  dontMatchBelongsTo?: boolean;
 };
 
 // ///// //
