@@ -67,6 +67,7 @@ export type DefineColumns = (db: SequelizeMigrator) => Attributes;
 
 /**
  * Since the keys of the associations object specify the `as`, the `modelName` must be procided when the association name !== modelName
+ * to indicate what model the association is referring to.
  */
 type AssociationModelName = {
   /** The name of the model that the association is to */
@@ -75,6 +76,8 @@ type AssociationModelName = {
 
 /**
  * This model belongsTo another model. This adds `{{name}}Id` to this model.
+ *
+ * Providing `modelName` here will infer `as` to be the association key
  *
  * When `NON_NULL` is provided, the options will be set to [NON_NULL]{@link module:constants.NON_NULL}
  */
@@ -85,16 +88,24 @@ export type BelongsToAssociation =
 /**
  * This model hasOne of another model. This adds `{{this}}Id` to the opposing association model.
  *
+ * Providing `modelName` here will infer foreignKey to be `${associationKey}Id`
+ *
  * When `CASCADE` is provided, the options will be set to [CASCADE_HOOKS]{@link module:constants.CASCADE_HOOKS}
  */
-export type HasOneAssociation = sequelize.HasOneOptions | 'CASCADE';
+export type HasOneAssociation =
+  | (sequelize.HasOneOptions & AssociationModelName)
+  | 'CASCADE';
 
 /**
  * This model hasMany of another model. This adds `{{this}}Id` to the association model defined by `name`
  *
+ * Providing `modelName` here will infer foreignKey to be `${associationKey}Id`
+ *
  * When `CASCADE` is provided, the options will be set to [CASCADE_HOOKS]{@link module:constants.CASCADE_HOOKS}
  */
-export type HasManyAssociation = sequelize.HasManyOptions | 'CASCADE';
+export type HasManyAssociation =
+  | (sequelize.HasManyOptions & AssociationModelName)
+  | 'CASCADE';
 
 /**
  * This model belongsToMany of another model. This adds a join table between the models.
