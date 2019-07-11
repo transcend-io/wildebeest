@@ -1,6 +1,6 @@
 {
   "name": "@transcend-io/wildebeest",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Simple class for manipulating files from a relative path",
   "main": "build/index.js",
   "homepage": "https://github.com/transcend-io/wildebeest#readme",
@@ -43,7 +43,7 @@
     "express": "^4.17.1",
     "lodash": "^4.17.14",
     "pluralize": "^8.0.0",
-    "sequelize": "^5.9.4",
+    "sequelize": "^5.10.0",
     "umzug": "^2.2.0"
   },
   "devDependencies": {

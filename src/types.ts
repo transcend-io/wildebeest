@@ -76,11 +76,11 @@ type AssociationModelName = {
 /**
  * This model belongsTo another model. This adds `{{name}}Id` to this model.
  *
- * When `CASCADE` is provided, the options will be set to [NON_NULL]{@link module:constants.NON_NULL}
+ * When `NON_NULL` is provided, the options will be set to [NON_NULL]{@link module:constants.NON_NULL}
  */
 export type BelongsToAssociation =
   | (sequelize.BelongsToOptions & AssociationModelName)
-  | 'CASCADE';
+  | 'NON_NULL';
 
 /**
  * This model hasOne of another model. This adds `{{this}}Id` to the opposing association model.
