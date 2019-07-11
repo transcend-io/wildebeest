@@ -66,11 +66,21 @@ export type Attributes = { [columnName in string]: Attribute };
 export type DefineColumns = (db: SequelizeMigrator) => Attributes;
 
 /**
+ * Since the keys of the associations object specify the `as`, the `modelName` must be procided when the association name !== modelName
+ */
+type AssociationModelName = {
+  /** The name of the model that the association is to */
+  modelName?: string;
+};
+
+/**
  * This model belongsTo another model. This adds `{{name}}Id` to this model.
  *
  * When `CASCADE` is provided, the options will be set to [NON_NULL]{@link module:constants.NON_NULL}
  */
-export type BelongsToAssociation = sequelize.BelongsToOptions | 'CASCADE';
+export type BelongsToAssociation =
+  | (sequelize.BelongsToOptions & AssociationModelName)
+  | 'CASCADE';
 
 /**
  * This model hasOne of another model. This adds `{{this}}Id` to the opposing association model.

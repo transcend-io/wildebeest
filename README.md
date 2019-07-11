@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt="Wildebeest by Transcend" src="https://user-images.githubusercontent.com/7354176/61022044-e3742500-a358-11e9-9cb2-122abb33e1b5.jpg"/>
+  <img alt="Wildebeest by Transcend" src="https://user-images.githubusercontent.com/7354176/61022044-e3742500-a358-11e9-9cb2-122abb33e1b5.jpg"/>
 </p>
 <h1 align="center">Wildebeest</h1>
 <p align="center">
