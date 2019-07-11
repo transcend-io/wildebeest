@@ -17,22 +17,24 @@ import {
   ONE_SECOND,
 } from '@wildebeest/constants';
 
+// models
+import Migration from '@wildebeest/models/migration';
+
 // local
-import Wildebeest from './index';
+import { WildebeestResponse } from '@wildebeest/types';
 import writeSchema from './utils/writeSchema';
 
-const REVERSED_MIGRATIONS = [...MIGRATIONS].reverse();
+// TODO res.render needs to be setup
 
 // Handle a migration error
 const handleError = (
-  wildbeest: Wildebeest,
-  res: express.Response,
+  res: WildebeestResponse,
   props = {},
   status = 400,
 ): ((error: Error) => void) => ({ message, stack }): void => {
   // Log the error verbosely
-  wildbeest.logger.error(message);
-  wildbeest.verboseLogger.log(stack);
+  res.locals.wildebeest.logger.error(message);
+  res.locals.wildebeest.verboseLogger.log(stack);
 
   // Render error with props
   res.status(status);
@@ -46,7 +48,7 @@ const handleError = (
 
 // Handle a migration success
 const handleSuccess = (
-  res: express.Response,
+  res: WildebeestResponse,
   props = {},
   msg = 'migrated',
 ): ((timeTaken: number) => void) => (timeTaken: number) => {
@@ -70,19 +72,18 @@ const handleSuccess = (
  */
 export async function current(
   req: express.Request,
-  res: express.Response,
+  res: WildebeestResponse,
 ): Promise<void> {
   const {
-    app: {
-      locals: { db },
-    },
     query: { page, wipe },
   } = req;
+  const {
+    locals: { wildebeest },
+  } = res;
   const props = { page };
 
   // Migrate (and optionally wipe)
-  await db
-    .model('migrationLock')
+  await wildebeest
     .runWithLock(async (lock) => {
       // First migrate to empty db if `wipe`
       if (wipe === 'true') {
@@ -103,20 +104,19 @@ export async function current(
  */
 export async function down(
   req: express.Request,
-  res: express.Response,
+  res: WildebeestResponse,
 ): Promise<void> {
   const {
     query: { page },
     params: { num },
-    app: {
-      locals: { db },
-    },
   } = req;
+  const {
+    locals: { wildebeest },
+  } = res;
   const props = { page };
 
   // Migrate down to some num
-  await db
-    .model('migrationLock')
+  await wildebeest
     .runWithLock((lock) => lock.downTo(num))
     .then(handleSuccess(res, props, `migrated down to ${num}`))
     .catch(handleError(res, props));
@@ -131,19 +131,18 @@ export async function down(
  */
 export async function empty(
   req: express.Request,
-  res: express.Response,
+  res: WildebeestResponse,
 ): Promise<void> {
   const {
     query: { page },
-    app: {
-      locals: { db },
-    },
   } = req;
+  const {
+    locals: { wildebeest },
+  } = res;
   const props = { page };
 
   // Wipe the db
-  await db
-    .model('migrationLock')
+  await wildebeest
     .runWithLock((lock) => lock.wipe())
     .then(handleSuccess(res, props, 'emptied'))
     .catch(handleError(res, props));
@@ -157,14 +156,14 @@ export async function empty(
  */
 export async function renderRoutes(
   req: express.Request,
-  res: express.Response,
+  res: WildebeestResponse,
 ): Promise<void> {
   const {
-    app: {
-      locals: { db },
-    },
     query: { page },
   } = req;
+  const {
+    locals: { wildebeest },
+  } = res;
   // Get the id of the migration to display from
   const startIndex = page ? Number(page) : 0;
   const endIndex = startIndex + MAX_MIGRATION_DISPLAY;
@@ -173,16 +172,17 @@ export async function renderRoutes(
   const currentMigration = await Migration.latest();
 
   // Check if a num has been run
-  const checkIsRun = (checkNum): boolean =>
+  const checkIsRun = (checkNum: string): boolean =>
     currentMigration
       ? checkNum.localeCompare(currentMigration.num()) <= 0
       : false;
 
   // Get the migrations to display on the page
-  const displayMigrations = REVERSED_MIGRATIONS.slice(startIndex, endIndex).map(
-    (migration) =>
+  const displayMigrations = wildebeest.reversedMigrations
+    .slice(startIndex, endIndex)
+    .map((migration) =>
       Object.assign({}, migration, { isRun: checkIsRun(migration.num) }),
-  );
+    );
 
   // Back page
   const backPage = startIndex - MAX_MIGRATION_DISPLAY;
@@ -194,7 +194,7 @@ export async function renderRoutes(
   return res.render('migrations/views', {
     backPage,
     hasBackPage: backPage >= 0,
-    hasNextPage: endIndex < REVERSED_MIGRATIONS.length,
+    hasNextPage: endIndex < wildebeest.reversedMigrations.length,
     migrations: displayMigrations,
     nextPage,
     page,
@@ -210,25 +210,24 @@ export async function renderRoutes(
  */
 export async function sync(
   req: express.Request,
-  res: express.Response,
+  res: WildebeestResponse,
 ): Promise<void> {
   const {
     query: { page },
-    app: {
-      locals: { db },
-    },
   } = req;
+  const {
+    locals: { wildebeest },
+  } = res;
   const props = { page };
 
   // Set timeout to a long time
-  req.setTimeout(ONE_MINUTE * 5, () => logger.error('TIMEOUT'));
+  req.setTimeout(ONE_MINUTE * 5, () => wildebeest.logger.error('TIMEOUT'));
 
   // Run tests on migrations
-  let synced;
-  return db
-    .model('migrationLock')
+  let synced: boolean;
+  return wildebeest
     .runWithLock(async () => {
-      synced = await testSetup(db, models);
+      synced = await wildebeest.syncTest();
     })
     .then((runTime) =>
       synced
@@ -254,22 +253,21 @@ export async function sync(
  */
 export async function test(
   req: express.Request,
-  res: express.Response,
+  res: WildebeestResponse,
 ): Promise<void> {
   const {
     query: { page },
-    app: {
-      locals: { db },
-    },
   } = req;
+  const {
+    locals: { wildebeest },
+  } = res;
   const props = { page };
 
   // Set timeout to a long time
-  req.setTimeout(ONE_MINUTE * 10, () => logger.error('TIMEOUT'));
+  req.setTimeout(ONE_MINUTE * 10, () => wildebeest.logger.error('TIMEOUT'));
 
   // Run tests on migrations
-  await db
-    .model('migrationLock')
+  await wildebeest
     .runWithLock((lock) => lock.test())
     .then(handleSuccess(res, props, 'passed tests'))
     .catch(handleError(res, props));
@@ -283,20 +281,19 @@ export async function test(
  */
 export async function up(
   req: express.Request,
-  res: express.Response,
+  res: WildebeestResponse,
 ): Promise<void> {
   const {
     query: { page },
     params: { num },
-    app: {
-      locals: { db },
-    },
   } = req;
+  const {
+    locals: { wildebeest },
+  } = res;
   const props = { page };
 
   // Migrate up to some num
-  return db
-    .model('migrationLock')
+  return wildebeest
     .runWithLock((lock) => lock.upTo(num))
     .then(handleSuccess(res, props, `migrated up to ${num}`))
     .catch(handleError(res, props));
@@ -310,16 +307,19 @@ export async function up(
  */
 export async function writeSchemaByName(
   req: express.Request,
-  res: express.Response,
+  res: WildebeestResponse,
 ): Promise<void> {
   const {
     query: { page },
     params: { name },
   } = req;
+  const {
+    locals: { wildebeest },
+  } = res;
   const props = { page };
 
   try {
-    await writeSchema(name);
+    await writeSchema(wildebeest, name);
     return res.render('migrations/views/success', {
       layout: 'migrations/views/success',
       message: `Successfully wrote schema: "${name}"`,

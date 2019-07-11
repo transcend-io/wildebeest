@@ -8,6 +8,7 @@
  */
 
 // external modules
+import * as express from 'express';
 import * as sequelize from 'sequelize';
 import * as umzug from 'umzug';
 
@@ -23,7 +24,7 @@ import { RowUpdater, UpdateRowOptions } from './utils/updateRows';
 // //// //
 
 /**
- * Any array
+ * Any array, useful for extending purposes
  */
 export type AnyArray = any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -32,7 +33,7 @@ export type AnyArray = any[]; // eslint-disable-line @typescript-eslint/no-expli
 // ///////// //
 
 /**
- * Input for creating an index
+ * Input for creating a new index
  */
 export type IndexConfig = {
   /** The type of index */
@@ -43,20 +44,22 @@ export type IndexConfig = {
 
 /**
  * A db model column attribute, adds some extra configs for associations
+ * TODO
  */
-export type Attribute = sequelize.ModelAttributeColumnOptions & {
-  /** Indicates if the column definition is due to an association */
-  isAssociation?: boolean;
-  /** The association options */
-  associationOptions?: sequelize.AssociationOptions;
-};
+export type Attribute = sequelize.ModelAttributeColumnOptions;
+
+//  & {
+//   /** Indicates if the column definition is due to an association */
+//   isAssociation?: boolean;
+//   /** The association options */
+//   associationOptions?: sequelize.AssociationOptions;
+// };
 
 /**
- * The db model column definitions
+ * The db model column definitions, keyed by column name
  */
-export type Attributes = { [key in string]: Attribute };
+export type Attributes = { [columnName in string]: Attribute };
 
-/** Function that returns column definition where key is column name and value is column definition */
 /**
  * Function that returns column definition where key is column name and value is column definition
  */
@@ -245,4 +248,19 @@ export type MigrationTransactionOptions = {
   queryT: QueryHelpers;
   /** The transaction itself */
   transaction: sequelize.Transaction;
+};
+
+// /////// //
+// Express //
+// /////// //
+
+/**
+ * Wildebeest is mounted onto res.locals
+ */
+export type WildebeestResponse = Omit<express.Response, 'locals'> & {
+  /** Local values accessesible in controller functions */
+  locals: {
+    /** The wildebeest migrator */
+    wildebeest: Wildebeest;
+  };
 };

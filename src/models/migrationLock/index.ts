@@ -243,8 +243,8 @@ export default class MigrationLock extends WildebeestModel {
     // Sleep for a second
     await sleepPromise(ONE_SECOND * 3);
 
-    // Then down to 2
-    await this.downTo(2);
+    // Then down to bottom
+    await this.downTo(this.wildebeest.bottomTest);
 
     // Sleep for a second
     await sleepPromise(ONE_SECOND * 3);

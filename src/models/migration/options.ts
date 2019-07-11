@@ -11,7 +11,7 @@
 import { ModelHooks } from 'sequelize/types/lib/hooks';
 
 // local
-import Migration from './Migration';
+import Migration from './index';
 
 const getNumber = (name: string): number =>
   parseInt(name.match(/^\d+/) as any, 10);

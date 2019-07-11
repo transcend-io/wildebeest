@@ -164,7 +164,6 @@ export function hasMatchingBelongsTo(
 export default async function AssociationsSync(
   wildebeest: Wildebeest,
   model: ModelDefinition,
-  getModelDefinition: (modelName: string) => ModelDefinition,
 ): Promise<boolean> {
   const {
     associations: {

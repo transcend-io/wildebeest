@@ -53,7 +53,7 @@ export default class Migration extends WildebeestModel {
     // Ensure init has been called
     if (!wildebeest) {
       throw new Error(
-        `Cannot access widlebeest until Model.customInit has been called`,
+        `Cannot access wildebeest until Model.customInit has been called`,
       );
     }
 
@@ -69,7 +69,7 @@ export default class Migration extends WildebeestModel {
    */
   public static async down(downOptions: DownToOptions): Promise<void> {
     // Run umzug down
-    return this.logSection((widlebeest) => widlebeest.umzug.down(downOptions));
+    return this.logSection((wildebeest) => wildebeest.umzug.down(downOptions));
   }
 
   /**
@@ -81,8 +81,8 @@ export default class Migration extends WildebeestModel {
   public static async execute(executeOptions: ExecuteOptions): Promise<void> {
     await this.setBatch();
     // Run umzug execute and set batch
-    return this.logSection((widlebeest) =>
-      widlebeest.umzug.execute(executeOptions).then(() => this.setBatch()),
+    return this.logSection((wildebeest) =>
+      wildebeest.umzug.execute(executeOptions).then(() => this.setBatch()),
     );
   }
 
@@ -117,7 +117,7 @@ export default class Migration extends WildebeestModel {
    */
   public static async up(upOptions: UpToOptions): Promise<void> {
     await this.setBatch();
-    return this.logSection(async (widlebeest) => {
+    return this.logSection(async (wildebeest) => {
       // Set the batch
       await this.setBatch();
 
@@ -125,14 +125,15 @@ export default class Migration extends WildebeestModel {
       let restartFrom;
 
       // Call up
-      await widlebeest.umzug.up(upOptions as UmzugUpToOptions).catch((e) => {
+      await wildebeest.umzug.up(upOptions as UmzugUpToOptions).catch((e) => {
         // Deal with weird case when loading in an existing db with migrations
         if (
           upOptions &&
           upOptions.from === '0001-initialize.js' &&
           e.name === 'SequelizeUniqueConstraintError'
         ) {
-          restartFrom = widlebeest.lookupMigration[2].fileName;
+          restartFrom =
+            wildebeest.lookupMigration[wildebeest.bottomTest].fileName;
           return this.create({ name: restartFrom });
         }
         throw e;
@@ -145,7 +146,7 @@ export default class Migration extends WildebeestModel {
           ...options,
           from: restartFrom,
         } as any; // eslint-disable-line
-        await widlebeest.umzug.up(castedUpTo);
+        await wildebeest.umzug.up(castedUpTo);
       }
     });
   }

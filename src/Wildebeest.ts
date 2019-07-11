@@ -182,6 +182,9 @@ export default class Wildebeest {
   /** The list of migrations to run */
   public migrations: MigrationConfig[];
 
+  /** For accessibiliy in reverse order */
+  public reversedMigrations: MigrationConfig[];
+
   /** Lookup from number to migration config */
   public lookupMigration: { [num in number]: MigrationConfig };
 
@@ -254,6 +257,7 @@ export default class Wildebeest {
     // Index the migrations
     this.directory = directory;
     this.migrations = Wildebeest.indexMigrations(directory);
+    this.reversedMigrations = [...this.migrations].reverse();
     this.lookupMigration = keyBy(this.migrations, 'numInt');
 
     // schema

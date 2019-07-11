@@ -22,6 +22,16 @@ export default (wildebeest: Wildebeest): express.Router => {
   const router = express.Router();
 
   // /////////// //
+  // MIDDLEWARES //
+  // /////////// //
+
+  // Save the wildebeest onto res.locals
+  router.all('*', (req, res, next) => {
+    res.locals.wildebeest = wildebeest;
+    next();
+  });
+
+  // /////////// //
   // CONTROLLERS //
   // /////////// //
 
@@ -29,7 +39,7 @@ export default (wildebeest: Wildebeest): express.Router => {
   router.get('/', controller.renderRoutes);
 
   // Migrate all the way forward
-  router.get('/current', controller.current as express.RequestHandler);
+  router.get('/current', controller.current);
 
   // Migrate all the way back
   router.get('/empty', controller.empty);

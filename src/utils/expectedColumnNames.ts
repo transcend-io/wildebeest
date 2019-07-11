@@ -12,9 +12,10 @@ import getForeignKeyName from './getForeignKeyName';
  * @returns The expected column names
  */
 export default function expectedColumnNames({
-  attributes,
-  associations: { belongsTo = {} },
+  attributes = {},
+  associations = {},
 }: ModelDefinition): string[] {
+  const { belongsTo = {} } = associations;
   return [
     // The attributes
     ...Object.keys(attributes),
