@@ -89,7 +89,10 @@ export type HasManyAssociation = sequelize.HasManyOptions | 'CASCADE';
 /**
  * This model belongsToMany of another model. This adds a join table between the models.
  */
-export type BelongsToManyAssociation = sequelize.BelongsToManyOptions;
+export type BelongsToManyAssociation = Omit<
+  sequelize.BelongsToManyOptions,
+  'through'
+>;
 
 /**
  * The intersection of all of the different association types
