@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.com/transcend-io/wildebeest.svg?token=dSiqFoEr9c1WZuWwxbXE&branch=master)](https://travis-ci.com/transcend-io/wildebeest)
 
+![wildebeest](https://upload.wikimedia.org/wikipedia/commons/f/fb/Blue_Wildebeest%2C_Ngorongoro.jpg)
+
 TODO Cleanup migration docs and increase readability
 
 ## TODO
