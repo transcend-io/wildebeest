@@ -10,8 +10,6 @@
 
 [![Build Status](https://travis-ci.com/transcend-io/wildebeest.svg?token=dSiqFoEr9c1WZuWwxbXE&branch=master)](https://travis-ci.com/transcend-io/wildebeest)
 
-![wildebeest](https://user-images.githubusercontent.com/7354176/61021920-5761fd80-a358-11e9-8eb4-34e0ea774a9a.jpg)
-
 TODO Cleanup migration docs and increase readability
 
 ## TODO
