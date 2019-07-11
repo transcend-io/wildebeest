@@ -1,14 +1,20 @@
-# wildebeest
+<p align="center">
+    <img alt="Sombra" src="https://user-images.githubusercontent.com/7354176/61021920-5761fd80-a358-11e9-8eb4-34e0ea774a9a.jpg"/>
+</p>
+<h1 align="center">Wildebeest</h1>
+<p align="center">
+  <strong>A migration framework for <a href="http://docs.sequelizejs.com/">Sequelize</a>.</strong><br /><br />
+  <i></i>
+</p>
+<br />
 
 [![Build Status](https://travis-ci.com/transcend-io/wildebeest.svg?token=dSiqFoEr9c1WZuWwxbXE&branch=master)](https://travis-ci.com/transcend-io/wildebeest)
 
-![wildebeest](https://user-images.githubusercontent.com/7354176/61021883-326d8a80-a358-11e9-835d-068b9e4a062b.jpeg)
+![wildebeest](https://user-images.githubusercontent.com/7354176/61021920-5761fd80-a358-11e9-8eb4-34e0ea774a9a.jpg)
 
 TODO Cleanup migration docs and increase readability
 
 ## TODO
-
-A migration framework for [sequelize](http://docs.sequelizejs.com/).
 
 Although we are using Sequelize as our ORM, we still need to write database migrations manually.
 The main reason for writing them manually is to have the ability to transform data from one database state to another.
