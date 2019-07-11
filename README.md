@@ -1,14 +1,25 @@
+<<<<<<< HEAD
 # wildebeest
 
 [![Build Status](https://travis-ci.com/transcend-io/wildebeest.svg?token=dSiqFoEr9c1WZuWwxbXE&branch=master)](https://travis-ci.com/transcend-io/wildebeest)
 
 ![wildebeest](https://www.wayfairertravel.com/media/2489/serengeti_wildebeest_migration_pattern.jpg?anchor=center&mode=crop&width=1920&height=1200&rnd=131775239500000000)
+=======
+<p align="center">
+    <img alt="Wildebeest by Transcend" src="https://user-images.githubusercontent.com/7354176/61022044-e3742500-a358-11e9-9cb2-122abb33e1b5.jpg"/>
+</p>
+<h1 align="center">Wildebeest</h1>
+<p align="center">
+  <strong>A database migration framework for <a href="http://docs.sequelizejs.com/">Sequelize</a>.</strong><br /><br />
+  <i></i>
+  <img href="https://travis-ci.com/transcend-io/wildebeest.svg?token=dSiqFoEr9c1WZuWwxbXE&branch=master" alt="Travis (.com)" src="https://travis-ci.com/transcend-io/wildebeest.svg">
+</p>
+<br />
+>>>>>>> 58eee3a3ebe2c9ac5b798d8a884b4fef453b1b68
 
 TODO Cleanup migration docs and increase readability
 
 ## TODO
-
-A migration framework for [sequelize](http://docs.sequelizejs.com/).
 
 Although we are using Sequelize as our ORM, we still need to write database migrations manually.
 The main reason for writing them manually is to have the ability to transform data from one database state to another.
