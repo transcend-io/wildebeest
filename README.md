@@ -3,9 +3,10 @@
 </p>
 <h1 align="center">Wildebeest</h1>
 <p align="center">
-  <strong>A database migration framework for <a href="http://docs.sequelizejs.com/">Sequelize</a>.</strong><br /><br />
+  <strong>A database migration framework for <a href="http://docs.sequelizejs.com/">Sequelize</a>.</strong>
+  <br /><br />
   <i>Coming soon. This repo is currently a work in progress.</i>
-  <br />
+  <br /><br />
   <img href="https://travis-ci.com/transcend-io/wildebeest.svg?token=dSiqFoEr9c1WZuWwxbXE&branch=master" alt="Travis (.com)" src="https://travis-ci.com/transcend-io/wildebeest.svg">
 </p>
 <br />
