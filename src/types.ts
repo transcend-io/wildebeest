@@ -109,9 +109,9 @@ export type Association =
 export type Associations = {
   /** The belongs to associations (adds `associationId` to the model) */
   belongsTo?: { [associationName in string]: BelongsToAssociation };
-  /** The has one associations (adds  `thisId` to the association model) */
+  /** The has one associations (adds `thisId` to the association model) */
   hasOne?: { [associationName in string]: HasOneAssociation };
-  /** The has many associations (adds  `thisId` to the association model) */
+  /** The has many associations (adds `thisId` to the association model) */
   hasMany?: { [associationName in string]: HasManyAssociation };
   /** Indicates there exists a join table with the association */
   belongsToMany?: { [associationName in string]: BelongsToManyAssociation };

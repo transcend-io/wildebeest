@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/transcend-io/wildebeest.svg?token=dSiqFoEr9c1WZuWwxbXE&branch=master)](https://travis-ci.com/transcend-io/wildebeest)
 
-![wildebeest](https://upload.wikimedia.org/wikipedia/commons/f/fb/Blue_Wildebeest%2C_Ngorongoro.jpg)
+![wildebeest](https://www.wayfairertravel.com/media/2489/serengeti_wildebeest_migration_pattern.jpg?anchor=center&mode=crop&width=1920&height=1200&rnd=131775239500000000)
 
 TODO Cleanup migration docs and increase readability
 
