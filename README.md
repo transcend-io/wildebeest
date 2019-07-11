@@ -5,10 +5,9 @@
 <p align="center">
   <strong>A migration framework for <a href="http://docs.sequelizejs.com/">Sequelize</a>.</strong><br /><br />
   <i></i>
+  <img href="https://travis-ci.com/transcend-io/wildebeest.svg?token=dSiqFoEr9c1WZuWwxbXE&branch=master" alt="Travis (.com)" src="https://travis-ci.com/transcend-io/wildebeest.svg">
 </p>
 <br />
-
-[![Build Status](https://travis-ci.com/transcend-io/wildebeest.svg?token=dSiqFoEr9c1WZuWwxbXE&branch=master)](https://travis-ci.com/transcend-io/wildebeest)
 
 TODO Cleanup migration docs and increase readability
 
