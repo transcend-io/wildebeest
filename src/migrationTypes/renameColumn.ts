@@ -2,9 +2,10 @@
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
+  ModelMap,
 } from '@wildebeest/types';
 import { listIndexNames } from '@wildebeest/utils';
-import Wildebeest from '@wildebeest/Wildebeest';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 // local
 import { renameTableIndex } from './renameIndex';
@@ -29,10 +30,10 @@ export type RenameColumnOptions = {
  * @param options - The rename options
  * @param transactionOptions - The transaction options
  */
-export async function renameColumnAndConstraints(
-  { db }: Wildebeest,
+export async function renameColumnAndConstraints<TModels extends ModelMap>(
+  { db }: Wildebeest<TModels>,
   options: RenameColumnOptions,
-  transactionOptions: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   const { tableName, oldName, newName, renameConstraints } = options;
 
@@ -69,9 +70,9 @@ export async function renameColumnAndConstraints(
  * @param options - Options for renaming a table column
  * @returns The rename column migrator migrator
  */
-export default function renameColumn(
+export default function renameColumn<TModels extends ModelMap>(
   options: RenameColumnOptions,
-): MigrationDefinition {
+): MigrationDefinition<TModels> {
   const { oldName, newName, ...rest } = options;
   return {
     up: async (wildebeest, withTransaction) =>

@@ -2,7 +2,7 @@
 import flatten from 'lodash/flatten';
 
 // global
-import { MigrationDefinition } from '@wildebeest/types';
+import { MigrationDefinition, ModelMap } from '@wildebeest/types';
 import createIndex from '@wildebeest/utils/createIndex';
 
 /**
@@ -29,9 +29,9 @@ export type AddUniqueIndexOptions = {
  * @param options - Options for making a unique constraint across multiple columns
  * @returns The add unique constraint index migrator migrator
  */
-export default function addUniqueConstraintIndex(
+export default function addUniqueConstraintIndex<TModels extends ModelMap>(
   options: AddUniqueIndexOptions,
-): MigrationDefinition {
+): MigrationDefinition<TModels> {
   const { tableName, fields, constraintName, dropDuplicates = false } = options;
 
   return {

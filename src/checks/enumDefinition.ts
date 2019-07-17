@@ -3,8 +3,9 @@ import difference from 'lodash/difference';
 import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
 // global
-import { SequelizeMigrator } from '@wildebeest/types';
-import Wildebeest from '@wildebeest/Wildebeest';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
+import { ModelMap } from '@wildebeest/types';
 
 /**
  * Unnested Value
@@ -21,8 +22,8 @@ export type UnnestedAttr = {
  * @param name - The name of the enum
  * @returns The enum values
  */
-export async function listEnumValues(
-  db: SequelizeMigrator,
+export async function listEnumValues<TModels extends ModelMap>(
+  db: WildebeestDb<TModels>,
   name: string,
 ): Promise<string[]> {
   const enumValues: UnnestedAttr[] = await db.queryInterface.sequelize.query(
@@ -41,8 +42,8 @@ export async function listEnumValues(
  * @param name - The name of the enum
  * @returns True if the enum is defined
  */
-export async function hasEnum(
-  db: SequelizeMigrator,
+export async function hasEnum<TModels extends ModelMap>(
+  db: WildebeestDb<TModels>,
   name: string,
 ): Promise<boolean> {
   const [enumItem] = await db.queryInterface.sequelize.query(
@@ -69,8 +70,8 @@ export async function hasEnum(
  * @param definition - The enum attribute definition
  * @returns True if the enum value is valid
  */
-export default async function EnumDefinition(
-  wildebeest: Wildebeest,
+export default async function EnumDefinition<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,

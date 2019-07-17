@@ -5,10 +5,11 @@ import difference from 'lodash/difference';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
+  ModelMap,
 } from '@wildebeest/types';
 import listEnumAttributes from '@wildebeest/utils/listEnumAttributes';
 import migrateEnumValues from '@wildebeest/utils/migrateEnumValues';
-import Wildebeest from '@wildebeest/Wildebeest';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 /**
  * Input for renaming the value of a sequelize enum
@@ -34,10 +35,10 @@ export type RenameEnumValueOptions = {
  * @param rawTransactionOptions - The existing transaction
  * @returns The rename table promise
  */
-export async function renameValueOfEnum(
-  wildebeest: Wildebeest,
+export async function renameValueOfEnum<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
   options: RenameEnumValueOptions,
-  transactionOptions: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   const { name, tableName, columnName, oldValue, newValue } = options;
   // Get the existing enum values
@@ -75,9 +76,9 @@ export async function renameValueOfEnum(
  * @param options - The rename enum value options
  * @returns The rename enum value migrator
  */
-export default function renameEnumValue(
+export default function renameEnumValue<TModels extends ModelMap>(
   options: RenameEnumValueOptions,
-): MigrationDefinition {
+): MigrationDefinition<TModels> {
   const { oldValue, newValue, ...rest } = options;
   return {
     up: async (wildebeest, withTransaction) =>

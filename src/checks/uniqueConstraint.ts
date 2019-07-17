@@ -2,8 +2,9 @@
 import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
 // global
-import { SequelizeMigrator } from '@wildebeest/types';
-import Wildebeest from '@wildebeest/Wildebeest';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
+import { ModelMap } from '@wildebeest/types';
 
 /**
  * Check if the database has a unique constraint
@@ -13,8 +14,8 @@ import Wildebeest from '@wildebeest/Wildebeest';
  * @param name - The name of the constraint
  * @returns True if the constraint is defined
  */
-export async function hasUniqueConstraint(
-  db: SequelizeMigrator,
+export async function hasUniqueConstraint<TModels extends ModelMap>(
+  db: WildebeestDb<TModels>,
   tableName: string,
   name: string,
 ): Promise<boolean> {
@@ -41,8 +42,8 @@ export async function hasUniqueConstraint(
  * @param definition - The attribute definition
  * @returns True if the unique constraint is set properly
  */
-export default async function checkUniqueConstraint(
-  wildebeest: Wildebeest,
+export default async function checkUniqueConstraint<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,

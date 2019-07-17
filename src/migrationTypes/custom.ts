@@ -2,22 +2,23 @@
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  SequelizeMigrator,
+  ModelMap,
 } from '@wildebeest/types';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 
 /**
  * A migration that should run on the db
  */
-export type TransactionMigrationDefinition = {
+export type TransactionMigrationDefinition<TModels extends ModelMap> = {
   /** The up migration (there should be no loss of data) */
   up: (
-    transactionOptions: MigrationTransactionOptions,
-    db: SequelizeMigrator,
+    transactionOptions: MigrationTransactionOptions<TModels>,
+    db: WildebeestDb<TModels>,
   ) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
   /** The down migration to reverse the up migration, with potential loss of data */
   down: (
-    transactionOptions: MigrationTransactionOptions,
-    db: SequelizeMigrator,
+    transactionOptions: MigrationTransactionOptions<TModels>,
+    db: WildebeestDb<TModels>,
   ) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 };
 
@@ -29,9 +30,9 @@ export type TransactionMigrationDefinition = {
  * @param options - The custom options
  * @returns The custom migrator
  */
-export default function custom(
-  options: TransactionMigrationDefinition,
-): MigrationDefinition {
+export default function custom<TModels extends ModelMap>(
+  options: TransactionMigrationDefinition<TModels>,
+): MigrationDefinition<TModels> {
   const { up, down } = options;
   return {
     up: async (wildebeest, withTransaction) =>

@@ -10,6 +10,9 @@
 // external modules
 import { ModelHooks } from 'sequelize/types/lib/hooks';
 
+// global
+import { ModelMap } from '@wildebeest/types';
+
 // local
 import Migration from './index';
 
@@ -19,7 +22,7 @@ const getNumber = (name: string): number =>
 /**
  * The default model hooks
  */
-export const hooks: Partial<ModelHooks<Migration>> = {
+export const hooks: Partial<ModelHooks<Migration<ModelMap>>> = {
   /**
    * Updates the batch number of a new migration
    *

@@ -18,17 +18,17 @@ import {
 } from '@wildebeest/constants';
 
 // models
-import Migration from '@wildebeest/models/migration';
+import Migration from '@wildebeest/models/migration/Migration';
 
 // local
-import { WildebeestResponse } from '@wildebeest/types';
+import { ModelMap, WildebeestResponse } from '@wildebeest/types';
 import writeSchema from './utils/writeSchema';
 
 // TODO res.render needs to be setup
 
 // Handle a migration error
-const handleError = (
-  res: WildebeestResponse,
+const handleError = <TModels extends ModelMap>(
+  res: WildebeestResponse<TModels>,
   props = {},
   status = 400,
 ): ((error: Error) => void) => ({ message, stack }): void => {
@@ -47,8 +47,8 @@ const handleError = (
 };
 
 // Handle a migration success
-const handleSuccess = (
-  res: WildebeestResponse,
+const handleSuccess = <TModels extends ModelMap>(
+  res: WildebeestResponse<TModels>,
   props = {},
   msg = 'migrated',
 ): ((timeTaken: number) => void) => (timeTaken: number) => {
@@ -70,9 +70,9 @@ const handleSuccess = (
  * @param res - Express response object
  * @returns The current promise
  */
-export async function current(
+export async function current<TModels extends ModelMap>(
   req: express.Request,
-  res: WildebeestResponse,
+  res: WildebeestResponse<TModels>,
 ): Promise<void> {
   const {
     query: { page, wipe },
@@ -102,9 +102,9 @@ export async function current(
  * @param req - Express request object
  * @param res - Express response object
  */
-export async function down(
+export async function down<TModels extends ModelMap>(
   req: express.Request,
-  res: WildebeestResponse,
+  res: WildebeestResponse<TModels>,
 ): Promise<void> {
   const {
     query: { page },
@@ -129,9 +129,9 @@ export async function down(
  * @param res - Express response object
  * @returns The empty promise
  */
-export async function empty(
+export async function empty<TModels extends ModelMap>(
   req: express.Request,
-  res: WildebeestResponse,
+  res: WildebeestResponse<TModels>,
 ): Promise<void> {
   const {
     query: { page },
@@ -154,9 +154,9 @@ export async function empty(
  * @param req - Express request object
  * @param res - Express response object
  */
-export async function renderRoutes(
+export async function renderRoutes<TModels extends ModelMap>(
   req: express.Request,
-  res: WildebeestResponse,
+  res: WildebeestResponse<TModels>,
 ): Promise<void> {
   const {
     query: { page },
@@ -208,9 +208,9 @@ export async function renderRoutes(
  * @param req - Express request object
  * @param res - Express response object
  */
-export async function sync(
+export async function sync<TModels extends ModelMap>(
   req: express.Request,
-  res: WildebeestResponse,
+  res: WildebeestResponse<TModels>,
 ): Promise<void> {
   const {
     query: { page },
@@ -251,9 +251,9 @@ export async function sync(
  * @param req - Express request object
  * @param res - Express response object
  */
-export async function test(
+export async function test<TModels extends ModelMap>(
   req: express.Request,
-  res: WildebeestResponse,
+  res: WildebeestResponse<TModels>,
 ): Promise<void> {
   const {
     query: { page },
@@ -279,9 +279,9 @@ export async function test(
  * @param req - Express request object
  * @param res - Express response object
  */
-export async function up(
+export async function up<TModels extends ModelMap>(
   req: express.Request,
-  res: WildebeestResponse,
+  res: WildebeestResponse<TModels>,
 ): Promise<void> {
   const {
     query: { page },
@@ -305,9 +305,9 @@ export async function up(
  * @param req - Express request object
  * @param res - Express response object
  */
-export async function writeSchemaByName(
+export async function writeSchemaByName<TModels extends ModelMap>(
   req: express.Request,
-  res: WildebeestResponse,
+  res: WildebeestResponse<TModels>,
 ): Promise<void> {
   const {
     query: { page },

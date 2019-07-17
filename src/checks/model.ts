@@ -1,7 +1,7 @@
 // global
-import { ModelDefinition } from '@wildebeest/types';
+import { ConfiguredModelDefinition, ModelMap } from '@wildebeest/types';
 import tableExists from '@wildebeest/utils/tableExists';
-import Wildebeest from '@wildebeest/Wildebeest';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 // local
 import checkAssociationsSync from './associations';
@@ -16,11 +16,13 @@ import checkIndexes from './indexes';
  *
  * @param wildebeest - The wildebeest configuration
  * @param model - The database model definition to verify
+ * @param modelName - The name of the model
  * @returns True on success TODO should return list of errorsF
  */
-export default async function checkModel(
-  wildebeest: Wildebeest,
-  model: ModelDefinition,
+export default async function checkModel<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
+  model: ConfiguredModelDefinition,
+  modelName: string,
 ): Promise<boolean> {
   // You can skip the check
   if (model.skip) {
@@ -40,7 +42,7 @@ export default async function checkModel(
     // Ensure the table has the proper multi column indexes
     checkIndexes(wildebeest, model),
     // Ensure the associations are in sync
-    checkAssociationsSync(wildebeest, model, getModelDefinition),
+    checkAssociationsSync(wildebeest, model),
   ]);
 
   // If true, the model definition is in sync

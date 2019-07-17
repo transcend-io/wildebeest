@@ -2,8 +2,9 @@
 import { ModelAttributeColumnOptions } from 'sequelize';
 
 // global
+import Wildebeest from '@wildebeest/classes/Wildebeest';
+import { ModelMap } from '@wildebeest/types';
 import columnAllowsNull from '@wildebeest/utils/columnAllowsNull';
-import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Check that the allowNull constraint is setup properly on the column
@@ -14,8 +15,10 @@ import Wildebeest from '@wildebeest/Wildebeest';
  * @param definition - The attribute definition
  * @returns True if the allowNull constraint is set properly
  */
-export default async function checkAllowNullConstraint(
-  wildebeest: Wildebeest,
+export default async function checkAllowNullConstraint<
+  TModels extends ModelMap
+>(
+  wildebeest: Wildebeest<TModels>,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,

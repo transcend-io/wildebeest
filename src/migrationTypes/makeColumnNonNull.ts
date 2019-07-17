@@ -2,8 +2,9 @@
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  SequelizeMigrator,
+  ModelMap,
 } from '@wildebeest/types';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 
 /**
  * Some queries expect the primary key columnt to be called id TODO factor this out
@@ -18,7 +19,8 @@ export type RowWithId = {
  */
 export type MakeColumnNonNullOptions<
   T extends RowWithId,
-  TValue extends string | number | null
+  TValue extends string | number | null,
+  TModels extends ModelMap
 > = {
   /** The name of the table to modify */
   tableName: string;
@@ -27,8 +29,8 @@ export type MakeColumnNonNullOptions<
   /** Get the row default value */
   getRowDefault?: (
     row: T,
-    transactionOptions: MigrationTransactionOptions,
-    db: SequelizeMigrator,
+    transactionOptions: MigrationTransactionOptions<TModels>,
+    db: WildebeestDb<TModels>,
   ) => Promise<TValue>;
   /** When true, drop all null rows */
   drop?: boolean;
@@ -44,8 +46,11 @@ export type MakeColumnNonNullOptions<
  */
 export default function makeColumnNonNull<
   T extends RowWithId,
-  TValue extends string | number | null
->(options: MakeColumnNonNullOptions<T, TValue>): MigrationDefinition {
+  TValue extends string | number | null,
+  TModels extends ModelMap
+>(
+  options: MakeColumnNonNullOptions<T, TValue, TModels>,
+): MigrationDefinition<TModels> {
   const { tableName, columnName, getRowDefault, drop = false } = options;
   return {
     up: async (wildebeest, withTransaction) =>

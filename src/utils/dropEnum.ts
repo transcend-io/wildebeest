@@ -1,8 +1,6 @@
 // global
-import {
-  MigrationTransactionOptions,
-  SequelizeMigrator,
-} from '@wildebeest/types';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
+import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
 
 /**
  * Drop an enum from the db
@@ -13,10 +11,10 @@ import {
  * @param cascade - Cascade result to other references
  * @returns The drop enum promise
  */
-export default async function dropEnum(
-  db: SequelizeMigrator,
+export default async function dropEnum<TModels extends ModelMap>(
+  db: WildebeestDb<TModels>,
   name: string,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions?: MigrationTransactionOptions<TModels>,
   cascade?: boolean,
 ): Promise<void> {
   // Raw query interface

@@ -1,5 +1,5 @@
 // global
-import { MigrationDefinition } from '@wildebeest/types';
+import { MigrationDefinition, ModelMap } from '@wildebeest/types';
 
 /**
  * The type of constraint
@@ -28,9 +28,9 @@ export type MakeColumnUniqueOptions = {
  * @param options - Options for making the table column unique
  * @returns The make column unique migrator
  */
-export default function makeColumnUnique(
+export default function makeColumnUnique<TModels extends ModelMap>(
   options: MakeColumnUniqueOptions,
-): MigrationDefinition {
+): MigrationDefinition<TModels> {
   const {
     tableName,
     columnName,

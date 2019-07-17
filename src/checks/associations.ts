@@ -1,7 +1,11 @@
 // global
-import { Association, ModelDefinition } from '@wildebeest/types';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
+import {
+  Association,
+  ConfiguredModelDefinition,
+  ModelMap,
+} from '@wildebeest/types';
 import getAssociationAs from '@wildebeest/utils/getAssociationAs';
-import Wildebeest from '@wildebeest/Wildebeest';
 
 // TODO break apart
 
@@ -12,9 +16,9 @@ import Wildebeest from '@wildebeest/Wildebeest';
  * @param model - The model to check the associations for
  * @returns True of the associations are configured properly for a join table
  */
-export async function checkJoinModelBelongsTo(
-  wildebeest: Wildebeest,
-  { associations, tableName }: ModelDefinition,
+export async function checkJoinModelBelongsTo<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
+  { associations, tableName }: ConfiguredModelDefinition,
 ): Promise<boolean> {
   let valid = true;
 
@@ -77,8 +81,8 @@ const isSame = (oppositeAssociation): boolean =>
  * @param name - The name of the association
  * @returns True if belongs to association is valiid
  */
-export function BelongsToAssociation(
-  wildebeest: Wildebeest,
+export function checkBelongsToAssociation<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
   association: Association,
   associationTable: string,
 ): boolean {
@@ -122,13 +126,14 @@ export function BelongsToAssociation(
 /**
  * Check if a belongsTo exists
  *
+ * @param wildebeest - The wildebeest config
  * @param association - The association definition
  * @param associationTable - The name of the table being associated
  */
 export function hasMatchingBelongsTo(
+  wildebeest: ConfiguredModelDefinition,
   association: Association,
   associationTable: string,
-  getModelDefinition: (modelName: string) => ModelDefinition,
 ): boolean {
   // If the association is only used in lookup, no need to have match
   if (typeof association === 'object' && association.lookupOnly) {
@@ -138,7 +143,7 @@ export function hasMatchingBelongsTo(
   // Get the associations of the association
   const {
     associations: { belongsTo = {} },
-  } = getModelDefinition(associationTable);
+  } = wildebeest.getModelDefinition(associationTable);
 
   const [belongsToOpposite] = belongsTo.filter(isSame);
   if (!belongsToOpposite) {
@@ -158,26 +163,20 @@ export function hasMatchingBelongsTo(
  *
  * @param wildebeest - The wildebeest configuration
  * @param model - The model to check the associations for
- * @param getModelDefinition - A function that will lookup another model by name
  * @returns True if all associations are setup as expected
  */
-export default async function AssociationsSync(
-  wildebeest: Wildebeest,
-  model: ModelDefinition,
+export default async function checkAssociationsSync<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
+  model: ConfiguredModelDefinition,
 ): Promise<boolean> {
   const {
-    associations: {
-      belongsTo = {},
-      belongsToMany = {},
-      hasMany = {},
-      hasOne = {},
-    },
+    associations: { belongsTo, belongsToMany, hasMany, hasOne },
   } = model;
   let valid = true;
 
   // First validate the belongsTo associations
   if (model.isJoin) {
-    const joinIsValid = await checkJoinModelBelongsTo(wildebeest, model);
+    const joinIsValid = await checkJoinModelBelongsTo(wildeebest, model);
     valid = valid && joinIsValid;
   } else {
     // Ensure each belongsTo has an opposite hasOne or hasMany

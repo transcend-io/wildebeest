@@ -3,7 +3,8 @@ import { execSync } from 'child_process';
 import { copyFileSync } from 'fs';
 
 // global
-import Wildebeest from '@wildebeest/Wildebeest';
+import { ModelMap } from '@wildebeest/types';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 /**
  * Write the current database schema to a file
@@ -14,8 +15,8 @@ import Wildebeest from '@wildebeest/Wildebeest';
  * @param name - The name of the schema file
  * @returns The schema written
  */
-export default async function writeSchema(
-  wildebeest: Wildebeest,
+export default async function writeSchema<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
   name: string,
 ): Promise<void> {
   // Hold the output of the sql

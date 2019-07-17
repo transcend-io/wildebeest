@@ -1,6 +1,6 @@
 // global
 import { OnDelete } from '@wildebeest/enums';
-import { MigrationDefinition } from '@wildebeest/types';
+import { MigrationDefinition, ModelMap } from '@wildebeest/types';
 import addTableColumnConstraint from '@wildebeest/utils/addTableColumnConstraint';
 import { TableReference } from '@wildebeest/utils/inferTableReference';
 
@@ -28,9 +28,9 @@ export type CascadeWithParentOptions = {
  * @param options - The add cascade with parent migrator options
  * @returns The add cascade with parent migrator
  */
-export default function addCascadeWithParent(
+export default function addCascadeWithParent<TModels extends ModelMap>(
   options: CascadeWithParentOptions,
-): MigrationDefinition {
+): MigrationDefinition<TModels> {
   const {
     tableName,
     columnName,

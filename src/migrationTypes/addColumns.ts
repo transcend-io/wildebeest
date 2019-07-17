@@ -4,11 +4,13 @@ import difference from 'lodash/difference';
 import { DataType, ModelAttributeColumnOptions, WhereOptions } from 'sequelize';
 
 // global
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 import { OnDelete } from '@wildebeest/enums';
 import {
   DefineColumns,
   MigrationDefinition,
   MigrationTransactionOptions,
+  ModelMap,
 } from '@wildebeest/types';
 import {
   addTableColumnConstraint,
@@ -21,22 +23,21 @@ import indexConstraints, {
   RawConstraint,
 } from '@wildebeest/utils/indexConstraints';
 import { RowUpdater } from '@wildebeest/utils/updateRows';
-import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Options for adding new columns to a single table
  */
-export type AddTableColumnsOptions<T extends {}> = {
+export type AddTableColumnsOptions<T extends {}, TModels extends ModelMap> = {
   /** The name of the table */
   tableName: string;
   /** Function that returns column definition where key is column name and value is column definition */
-  getColumns: DefineColumns;
+  getColumns: DefineColumns<TModels>;
   /** The foreign key constraints. When a string, it refers to the name of the column and table is calculated by pascalCase(removeId(columnName)) */
   constraints?: RawConstraint[];
   /** Drop the table values first. True means drop all rows. Can also specify the where options to drop */
   drop?: boolean | WhereOptions;
   /**  When migrating a table with data in it, write a function that takes in a db row and returns the new defaults for that row */
-  getRowDefaults?: RowUpdater<T>;
+  getRowDefaults?: RowUpdater<T, TModels>;
   /** The constraint on delete (SET NULL is default) */
   onDelete?: OnDelete;
   /** The name of the id column */
@@ -68,8 +69,8 @@ export type AddTableColumnOptions<T extends {}> = {
 /**
  * Options for adding new columns to a table
  */
-export type AddColumnsOptions<T> = Omit<
-  AddTableColumnsOptions<T>,
+export type AddColumnsOptions<T, TModels extends ModelMap> = Omit<
+  AddTableColumnsOptions<T, TModels>,
   'tableName'
 > & {
   /** The name of the table */
@@ -84,10 +85,10 @@ export type AddColumnsOptions<T> = Omit<
  * @param transactionOptions - The current transaction
  * @returns The add column promise
  */
-export async function addColumn<T extends {}>(
-  wildebeest: Wildebeest,
+export async function addColumn<T extends {}, TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
   options: AddTableColumnOptions<T>,
-  transactionOptions: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   const { tableName, columnName, column } = options;
   // Pull apart column config
@@ -119,10 +120,10 @@ export async function addColumn<T extends {}>(
  * @param transactionOptions - The current transaction
  * @returns The add column promise
  */
-export async function setColumn<T extends {}>(
-  wildebeest: Wildebeest,
+export async function setColumn<T extends {}, TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
   options: AddTableColumnOptions<T>,
-  transactionOptions: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   const {
     tableName,
@@ -240,10 +241,10 @@ export function shouldDrop(
  * @param transactionOptions - The current transaction
  * @returns The remove column promise
  */
-export async function removeColumn<T extends {}>(
-  wildebeest: Wildebeest,
+export async function removeColumn<T extends {}, TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
   options: AddTableColumnOptions<T>,
-  transactionOptions: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   // Raw query interface
   const { queryInterface } = wildebeest.db;
@@ -275,10 +276,10 @@ export async function removeColumn<T extends {}>(
  * @param transactionOptions - The current transaction
  * @returns The add column promise
  */
-export async function addTableColumns<T extends {}>(
-  wildebeest: Wildebeest,
-  options: AddTableColumnsOptions<T>,
-  transactionOptions: MigrationTransactionOptions,
+export async function addTableColumns<T extends {}, TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
+  options: AddTableColumnsOptions<T, TModels>,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   const { queryT } = transactionOptions;
   const {
@@ -356,10 +357,13 @@ export async function addTableColumns<T extends {}>(
  * @param transactionOptions - The current transaction
  * @returns The add column promise
  */
-export async function removeTableColumns<T extends {}>(
-  wildebeest: Wildebeest,
-  options: AddTableColumnsOptions<T>,
-  transactionOptions: MigrationTransactionOptions,
+export async function removeTableColumns<
+  T extends {},
+  TModels extends ModelMap
+>(
+  wildebeest: Wildebeest<TModels>,
+  options: AddTableColumnsOptions<T, TModels>,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   const { queryT } = transactionOptions;
   const { getColumns, drop, tableName } = options;
@@ -396,9 +400,9 @@ export async function removeTableColumns<T extends {}>(
  * @param options - Options for adding new columns to a table
  * @returns The add columns migrator
  */
-export default function addColumns<T extends {}>(
-  options: AddColumnsOptions<T>,
-): MigrationDefinition {
+export default function addColumns<T extends {}, TModels extends ModelMap>(
+  options: AddColumnsOptions<T, TModels>,
+): MigrationDefinition<TModels> {
   const { tableName, ...rest } = options;
   // List of tables
   const tablesNames = Array.isArray(tableName) ? tableName : [tableName];

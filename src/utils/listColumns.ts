@@ -2,7 +2,8 @@
 import { QueryTypes } from 'sequelize';
 
 // global
-import { SequelizeMigrator } from '@wildebeest/types';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
+import { ModelMap } from '@wildebeest/types';
 
 /**
  * The top level metadata for a column in the db
@@ -21,8 +22,8 @@ export type ListedColumn = {
  *
  * @returns The current table columns
  */
-export default function listColumns(
-  db: SequelizeMigrator,
+export default function listColumns<TModels extends ModelMap>(
+  db: WildebeestDb<TModels>,
   tableName: string,
 ): Promise<string[]> {
   return db

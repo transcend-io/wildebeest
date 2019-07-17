@@ -1,5 +1,5 @@
 // global
-import { MigrationDefinition } from '@wildebeest/types';
+import { MigrationDefinition, ModelMap } from '@wildebeest/types';
 
 /**
  * Skip the migrator because it was later removed
@@ -8,7 +8,9 @@ import { MigrationDefinition } from '@wildebeest/types';
  *
  * @returns The skip migrator
  */
-export default function skip(): MigrationDefinition {
+export default function skip<TModels extends ModelMap>(): MigrationDefinition<
+  TModels
+> {
   return {
     up: () => Promise.resolve(null),
     down: () => Promise.resolve(null),

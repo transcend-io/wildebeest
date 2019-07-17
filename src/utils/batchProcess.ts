@@ -3,8 +3,8 @@ import { QueryTypes } from 'sequelize';
 
 // global
 import { ONE_MINUTE, ONE_SECOND } from '@wildebeest/constants';
-import { MigrationTransactionOptions } from '@wildebeest/types';
-import Wildebeest from '@wildebeest/Wildebeest';
+import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 /**
  * Options to define which rows to process
@@ -31,12 +31,15 @@ export type WhereOptions = {
  * @param logThreshold - A threshold to log the results when the processing takes longer than this about of time in ms
  * @returns The total number of processed rows
  */
-export default async function batchProcess<T extends {}>(
-  { db, logger }: Wildebeest,
+export default async function batchProcess<
+  T extends {},
+  TModels extends ModelMap
+>(
+  { db, logger }: Wildebeest<TModels>,
   tableName: string,
   whereOptions: WhereOptions = {},
   processRow: (row: T) => void,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions?: MigrationTransactionOptions<TModels>,
   logThreshold: number = ONE_MINUTE / 3,
 ): Promise<number> {
   const { queryInterface } = db;

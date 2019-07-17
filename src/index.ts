@@ -8,9 +8,12 @@
 
 // local
 import * as checks from './checks';
+import Wildebeest, {
+  NamingConventions,
+  WildebeestOptions,
+} from './classes/Wildebeest';
 import { CASCADE_HOOKS, NON_NULL } from './constants';
 import * as utils from './utils';
-import Wildebeest, { NamingConventions, WildebeestOptions } from './Wildebeest';
 
 // expose all migration types
 export * from './migrationTypes';

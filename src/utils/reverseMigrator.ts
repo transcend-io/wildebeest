@@ -1,5 +1,5 @@
 // global
-import { MigrationDefinition } from '@wildebeest/types';
+import { MigrationDefinition, ModelMap } from '@wildebeest/types';
 
 /**
  * Reverse a higher order generator so down returns up and up returns down
@@ -7,10 +7,10 @@ import { MigrationDefinition } from '@wildebeest/types';
  * @param createMigrator - The higher order migrator to reverse
  * @returns The higher order migrator reversed
  */
-export default function reverseMigrator<TOptions>(
-  createMigrator: (options: TOptions) => MigrationDefinition,
-): (options: TOptions) => MigrationDefinition {
-  return (options: TOptions): MigrationDefinition => {
+export default function reverseMigrator<TOptions, TModels extends ModelMap>(
+  createMigrator: (options: TOptions) => MigrationDefinition<TModels>,
+): (options: TOptions) => MigrationDefinition<TModels> {
+  return (options: TOptions): MigrationDefinition<TModels> => {
     const { up, down } = createMigrator(options);
     return {
       down: up,

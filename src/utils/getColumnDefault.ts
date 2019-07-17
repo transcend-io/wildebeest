@@ -2,10 +2,8 @@
 import { QueryTypes } from 'sequelize';
 
 // global
-import {
-  MigrationTransactionOptions,
-  SequelizeMigrator,
-} from '@wildebeest/types';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
+import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
 
 /**
  * Get the default value that the column takes on
@@ -17,11 +15,11 @@ import {
  * @param columnName - The name of the column
  * @returns The default value
  */
-export default async function getColumnDefault(
-  db: SequelizeMigrator,
+export default async function getColumnDefault<TModels extends ModelMap>(
+  db: WildebeestDb<TModels>,
   tableName: string,
   columnName: string,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions?: MigrationTransactionOptions<TModels>,
 ): Promise<string> {
   // Get the default for the column
   const [{ column_default }] = await db.queryInterface.sequelize.query(

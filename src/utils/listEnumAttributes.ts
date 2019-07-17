@@ -2,10 +2,8 @@
 import { QueryTypes } from 'sequelize';
 
 // global
-import {
-  MigrationTransactionOptions,
-  SequelizeMigrator,
-} from '@wildebeest/types';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
+import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
 
 /**
  * Unnested Value
@@ -23,10 +21,10 @@ export type UnnestedAttr = {
  * @param rawTransactionOptions - The transaction options
  * @returns The enum attributes
  */
-export default async function listEnumAttributes(
-  db: SequelizeMigrator,
+export default async function listEnumAttributes<TModels extends ModelMap>(
+  db: WildebeestDb<TModels>,
   name: string,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions?: MigrationTransactionOptions<TModels>,
 ): Promise<string[]> {
   // Raw query interface
   const { queryInterface } = db;

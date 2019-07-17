@@ -2,8 +2,9 @@
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  SequelizeMigrator,
+  ModelMap,
 } from '@wildebeest/types';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 
 /**
  * The options for changing the name of an enum
@@ -23,10 +24,10 @@ export type RenameEnumOptions = {
  * @param rawTransactionOptions - The raw transaction options
  * @returns The change name promise
  */
-export async function changeEnumName(
-  db: SequelizeMigrator,
+export async function changeEnumName<TModels extends ModelMap>(
+  db: WildebeestDb<TModels>,
   options: RenameEnumOptions,
-  transactionOptions: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   // Raw query interface
   const { queryT } = transactionOptions;
@@ -45,9 +46,9 @@ export async function changeEnumName(
  * @param options - The change enum options
  * @returns The rename enum migrator
  */
-export default function renameEnum(
+export default function renameEnum<TModels extends ModelMap>(
   options: RenameEnumOptions,
-): MigrationDefinition {
+): MigrationDefinition<TModels> {
   const { oldName, newName } = options;
   return {
     up: async (wildebeest, withTransaction) =>

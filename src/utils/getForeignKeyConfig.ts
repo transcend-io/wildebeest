@@ -2,10 +2,8 @@
 import { QueryTypes } from 'sequelize';
 
 // global
-import {
-  MigrationTransactionOptions,
-  SequelizeMigrator,
-} from '@wildebeest/types';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
+import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
 
 /**
  * The foreign key constraint
@@ -39,10 +37,10 @@ export type ForeignKeyConstraintConfig = {
  * @param rawTransactionOptions - The current transaction options
  * @returns The foreign key constraint config
  */
-export default async function getForeignKeyConfig(
-  db: SequelizeMigrator,
+export default async function getForeignKeyConfig<TModels extends ModelMap>(
+  db: WildebeestDb<TModels>,
   name: string,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions?: MigrationTransactionOptions<TModels>,
 ): Promise<ForeignKeyConstraintConfig> {
   const [config] = await db.queryInterface.sequelize.query(
     `

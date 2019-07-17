@@ -2,6 +2,7 @@
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
+  ModelMap,
 } from '@wildebeest/types';
 
 /**
@@ -27,11 +28,11 @@ export type ChangeColumnDefaultOptions = {
  * @param transactionOptions - The transaction options
  * @param db - The database to operate on
  */
-export async function changeDefaultValue(
+export async function changeDefaultValue<TModels extends ModelMap>(
   tableName: string,
   columnName: string,
   defaultValue: string,
-  transactionOptions: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   // Add the enum values to the column
   await transactionOptions.queryT.raw(
@@ -47,9 +48,9 @@ export async function changeDefaultValue(
  * @param options - Options for changing the default
  * @returns The migrator
  */
-export default function newApiVersion(
+export default function newApiVersion<TModels extends ModelMap>(
   options: ChangeColumnDefaultOptions,
-): MigrationDefinition {
+): MigrationDefinition<TModels> {
   const { tableName, columnName, oldDefault, newDefault } = options;
   return {
     // Add the unique index

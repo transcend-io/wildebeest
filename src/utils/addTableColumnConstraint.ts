@@ -2,9 +2,9 @@
 import sequelize from 'sequelize';
 
 // global
-import { MigrationTransactionOptions } from '@wildebeest/types';
+import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
 import inferTableReference from '@wildebeest/utils/inferTableReference';
-import Wildebeest from '@wildebeest/Wildebeest';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 /**
  * Options for adding a constraint to a table
@@ -30,10 +30,12 @@ export type AddTableConstraintOptions = {
  * @param rawTransactionOptions - The current transaction
  * @returns The create constraint promise
  */
-export default async function addTableColumnConstraint(
-  { db, namingConventions, modelNameToTableName }: Wildebeest,
+export default async function addTableColumnConstraint<
+  TModels extends ModelMap
+>(
+  { db, namingConventions, pluralCase }: Wildebeest<TModels>,
   options: AddTableConstraintOptions,
-  transactionOptions: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   // Raw query interface
   const { queryInterface } = db;
@@ -62,8 +64,7 @@ export default async function addTableColumnConstraint(
   await queryInterface.addConstraint(tableName, [columnName], {
     type: 'foreign key', // default constraint is a foreign key
     name: useConstraintName,
-    references:
-      references || inferTableReference(columnName, modelNameToTableName),
+    references: references || inferTableReference(columnName, pluralCase),
     ...otherConstraintOptions,
     ...transactionOptions,
   });

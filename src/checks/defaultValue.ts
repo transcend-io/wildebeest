@@ -2,11 +2,10 @@
 import { ModelAttributeColumnOptions } from 'sequelize';
 
 // global
-import Wildebeest from '@wildebeest/Wildebeest';
-
-// local
+import { ModelMap } from '@wildebeest/types';
 import getColumnDefault from '@wildebeest/utils/getColumnDefault';
 import isEnum from '@wildebeest/utils/isEnum';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 /**
  * Ensure the default value of a sequelize definition matches the default value in postgres
@@ -18,8 +17,8 @@ import isEnum from '@wildebeest/utils/isEnum';
  * @param definition - The attribute definition
  * @returns True if the association config is proper
  */
-export default async function DefaultValue(
-  { db, logger, namingConventions }: Wildebeest,
+export default async function DefaultValue<TModels extends ModelMap>(
+  { db, logger, namingConventions }: Wildebeest<TModels>,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,

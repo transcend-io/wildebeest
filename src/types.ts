@@ -12,6 +12,10 @@ import * as express from 'express';
 import * as sequelize from 'sequelize';
 import * as umzug from 'umzug';
 
+// models
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
+import Model from '@wildebeest/classes/WildebeestModel';
+
 // local
 import { IndexType } from './enums';
 import Wildebeest from './index';
@@ -28,6 +32,12 @@ import { RowUpdater, UpdateRowOptions } from './utils/updateRows';
  */
 export type AnyArray = any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
 
+/**
+ * Make select arguments of a type required
+ */
+export type Requirize<T, K extends keyof T> = Omit<T, K> &
+  Required<{ [P in K]: T[P] }>;
+
 // ///////// //
 // Sequelize //
 // ///////// //
@@ -43,17 +53,9 @@ export type IndexConfig = {
 };
 
 /**
- * A db model column attribute, adds some extra configs for associations
- * TODO
+ * A db model column attribute, alias for sequelize options only
  */
 export type Attribute = sequelize.ModelAttributeColumnOptions;
-
-//  & {
-//   /** Indicates if the column definition is due to an association */
-//   isAssociation?: boolean;
-//   /** The association options */
-//   associationOptions?: sequelize.AssociationOptions;
-// };
 
 /**
  * The db model column definitions, keyed by column name
@@ -61,15 +63,34 @@ export type Attribute = sequelize.ModelAttributeColumnOptions;
 export type Attributes = { [columnName in string]: Attribute };
 
 /**
+ * Once associations have been collapsed into attributes, extra options are added
+ */
+export type ConfiguredAttribute = Attribute & {
+  /** Indicates if the column definition is due to an association */
+  isAssociation?: boolean;
+  /** The association options */
+  associationOptions?: sequelize.AssociationOptions;
+};
+
+/**
+ * The db model column definitions, keyed by column name
+ */
+export type ConfiguredAttributes = {
+  [columnName in string]: ConfiguredAttribute;
+};
+
+/**
  * Function that returns column definition where key is column name and value is column definition
  */
-export type DefineColumns = (db: SequelizeMigrator) => Attributes;
+export type DefineColumns<TModels extends ModelMap> = (
+  db: WildebeestDb<TModels>,
+) => Attributes;
 
 /**
  * Since the keys of the associations object specify the `as`, the `modelName` must be procided when the association name !== modelName
  * to indicate what model the association is referring to.
  */
-type AssociationModelName = {
+export type AssociationModelName = {
   /** The name of the model that the association is to */
   modelName?: string;
 };
@@ -79,7 +100,7 @@ type AssociationModelName = {
  *
  * Providing `modelName` here will infer `as` to be the association key
  *
- * When `NON_NULL` is provided, the options will be set to [NON_NULL]{@link module:constants.NON_NULL}
+ * When `NON_NULL` is provided, the options will be set to [NON_NULL]{@link module:constants.NON_NULL} and the association will have an `onDelete: 'CASCADE'`
  */
 export type BelongsToAssociation =
   | (sequelize.BelongsToOptions & AssociationModelName)
@@ -99,7 +120,7 @@ export type HasOneAssociation =
 /**
  * This model hasMany of another model. This adds `{{this}}Id` to the association model defined by `name`
  *
- * Providing `modelName` here will infer foreignKey to be `${associationKey}Id`
+ * Providing `modelName` here will infer `as` to be `pluralCase({associationKey})`
  *
  * When `CASCADE` is provided, the options will be set to [CASCADE_HOOKS]{@link module:constants.CASCADE_HOOKS}
  */
@@ -139,17 +160,44 @@ export type Associations = {
 };
 
 /**
+ * The associations for a converted into standard sequelize options
+ */
+export type ConfiguredAssociations = {
+  /** The belongs to associations (adds `associationId` to the model) */
+  belongsTo: {
+    [associationName in string]: sequelize.BelongsToOptions &
+      Required<AssociationModelName>;
+  };
+  /** The has one associations (adds `thisId` to the association model) */
+  hasOne: {
+    [associationName in string]: sequelize.HasOneOptions &
+      Required<AssociationModelName>;
+  };
+  /** The has many associations (adds `thisId` to the association model) */
+  hasMany: {
+    [associationName in string]: sequelize.HasManyOptions &
+      Required<AssociationModelName>;
+  };
+  /** Indicates there exists a join table with the association */
+  belongsToMany: {
+    [associationName in string]: sequelize.BelongsToManyOptions;
+  };
+};
+
+/**
  * A definition of a database model
  */
-export type ModelDefinition = {
+export type ModelDefinition<
+  TModel extends sequelize.Model = sequelize.Model
+> = {
   /** The name of the table */
-  tableName: string;
+  tableName?: string;
   /** The sequelize db model attribute definitions */
   attributes?: Attributes;
   /** The associations for that db model */
   associations?: Associations;
   /** The sequelize db model options */
-  options?: sequelize.ModelOptions;
+  options?: sequelize.ModelOptions<TModel>;
   /** Indicate if the model is a join table and extra checks will be enforced */
   isJoin?: boolean;
   /** You can skip the sync check by setting this to true */
@@ -158,33 +206,42 @@ export type ModelDefinition = {
   dontMatchBelongsTo?: boolean;
 };
 
+/**
+ * A configured model definition with defaults filled out
+ */
+export type ConfiguredModelDefinition = Required<
+  Omit<ModelDefinition, 'dontMatchBelongTo' | 'associations' | 'attributes'>
+> & {
+  /** The configured model attributes */
+  attributes: ConfiguredAttributes;
+  /** The configured sequelize association options */
+  associations: ConfiguredAssociations;
+  /** Save the initial associations */
+  rawAssociations: Required<Associations>;
+};
+
+/**
+ * Model map definition from model name to model definition
+ */
+export type ModelMap = { [modelName in string]: typeof Model };
+
 // ///// //
 // Umzug //
 // ///// //
 
 /**
- * Foreign key constraint definition for a table column
- */
-export type SequelizeMigrator = sequelize.Sequelize & {
-  /** No need to call getter to access queryInterface during migrations */
-  queryInterface: sequelize.QueryInterface;
-  /** The data types */
-  DataTypes: typeof sequelize.DataTypes;
-};
-
-/**
  * A migration that should run on the db
  */
-export type MigrationDefinition = {
+export type MigrationDefinition<TModels extends ModelMap> = {
   /** The up migration (there should be no loss of data) */
   up: (
-    wildebeest: Wildebeest,
-    withTransaction: WithTransaction,
+    wildebeest: Wildebeest<TModels>,
+    withTransaction: WithTransaction<TModels>,
   ) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any,max-len
   /** The down migration to reverse the up migration, with potential loss of data */
   down: (
-    wildebeest: Wildebeest,
-    withTransaction: WithTransaction,
+    wildebeest: Wildebeest<TModels>,
+    withTransaction: WithTransaction<TModels>,
   ) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any,max-len
 };
 
@@ -226,7 +283,7 @@ export type QueryWithTransaction = <T extends AnyArray = AnyArray>(
 /**
  * The helper functions wrapped in transactions
  */
-export type QueryHelpers = {
+export type QueryHelpers<TModels extends ModelMap> = {
   /** Run a SELECT query in the transaction that returns a list */
   select: QueryWithTransaction;
   /** Delete rows inside the transaction */
@@ -250,7 +307,7 @@ export type QueryHelpers = {
   /** Batch update a table */
   batchUpdate: <T extends {}>(
     tableName: string,
-    getRowDefaults: RowUpdater<T>,
+    getRowDefaults: RowUpdater<T, TModels>,
     columnDefinitions: Attributes,
     options: UpdateRowOptions<T>,
   ) => Promise<number>;
@@ -259,9 +316,9 @@ export type QueryHelpers = {
 /**
  * Transaction options when running a migration come with helper functions
  */
-export type MigrationTransactionOptions = {
+export type MigrationTransactionOptions<TModels extends ModelMap> = {
   /** Helper functions that run within the migration transaction */
-  queryT: QueryHelpers;
+  queryT: QueryHelpers<TModels>;
   /** The transaction itself */
   transaction: sequelize.Transaction;
 };
@@ -273,10 +330,13 @@ export type MigrationTransactionOptions = {
 /**
  * Wildebeest is mounted onto res.locals
  */
-export type WildebeestResponse = Omit<express.Response, 'locals'> & {
+export type WildebeestResponse<TModels extends ModelMap> = Omit<
+  express.Response,
+  'locals'
+> & {
   /** Local values accessesible in controller functions */
   locals: {
     /** The wildebeest migrator */
-    wildebeest: Wildebeest;
+    wildebeest: Wildebeest<TModels>;
   };
 };

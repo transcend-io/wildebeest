@@ -5,10 +5,11 @@ import * as sequelize from 'sequelize';
 import {
   AnyArray,
   MigrationTransactionOptions,
+  ModelMap,
   QueryHelpers,
   QueryWithTransaction,
 } from '@wildebeest/types';
-import Wildebeest from '@wildebeest/Wildebeest';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 // local
 import batchProcess from './batchProcess';
@@ -17,15 +18,15 @@ import updateRows from './updateRows';
 /**
  * A function should be run with all queries inside a transaction a transaction
  */
-export type RunInTransaction = (
-  transactionOptions: MigrationTransactionOptions,
+export type RunInTransaction<TModels extends ModelMap> = (
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ) => PromiseLike<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
  * Similar to the function provided to db.transaction
  */
-export type WithTransaction = (
-  runInTransaction: RunInTransaction,
+export type WithTransaction<TModels extends ModelMap> = (
+  runInTransaction: RunInTransaction<TModels>,
 ) => PromiseLike<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
@@ -65,17 +66,17 @@ export default function createQueryMaker(
  * @param wildebeest - The wildebeest configuration
  * @returns A function that takes in the argument of db.transaction but wrapped with extras
  */
-export function transactionWrapper(
-  wildebeest: Wildebeest,
+export function transactionWrapper<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): (runInTransaction: RunInTransaction) => PromiseLike<any> {
+): (runInTransaction: RunInTransaction<TModels>) => PromiseLike<any> {
   const { db } = wildebeest;
-  return async (runInTransaction: RunInTransaction) =>
+  return async (runInTransaction: RunInTransaction<TModels>) =>
     db.transaction(async (transaction) => {
       const tOpt = { transaction };
 
       // Run select with the transaction
-      const qT: QueryHelpers = {
+      const qT: QueryHelpers<TModels> = {
         delete: async (tableName, options = {}) =>
           db.queryInterface.bulkDelete(tableName, options, tOpt),
         insert: async (tableName, items) => {

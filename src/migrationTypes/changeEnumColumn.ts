@@ -1,5 +1,5 @@
 // global
-import { MigrationDefinition } from '@wildebeest/types';
+import { MigrationDefinition, ModelMap } from '@wildebeest/types';
 import { invert } from '@wildebeest/utils';
 import migrateEnumColumn from '@wildebeest/utils/migrateEnumColumn';
 
@@ -37,9 +37,9 @@ export type ChangeEnumColumnOptions = {
  * @param options - Options for changing a column thats an enum
  * @returns The change enum column migrator
  */
-export default function changeEnumColumn(
+export default function changeEnumColumn<TModels extends ModelMap>(
   options: ChangeEnumColumnOptions,
-): MigrationDefinition {
+): MigrationDefinition<TModels> {
   const {
     tableName,
     columnName,

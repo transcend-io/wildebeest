@@ -2,20 +2,21 @@
 import { ModelAttributeColumnOptions } from 'sequelize';
 
 // global
-import { MigrationDefinition, SequelizeMigrator } from '@wildebeest/types';
+import { MigrationDefinition, ModelMap } from '@wildebeest/types';
 import addTableColumnConstraint from '@wildebeest/utils/addTableColumnConstraint';
 import { TableReference } from '@wildebeest/utils/inferTableReference';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 
 /**
  * Options for removing a column that is supposed to be non null
  */
-export type RemoveNonNullColumnOptions = {
+export type RemoveNonNullColumnOptions<TModels extends ModelMap> = {
   /** The name of the table to remove the non null column from */
   tableName: string;
   /** The name of the column that should remove the non null constraint from */
   columnName: string;
   /** Get the new column definition */
-  getColumn?: (db: SequelizeMigrator) => ModelAttributeColumnOptions;
+  getColumn?: (db: WildebeestDb<TModels>) => ModelAttributeColumnOptions;
   /** Override the default constraint name */
   constraintName?: string;
   /** The opposing constraint table reference (when left null will be inferred by column) */
@@ -32,13 +33,13 @@ export type RemoveNonNullColumnOptions = {
  * @param options - The options for removing the non null column
  * @returns The remove non null column migrator
  */
-export default function removeNonNullColumn(
-  options: RemoveNonNullColumnOptions,
-): MigrationDefinition {
+export default function removeNonNullColumn<TModels extends ModelMap>(
+  options: RemoveNonNullColumnOptions<TModels>,
+): MigrationDefinition<TModels> {
   const {
     tableName,
     columnName,
-    getColumn = ({ DataTypes }: SequelizeMigrator) => ({
+    getColumn = ({ DataTypes }: WildebeestDb<TModels>) => ({
       allowNull: true,
       defaultValue: DataTypes.UUIDV4,
       type: DataTypes.UUID,

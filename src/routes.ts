@@ -11,13 +11,16 @@
 import express from 'express';
 
 // local
+import Wildebeest from '@wildebeest/classes/Wildebeest';
+import { ModelMap } from '@wildebeest/types';
 import * as controller from './controller';
-import Wildebeest from './Wildebeest';
 
 /**
  * Construct a router
  */
-export default (wildebeest: Wildebeest): express.Router => {
+export default <TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
+): express.Router => {
   // instantiate a router
   const router = express.Router();
 

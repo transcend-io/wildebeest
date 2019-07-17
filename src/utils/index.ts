@@ -7,12 +7,17 @@
  */
 
 // local
+export { default as apply } from './apply';
 export {
   default as addTableColumnConstraint,
 } from './addTableColumnConstraint';
 export { default as batchProcess } from './batchProcess';
 export { default as clearSchema } from './clearSchema';
 export { default as columnAllowsNull } from './columnAllowsNull';
+export { default as configureAssociations } from './configureAssociations';
+export {
+  default as configureModelDefinition,
+} from './configureModelDefinition';
 export { default as createIndex } from './createIndex';
 export { default as createUmzugLogger } from './createUmzugLogger';
 export { default as createQueryMaker } from './createQueryMaker';

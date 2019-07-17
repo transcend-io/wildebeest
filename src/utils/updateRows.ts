@@ -2,20 +2,21 @@
 import {
   Attributes,
   MigrationTransactionOptions,
-  SequelizeMigrator,
+  ModelMap,
 } from '@wildebeest/types';
 
 // local
-import Wildebeest from '@wildebeest/Wildebeest';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import batchProcess from './batchProcess';
 
 /**
  * Database column definitions, often found in attributes.js
  */
-export type RowUpdater<T extends {}> = (
+export type RowUpdater<T extends {}, TModels extends ModelMap> = (
   row: T,
-  transactionOptions: MigrationTransactionOptions,
-  db: SequelizeMigrator,
+  transactionOptions: MigrationTransactionOptions<TModels>,
+  db: WildebeestDb<TModels>,
 ) => T | PromiseLike<T>;
 
 /**
@@ -40,19 +41,22 @@ export type UpdateRowOptions<T extends {}> = {
  * @param rawTransactionOptions - The current transaction if one exists
  * @returns The number of rows operate on
  */
-export default async function updateRows<T extends {}>(
-  wildebeest: Wildebeest,
+export default async function updateRows<
+  T extends {},
+  TModels extends ModelMap
+>(
+  wildebeest: Wildebeest<TModels>,
   tableName: string,
-  getRowDefaults: RowUpdater<T>,
+  getRowDefaults: RowUpdater<T, TModels>,
   columnDefinitions: Attributes,
   options: UpdateRowOptions<T> = {},
-  transactionOptions: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<number> {
   const { queryT } = transactionOptions;
   const { onNullValue, idName = 'id' } = options;
 
   // Update rows in batches
-  return batchProcess<T>(
+  return batchProcess<T, TModels>(
     wildebeest,
     tableName,
     { attributes: '*' },

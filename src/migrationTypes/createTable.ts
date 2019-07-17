@@ -1,33 +1,34 @@
 // global
+import Wildebeest from '@wildebeest/classes/Wildebeest';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import {
   Attributes,
   DefineColumns,
   MigrationDefinition,
   MigrationTransactionOptions,
-  SequelizeMigrator,
+  ModelMap,
 } from '@wildebeest/types';
 import { addTableColumnConstraint, dropEnum, isEnum } from '@wildebeest/utils';
 import { RawConstraint } from '@wildebeest/utils/indexConstraints';
-import Wildebeest from '@wildebeest/Wildebeest';
 
 /**
  * Options for dropping a table
  */
-export type DropTableOptions = {
+export type DropTableOptions<TModels extends ModelMap> = {
   /** The name of the table to drop */
   tableName: string;
   /** A function that returns the column definitions for the new table */
-  getColumns?: DefineColumns;
+  getColumns?: DefineColumns<TModels>;
 };
 
 /**
  * Options for creating a new table
  */
-export type CreateTableOptions = {
+export type CreateTableOptions<TModels extends ModelMap> = {
   /** The name of the table to create */
   tableName: string;
   /** A function that returns the column definitions for the new table */
-  getColumns: DefineColumns;
+  getColumns: DefineColumns<TModels>;
   /** The columns that should get cascade constraints */
   constraints?: RawConstraint[];
   /** When true, the columns id, createdAt, and updatedAt will not be added in addition to columns from `getColumns` */
@@ -40,10 +41,10 @@ export type CreateTableOptions = {
  * @param options - The options for creating the table
  * @returns The create table promise
  */
-export async function createNewTable(
-  wildebeest: Wildebeest,
-  options: CreateTableOptions,
-  transactionOptions: MigrationTransactionOptions,
+export async function createNewTable<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
+  options: CreateTableOptions<TModels>,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   // Raw query interface
   const { queryInterface } = wildebeest.db;
@@ -98,10 +99,10 @@ export async function createNewTable(
  * @param transactionOptions - The current transaction
  * @returns The remove table promise
  */
-export async function dropTable(
-  { db, namingConventions }: Wildebeest,
-  options: DropTableOptions,
-  transactionOptions: MigrationTransactionOptions,
+export async function dropTable<TModels extends ModelMap>(
+  { db, namingConventions }: Wildebeest<TModels>,
+  options: DropTableOptions<TModels>,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   // Raw query interface
   const { queryInterface } = db;
@@ -133,9 +134,9 @@ export async function dropTable(
  * @param options - Options for creating a new table
  * @returns The create table migrator
  */
-export default function createTable(
-  options: CreateTableOptions,
-): MigrationDefinition {
+export default function createTable<TModels extends ModelMap>(
+  options: CreateTableOptions<TModels>,
+): MigrationDefinition<TModels> {
   const {
     tableName,
     getColumns,
@@ -145,7 +146,7 @@ export default function createTable(
   // Get the default columns for all models (can be skipped with `noDefaults`)
   const getDefaults = noDefaults
     ? () => ({})
-    : ({ DataTypes }: SequelizeMigrator) => ({
+    : ({ DataTypes }: WildebeestDb<TModels>) => ({
         // UUID
         id: {
           primaryKey: true,
@@ -165,7 +166,7 @@ export default function createTable(
       });
 
   // Get default columns combined with provided columns
-  const getAllColumns = (db: SequelizeMigrator): Attributes =>
+  const getAllColumns = (db: WildebeestDb<TModels>): Attributes =>
     Object.assign(getDefaults(db), getColumns(db));
 
   return {

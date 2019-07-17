@@ -1,7 +1,7 @@
 // global
-import { ModelDefinition } from '@wildebeest/types';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
+import { ConfiguredModelDefinition, ModelMap } from '@wildebeest/types';
 import isEnum from '@wildebeest/utils/isEnum';
-import Wildebeest from '@wildebeest/Wildebeest';
 
 // local
 import checkAllowNullConstraint from './allowNullConstraint';
@@ -22,9 +22,9 @@ import checkUniqueConstraint from './uniqueConstraint';
  * @param name - The name of the column to check
  * @returns True if the column is setup properly
  */
-export default async function checkColumnDefinition(
-  wildebeest: Wildebeest,
-  { tableName, attributes }: ModelDefinition,
+export default async function checkColumnDefinition<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
+  { tableName, attributes }: ConfiguredModelDefinition,
   name: string,
 ): Promise<boolean> {
   // Get the column definition

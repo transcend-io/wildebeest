@@ -1,5 +1,5 @@
 // global
-import { MigrationDefinition } from '@wildebeest/types';
+import { MigrationDefinition, ModelMap } from '@wildebeest/types';
 import createIndex from '@wildebeest/utils/createIndex';
 
 /**
@@ -22,9 +22,9 @@ export type AddIndexOptions = {
  * @param options - Options for making a unique constraint across multiple columns
  * @returns The add index migrator
  */
-export default function addIndex(
+export default function addIndex<TModels extends ModelMap>(
   options: AddIndexOptions,
-): MigrationDefinition {
+): MigrationDefinition<TModels> {
   const { tableName, fields, constraintName } = options;
   return {
     // Add the unique index

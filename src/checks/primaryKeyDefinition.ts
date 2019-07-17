@@ -2,8 +2,9 @@
 import { QueryTypes } from 'sequelize';
 
 // global
-import { SequelizeMigrator } from '@wildebeest/types';
-import Wildebeest from '@wildebeest/Wildebeest';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
+import { ModelMap } from '@wildebeest/types';
 
 /**
  * The configuration for a primary key
@@ -26,8 +27,8 @@ export type PrimaryKeyConfig = {
  * @param tableName - The name of the table to get the primary key from
  * @returns The primary key configuration
  */
-export async function getTablePrimaryKey(
-  db: SequelizeMigrator,
+export async function getTablePrimaryKey<TModels extends ModelMap>(
+  db: WildebeestDb<TModels>,
   tableName: string,
 ): Promise<PrimaryKeyConfig> {
   const [primaryKey] = await db.queryInterface.sequelize.query(
@@ -61,8 +62,10 @@ export async function getTablePrimaryKey(
  * @param name - The name of the expected primary key
  * @returns True if the primary key config is valid for the specified column
  */
-export default async function checkPrimaryKeyDefinition(
-  wildebeest: Wildebeest,
+export default async function checkPrimaryKeyDefinition<
+  TModels extends ModelMap
+>(
+  wildebeest: Wildebeest<TModels>,
   tableName: string,
   name: string,
 ): Promise<boolean> {

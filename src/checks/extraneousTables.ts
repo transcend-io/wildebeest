@@ -3,7 +3,8 @@ import difference from 'lodash/difference';
 import { QueryTypes } from 'sequelize';
 
 // global
-import Wildebeest from '@wildebeest/Wildebeest';
+import { ModelMap } from '@wildebeest/types';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 /**
  * When querying a table
@@ -24,8 +25,8 @@ export type TableDefinition = {
  * @param tableNames - The tables names that should exist
  * @returns True if there are no extra tables definitions in the db
  */
-export default async function checkExtraneousTables(
-  { db, logger }: Wildebeest,
+export default async function checkExtraneousTables<TModels extends ModelMap>(
+  { db, logger }: Wildebeest<TModels>,
   tableNames: string[],
 ): Promise<boolean> {
   // Check for existing tables tables

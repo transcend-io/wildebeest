@@ -6,10 +6,11 @@ import uniq from 'lodash/uniq';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
+  ModelMap,
 } from '@wildebeest/types';
 import listEnumAttributes from '@wildebeest/utils/listEnumAttributes';
 import migrateEnumValues from '@wildebeest/utils/migrateEnumValues';
-import Wildebeest from '@wildebeest/Wildebeest';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 /**
  * Options for adding or removing enum values
@@ -38,10 +39,10 @@ export type ChangeEnumAttributeOptions = {
  * @param transactionOptions - The raw transaction options
  * @returns The change enum promise
  */
-export async function addValuesToEnum(
-  wildebeest: Wildebeest,
+export async function addValuesToEnum<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
   options: ChangeEnumAttributeOptions,
-  transactionOptions: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   // Raw query interface
   const { name, tableName, columnName, attributes } = options;
@@ -73,10 +74,10 @@ export async function addValuesToEnum(
  * @param transactionOptions - The current transaction options
  * @returns The change enum promise
  */
-export async function removeValuesFromEnum(
-  wildebeest: Wildebeest,
+export async function removeValuesFromEnum<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
   options: ChangeEnumAttributeOptions,
-  transactionOptions: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   const {
     name,
@@ -123,9 +124,9 @@ export async function removeValuesFromEnum(
  * @param options - Options for adding attributes from the enum
  * @returns The add enum values migrator
  */
-export default function addEnumValues(
+export default function addEnumValues<TModels extends ModelMap>(
   options: ChangeEnumAttributeOptions,
-): MigrationDefinition {
+): MigrationDefinition<TModels> {
   return {
     up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>

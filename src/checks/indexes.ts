@@ -4,10 +4,11 @@ import uniq from 'lodash/uniq';
 import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
 // global
-import { ModelDefinition, SequelizeMigrator } from '@wildebeest/types';
-import Wildebeest from '@wildebeest/Wildebeest';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
+import { ConfiguredModelDefinition, ModelMap } from '@wildebeest/types';
 
 // local
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import listIndexNames from '@wildebeest/utils/listIndexNames';
 
 /**
@@ -17,8 +18,8 @@ import listIndexNames from '@wildebeest/utils/listIndexNames';
  * @param name - The name of the index
  * @returns True if the index is defined
  */
-export async function hasIndex(
-  db: SequelizeMigrator,
+export async function hasIndex<TModels extends ModelMap>(
+  db: WildebeestDb<TModels>,
   name: string,
 ): Promise<boolean> {
   const [index] = await db.queryInterface.sequelize.query(
@@ -59,9 +60,9 @@ export async function hasIndex(
  * @param model - The database model definition to verify
  * @returns True if the model has indexes setup matching sequelize definitions
  */
-export default async function checkIndexes(
-  wildebeest: Wildebeest,
-  { options, attributes, tableName }: ModelDefinition,
+export default async function checkIndexes<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
+  { options, attributes, tableName }: ConfiguredModelDefinition,
 ): Promise<boolean> {
   // Get the indexes
   const { indexes = [] } = options;

@@ -2,10 +2,8 @@
 import { QueryTypes } from 'sequelize';
 
 // global
-import {
-  MigrationTransactionOptions,
-  SequelizeMigrator,
-} from '@wildebeest/types';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
+import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
 
 /**
  * A db index
@@ -24,10 +22,10 @@ export type PgIndex = {
  * @param tableName - The table to list indexes for
  * @returns The names of the indexes
  */
-export default async function listIndexNames(
-  db: SequelizeMigrator,
+export default async function listIndexNames<TModels extends ModelMap>(
+  db: WildebeestDb<TModels>,
   tableName: string,
-  transactionOptions?: MigrationTransactionOptions,
+  transactionOptions?: MigrationTransactionOptions<TModels>,
 ): Promise<string[]> {
   const { queryInterface } = db;
   //  Determine the indexes

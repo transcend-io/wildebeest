@@ -3,10 +3,10 @@ import difference from 'lodash/difference';
 import uniq from 'lodash/uniq';
 
 // global
-import { ModelDefinition } from '@wildebeest/types';
+import { ConfiguredModelDefinition, ModelMap } from '@wildebeest/types';
 import expectedColumnNames from '@wildebeest/utils/expectedColumnNames';
 import listColumns from '@wildebeest/utils/listColumns';
-import Wildebeest from '@wildebeest/Wildebeest';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 // local
 import checkColumnDefinition from './columnDefinition';
@@ -20,9 +20,9 @@ import checkColumnDefinition from './columnDefinition';
  * @param model - The db model to check against
  * @returns True if column definitions are in sync
  */
-export default async function checkColumnDefinitions(
-  wildebeest: Wildebeest,
-  model: ModelDefinition,
+export default async function checkColumnDefinitions<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
+  model: ConfiguredModelDefinition,
 ): Promise<boolean> {
   // Compare columns to what exist
   const expectedColumns = expectedColumnNames(model);

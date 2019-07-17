@@ -6,13 +6,14 @@ import flatten from 'lodash/flatten';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
+  ModelMap,
 } from '@wildebeest/types';
 import {
   invert,
   listEnumAttributes,
   migrateEnumValues,
 } from '@wildebeest/utils';
-import Wildebeest from '@wildebeest/Wildebeest';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 /**
  * A migration that should run on the db
@@ -32,12 +33,12 @@ export type ConvertEnumValuesOptions = {
  * @param renameValues - The enum value maps to rename
  * @param transactionOptions - The current transaction
  */
-export async function renameColumnEnumValues(
-  wildebeest: Wildebeest,
+export async function renameColumnEnumValues<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
   tableName: string,
   columnName: string,
   renameValues: { [oldValue in string]: string },
-  transactionOptions: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   const name = wildebeest.namingConventions.enum(tableName, columnName);
 
@@ -75,10 +76,10 @@ export async function renameColumnEnumValues(
  * Rename many enum values in many tables
  * @param options - The enum values to rename
  */
-export async function renameManyEnumValues(
-  wildebeest: Wildebeest,
+export async function renameManyEnumValues<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
   options: ConvertEnumValuesOptions,
-  transactionOptions: MigrationTransactionOptions,
+  transactionOptions: MigrationTransactionOptions<TModels>,
   invertValues = false,
 ): Promise<void> {
   const changePromises = Object.entries(options).map(([tableName, columns]) =>
@@ -104,9 +105,9 @@ export async function renameManyEnumValues(
  * @param options - The convertEnumValues options
  * @returns The custom migrator
  */
-export default function convertEnumValues(
+export default function convertEnumValues<TModels extends ModelMap>(
   options: ConvertEnumValuesOptions,
-): MigrationDefinition {
+): MigrationDefinition<TModels> {
   return {
     up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>

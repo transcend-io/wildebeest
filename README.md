@@ -7,7 +7,7 @@
   <br /><br />
   <i>Coming soon. This repo is currently a work in progress.</i>
   <br /><br />
-  <img href="https://travis-ci.com/transcend-io/wildebeest.svg?token=dSiqFoEr9c1WZuWwxbXE&branch=master" alt="Travis (.com)" src="https://travis-ci.com/transcend-io/wildebeest.svg">
+  <img href="https://travis-ci.com/transcend-io/wildebeest.svg?branch=master" alt="Travis (.com)" src="https://travis-ci.com/transcend-io/wildebeest.svg">
 </p>
 <br />
 

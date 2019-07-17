@@ -2,11 +2,12 @@
 import { QueryTypes } from 'sequelize';
 
 // global
-import { Attribute, SequelizeMigrator } from '@wildebeest/types';
+import { ConfiguredAttribute, ModelMap } from '@wildebeest/types';
 import getForeignKeyConfig from '@wildebeest/utils/getForeignKeyConfig';
 
 // local
-import Wildebeest from '@wildebeest/Wildebeest';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 
 /**
  * Check if the database has a constraint
@@ -15,8 +16,8 @@ import Wildebeest from '@wildebeest/Wildebeest';
  * @param name - The name of the constraint
  * @returns True if the constraint is defined
  */
-export async function hasConstraint(
-  db: SequelizeMigrator,
+export async function hasConstraint<TModels extends ModelMap>(
+  db: WildebeestDb<TModels>,
   name: string,
 ): Promise<boolean> {
   const [constraint] = await db.queryInterface.sequelize.query(
@@ -41,11 +42,11 @@ export async function hasConstraint(
  * @param definition - The attribute definition
  * @returns True if the association config is proper
  */
-export default async function checkAssociationConfig(
-  wildebeest: Wildebeest,
+export default async function checkAssociationConfig<TModels extends ModelMap>(
+  wildebeest: Wildebeest<TModels>,
   tableName: string,
   name: string,
-  definition: Attribute,
+  definition: ConfiguredAttribute,
 ): Promise<boolean> {
   let valid = true;
 
@@ -70,7 +71,10 @@ export default async function checkAssociationConfig(
       wildebeest.db,
       constraintName,
     );
-    const expected = definition.associationOptions.onDelete.toUpperCase();
+    const expected =
+      definition.associationOptions && definition.associationOptions.onDelete
+        ? definition.associationOptions.onDelete.toUpperCase()
+        : 'NO ACTION';
     const onDeleteValid = delete_rule === expected;
 
     if (!onDeleteValid) {
