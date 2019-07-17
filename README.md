@@ -11,6 +11,8 @@
 </p>
 <br />
 
+[![Build Status](https://travis-ci.com/transcend-io/wildebeest.svg?branch=master)](https://travis-ci.com/transcend-io/wildebeest)
+
 TODO Cleanup migration docs and increase readability
 
 ## TODO
