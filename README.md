@@ -11,8 +11,6 @@
 </p>
 <br />
 
-[![Build Status](https://travis-ci.com/transcend-io/wildebeest.svg?branch=master)](https://travis-ci.com/transcend-io/wildebeest)
-
 TODO Cleanup migration docs and increase readability
 
 ## TODO
@@ -153,7 +151,6 @@ Until this new framework is in place, the current process for re-ordering migrat
 3. Move all of the migrations on the branch you are working on to the end of the migration chain. You can use the command `npm run refactor reorder-migrations`.
 4. You will need to do a wipe on your local db and re-run the migrations, you can do this on the [/migrate](https://yo.com:4001/migrate)
    page or with the command `npm run server:dev:clean && npm run server:dev:uplogs`
-
 
 *Only will work when RUN apk add --no-cache postgresql-client=10.5-r0 is not commented out in app.Dockerfile*
 TODO first migration expected to be genesis
