@@ -15,7 +15,8 @@ import Wildebeest, {
 import { CASCADE_HOOKS, NON_NULL } from './constants';
 import * as utils from './utils';
 
-// expose all migration types
+// expose all migration types and classes
+export * from './classes';
 export * from './migrationTypes';
 
 // Types

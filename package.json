@@ -1,6 +1,6 @@
 {
   "name": "@transcend-io/wildebeest",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Simple class for manipulating files from a relative path",
   "main": "build/index.js",
   "homepage": "https://github.com/transcend-io/wildebeest#readme",
@@ -26,8 +26,8 @@
     "####### Linting #######": "",
     "lint": "eslint . --cache --ext .js,.ts,.tsx,.jsx",
     "ts:lint": "tslint ./src/**/*.ts",
-    "####### Testing #######": "",
-    "test": "npm run build && npm run test:nobuild",
+    "####### Testing #######": "npm run build && npm run test:nobuild",
+    "test": "echo no tests",
     "test:nobuild": "NODE_ENV=test ./node_modules/.bin/mocha \"build/**/*.test.{js,ts}\" --reporter spec --timeout 10000",
     "####### Check Dependencies #######": "",
     "check:deps": "npm-check --ignore \"{}\"",

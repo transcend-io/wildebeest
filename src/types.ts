@@ -244,12 +244,6 @@ export type ConfiguredModelDefinition<
 
 /**
  * Model map definition from model name to model definition
- *
- * This can be overwritten using a wildebeest.d.ts to enforce the true mapping globally
- * ```ts
- * declare module "wildebeest" {
- *   type ModelMap = { ... }
- * }
  */
 export type ModelMap = { [modelName in string]: typeof Model };
 
