@@ -1,6 +1,11 @@
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
-import { ConfiguredModelDefinition, ModelMap } from '@wildebeest/types';
+import {
+  ConfiguredModelDefinition,
+  ModelMap,
+  StringKeys,
+  SyncError,
+} from '@wildebeest/types';
 import isEnum from '@wildebeest/utils/isEnum';
 
 // local
@@ -20,46 +25,49 @@ import checkUniqueConstraint from './uniqueConstraint';
  * @param wildebeest - The wildebeest coniguration
  * @param model - The model to check
  * @param name - The name of the column to check
- * @returns True if the column is setup properly
+ * @returns Any errors related to the column definition
  */
 export default async function checkColumnDefinition<TModels extends ModelMap>(
   wildebeest: Wildebeest<TModels>,
-  { tableName, attributes }: ConfiguredModelDefinition,
+  { tableName, attributes }: ConfiguredModelDefinition<StringKeys<TModels>>,
   name: string,
-): Promise<boolean> {
+): Promise<SyncError[]> {
+  // Keep track of errors
+  const errors: SyncError[] = [];
+
   // Get the column definition
   const definition = attributes[name];
   if (!definition) {
-    wildebeest.logger.error(
-      `Missing attribute definition for column "${name}" in table "${tableName}"`,
-    );
-    return false;
+    errors.push({
+      message: `Missing attribute definition for column "${name}" in table "${tableName}"`,
+      tableName,
+    });
+    return errors;
   }
 
   // Run the column checks
-  const columnChecks = await Promise.all([
+  const allErrors = await Promise.all([
     // If the definition is an enum, verify that the enum configuration is correct
     !isEnum(definition)
-      ? true
+      ? []
       : checkEnumDefinition(wildebeest, tableName, name, definition),
     // If the column is a primary key, ensure its constraint exists
     !definition.primaryKey
-      ? true
+      ? []
       : checkPrimaryKeyDefinition(wildebeest, tableName, name),
     // Ensure the association is configured properly
     !definition.isAssociation
-      ? true
+      ? []
       : checkAssociationConfig(wildebeest, tableName, name, definition),
     // Ensure the unique constraint is set properly
     checkUniqueConstraint(wildebeest, tableName, name, definition),
     // Ensure allowNull is set properly
-    checkAllowNullConstraint(wildebeest, tableName, name, definition),
+    checkAllowNullConstraint(wildebeest.db, tableName, name, definition),
     // Ensure the default value is correct
     checkDefaultValue(wildebeest, tableName, name, definition),
     // Ensure the type is set properly,
-    checkColumnType(wildebeest, tableName, name, definition),
+    checkColumnType(wildebeest.db, tableName, name, definition),
   ]);
 
-  // Returns true if definition is in sync
-  return columnChecks.filter((isValid) => !isValid).length === 0;
+  return errors.concat(...allErrors);
 }

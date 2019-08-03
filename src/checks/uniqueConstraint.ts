@@ -4,7 +4,7 @@ import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
-import { ModelMap } from '@wildebeest/types';
+import { ModelMap, SyncError } from '@wildebeest/types';
 
 /**
  * Check if the database has a unique constraint
@@ -40,47 +40,49 @@ export async function hasUniqueConstraint<TModels extends ModelMap>(
  * @param model - The db model to check
  * @param name - The name of the attribute
  * @param definition - The attribute definition
- * @returns True if the unique constraint is set properly
+ * @returns Any errors related to unique constraints
  */
 export default async function checkUniqueConstraint<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
+  { namingConventions, db }: Wildebeest<TModels>,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,
-): Promise<boolean> {
+): Promise<SyncError[]> {
+  // Keep track of errors
+  const errors: SyncError[] = [];
+
   // Check if expected to be unique
   const isUnique =
     !!definition.unique && definition.unique && !definition.primaryKey;
 
   // The name of the constraint
-  const uniqueConstraintName = wildebeest.namingConventions.uniqueConstraint(
+  const uniqueConstraintName = namingConventions.uniqueConstraint(
     tableName,
     name,
   );
 
   // Check if the constraint exists
   const constraintExists = await hasUniqueConstraint(
-    wildebeest.db,
+    db,
     tableName,
     uniqueConstraintName,
   );
 
   // Determine if a constraint exists when it should not
-  const hasConstraintWhenNot = !isUnique && constraintExists;
-  if (hasConstraintWhenNot) {
-    wildebeest.logger.error(
-      `Has unexpected constraint: "${uniqueConstraintName}"`,
-    );
+  if (!isUnique && constraintExists) {
+    errors.push({
+      message: `Has unexpected constraint: "${uniqueConstraintName}"`,
+      tableName,
+    });
   }
 
   // Determine if a constraint does not exist when expected
-  const missingConstraintWhenHas = isUnique && !constraintExists;
-  if (missingConstraintWhenHas) {
-    wildebeest.logger.error(
-      `Missing expected constraint: "${uniqueConstraintName}"`,
-    );
+  if (isUnique && !constraintExists) {
+    errors.push({
+      message: `Missing expected constraint: "${uniqueConstraintName}"`,
+      tableName,
+    });
   }
 
-  // Return true when setup properly
-  return !hasConstraintWhenNot && !missingConstraintWhenHas;
+  return errors;
 }

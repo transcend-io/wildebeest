@@ -2,9 +2,8 @@
 import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
 // global
-import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
-import { ModelMap } from '@wildebeest/types';
+import { ModelMap, SyncError } from '@wildebeest/types';
 
 /**
  * Mapping from sequelize type to data type
@@ -55,17 +54,21 @@ export async function getColumnType<TModels extends ModelMap>(
  *
  * @memberof module:checks
  *
- * @param model - The db model to check for
+ * @param db - The db to test on
+ * @param tableName - The name of the table to operate on
  * @param name - The name of the column
  * @param definition - The model definition
- * @returns True if the column type matches postgres
+ * @returns Any errors related to the type of the column
  */
 export default async function checkColumnType<TModels extends ModelMap>(
-  { logger, db }: Wildebeest<TModels>,
+  db: WildebeestDb<TModels>,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,
-): Promise<boolean> {
+): Promise<SyncError[]> {
+  // Keep track of errors
+  const errors: SyncError[] = [];
+
   // Get the current type
   const currentType = await getColumnType(db, tableName, name);
 
@@ -75,12 +78,12 @@ export default async function checkColumnType<TModels extends ModelMap>(
     SEQUELIZE_TO_DATA_TYPE[expectedConstructorName] || expectedConstructorName;
 
   // Check if type is correct
-  const correctType = expectedType === currentType;
-  if (!correctType) {
-    logger.error(
-      `Unexpected type for column: "${name}" on table "${tableName}". Got "${currentType}" expected "${expectedType}"`,
-    );
+  if (expectedType !== currentType) {
+    errors.push({
+      message: `Unexpected type for column: "${name}" on table "${tableName}". Got "${currentType}" expected "${expectedType}"`, // eslint-disable-line max-len
+      tableName,
+    });
   }
 
-  return correctType;
+  return errors;
 }

@@ -1,30 +1,27 @@
 // global
-import { ModelDefinition } from '@wildebeest/types';
+import { Associations, Attributes } from '@wildebeest/types';
 
 // local
-import getAssociationAs from './getAssociationAs';
 import getForeignKeyName from './getForeignKeyName';
 
 /**
  * Determine the expected column names for a model definition
  *
- * @param model - The model definitioni to determine the column names for
+ * @param attributes - The sequelize db model attribute definitions
+ * @param associations - The associations for that db model
  * @returns The expected column names
  */
-export default function expectedColumnNames({
-  attributes = {},
-  associations = {},
-}: ModelDefinition): string[] {
+export default function expectedColumnNames<TModelNames extends string>(
+  attributes: Attributes = {},
+  associations: Associations<TModelNames> = {},
+): string[] {
   const { belongsTo = {} } = associations;
   return [
     // The attributes
     ...Object.keys(attributes),
     // The belongs to columns
     ...Object.keys(belongsTo).map((associationName) =>
-      getForeignKeyName(
-        belongsTo[associationName],
-        `${getAssociationAs(belongsTo[associationName], associationName)}Id`,
-      ),
+      getForeignKeyName(belongsTo[associationName], `${associationName}Id`),
     ),
   ];
 }

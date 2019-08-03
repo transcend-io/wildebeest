@@ -1,6 +1,13 @@
 // global
-import { ConfiguredModelDefinition, ModelMap } from '@wildebeest/types';
+import {
+  ConfiguredModelDefinition,
+  ModelMap,
+  StringKeys,
+  SyncError,
+} from '@wildebeest/types';
 import tableExists from '@wildebeest/utils/tableExists';
+
+// classes
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 // local
@@ -13,38 +20,43 @@ import checkIndexes from './indexes';
  *
  * @memberof module:checks
  *
- *
  * @param wildebeest - The wildebeest configuration
  * @param model - The database model definition to verify
  * @param modelName - The name of the model
- * @returns True on success TODO should return list of errorsF
+ * @returns Any errors related to the model definition
  */
 export default async function checkModel<TModels extends ModelMap>(
   wildebeest: Wildebeest<TModels>,
-  model: ConfiguredModelDefinition,
-  modelName: string,
-): Promise<boolean> {
+  model: ConfiguredModelDefinition<StringKeys<TModels>>,
+  modelName: StringKeys<TModels>,
+): Promise<SyncError[]> {
+  // Keep track of errors
+  const errors: SyncError[] = [];
+
   // You can skip the check
   if (model.skip) {
-    return true;
+    return errors;
   }
 
   // Ensure the table exist
   const exists = await tableExists(wildebeest.db, model.tableName);
   if (!exists) {
-    wildebeest.logger.error(`Missing table: ${model.tableName}`);
+    errors.push({
+      message: `Missing table: ${model.tableName}`,
+      tableName: model.tableName,
+    });
   }
 
   // Additional checks
-  const [validIndexes, validColumns, validAssociations] = await Promise.all([
+  const allErrors = await Promise.all([
     // Check column definitions
     checkColumnDefinitions(wildebeest, model),
     // Ensure the table has the proper multi column indexes
     checkIndexes(wildebeest, model),
     // Ensure the associations are in sync
-    checkAssociationsSync(wildebeest, model),
+    checkAssociationsSync(wildebeest, model, modelName),
   ]);
 
   // If true, the model definition is in sync
-  return exists && validColumns && validIndexes && validAssociations;
+  return errors.concat(...allErrors);
 }

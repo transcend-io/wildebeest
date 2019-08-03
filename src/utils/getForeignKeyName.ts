@@ -10,8 +10,8 @@ import { Association } from '@wildebeest/types';
  * @param defaultValue - When none is provided, fall back to this
  * @returns The name of the foreign key or null if not provided
  */
-export default function getForeignKeyName(
-  association: Association,
+export default function getForeignKeyName<TModelName extends string>(
+  association: Association<TModelName>,
   defaultValue = 'id',
 ): string {
   if (typeof association === 'string' || !association.foreignKey) {

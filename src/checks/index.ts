@@ -10,12 +10,14 @@
 export { default as checkAllowNullConstraint } from './allowNullConstraint';
 export { default as checkAssociationConfig } from './associationConfig';
 export { default as checkAssociationsSync } from './associations';
+export { default as checkBelongsToAssociation } from './belongsToAssociation';
 export { default as checkColumnDefinition } from './columnDefinition';
 export { default as checkColumnDefinitions } from './columnDefinitions';
 export { default as checkColumnType } from './columnType';
 export { default as checkDefaultValue } from './defaultValue';
 export { default as checkEnumDefinition } from './enumDefinition';
 export { default as checkExtraneousTables } from './extraneousTables';
+export { default as checkJoinBelongsTo } from './joinBelongsTo';
 export { default as checkModel } from './model';
 export { default as checkIndexes } from './indexes';
 export { default as checkPrimaryKeyDefinition } from './primaryKeyDefinition';

@@ -1,10 +1,12 @@
-// global
+// external modules
 import { QueryTypes } from 'sequelize';
 
 // global
+import { ModelMap, SyncError } from '@wildebeest/types';
+
+// classes
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
-import { ModelMap } from '@wildebeest/types';
 
 /**
  * The configuration for a primary key
@@ -58,39 +60,43 @@ export async function getTablePrimaryKey<TModels extends ModelMap>(
  *
  * @memberof module:checks
  *
- * @param model - The model to check
+ * @param db - The db to check against
+ * @param tableName - The name of the table
  * @param name - The name of the expected primary key
- * @returns True if the primary key config is valid for the specified column
+ * @returns Any errors with the primary key definition
  */
 export default async function checkPrimaryKeyDefinition<
   TModels extends ModelMap
 >(
-  wildebeest: Wildebeest<TModels>,
+  { db, namingConventions }: Wildebeest<TModels>,
   tableName: string,
   name: string,
-): Promise<boolean> {
+): Promise<SyncError[]> {
+  // Keep track of errors
+  const errors: SyncError[] = [];
+
   // Get the primary key definition
   const { column_name, constraint_name } = await getTablePrimaryKey(
-    wildebeest.db,
+    db,
     tableName,
   );
 
   // Ensure the primary key is the same column
-  const isSameColumn = name === column_name;
-  if (!isSameColumn) {
-    wildebeest.logger.error(
-      `Wrong column is primary key in "${tableName}" Got "${column_name}", expected "${name}`,
-    );
+  if (name !== column_name) {
+    errors.push({
+      message: `Wrong column is primary key in "${tableName}" Got "${column_name}", expected "${name}`,
+      tableName,
+    });
   }
 
   // Ensure the index has the proper name
-  const expectedIndexName = `${tableName}_pkey`;
-  const indexNameValid = expectedIndexName === constraint_name;
-  if (!indexNameValid) {
-    wildebeest.logger.error(
-      `Invalid primary index name or table "${tableName}" Got "${constraint_name}", expected "${expectedIndexName}`,
-    );
+  const expectedIndexName = namingConventions.primaryKey(tableName);
+  if (expectedIndexName !== constraint_name) {
+    errors.push({
+      message: `Invalid primary index name or table "${tableName}" Got "${constraint_name}", expected "${expectedIndexName}`,
+      tableName,
+    });
   }
 
-  return isSameColumn && indexNameValid;
+  return errors;
 } /* eslint-enable camelcase */

@@ -14,14 +14,24 @@ import { Model } from 'sequelize';
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import { DefaultTableNames } from '@wildebeest/enums';
-import { ModelDefinition, ModelMap } from '@wildebeest/types';
+import {
+  ConfiguredModelDefinition,
+  ModelDefinition,
+  ModelMap,
+  StringKeys,
+} from '@wildebeest/types';
 
 /**
  * A MigrationLock db model
  */
 export default class WildebeestModel<TModels extends ModelMap> extends Model {
   /** The sequelize model definition */
-  public static definition: ModelDefinition;
+  public static definition: ModelDefinition<StringKeys<any>>;
+
+  /** The configured sequelize model definition */
+  public static configuredDefinition?: ConfiguredModelDefinition<
+    StringKeys<any>
+  >; // TODO set this
 
   /** The wildebeest configuration is added on the customInit setup */
   public static wildebeest?: Wildebeest<ModelMap>;
