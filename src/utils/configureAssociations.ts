@@ -1,7 +1,3 @@
-// external modules
-import camelCase from 'lodash/camelCase';
-import upperFirst from 'lodash/upperFirst';
-
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import { CASCADE_HOOKS, NON_NULL } from '@wildebeest/constants';
@@ -11,10 +7,10 @@ import {
   ConfiguredAssociations,
   ModelMap,
   Requirize,
+  StringKeys,
 } from '@wildebeest/types';
 import apply from '@wildebeest/utils/apply';
-
-const pascalCase = (word: string): string => upperFirst(camelCase(word));
+import pascalCase from '@wildebeest/utils/pascalCase';
 
 /**
  * Determine the name of the through model by check for a model definition
@@ -27,11 +23,9 @@ function determineThroughModelName<TModels extends ModelMap>(
   wildebeest: Wildebeest<TModels>,
   modelName1: string,
   modelName2: string,
-): Extract<keyof TModels, string> {
-  const pascalPluralCase = (word: string): string =>
-    pascalCase(wildebeest.pluralCase(word));
+): StringKeys<TModels> {
   const createName = (m1: string, m2: string): string =>
-    `${pascalCase(m1)}${pascalPluralCase(m2)}`;
+    `${pascalCase(m1)}${wildebeest.pascalPluralCase(m2)}`;
 
   // Determine what the name  of the join table is
   const joinNameOne = createName(modelName1, modelName2);
@@ -39,10 +33,10 @@ function determineThroughModelName<TModels extends ModelMap>(
 
   // Return whichever one exists
   if (wildebeest.db.isDefined(joinNameOne)) {
-    return joinNameOne as Extract<keyof TModels, string>;
+    return joinNameOne as StringKeys<TModels>;
   }
   if (wildebeest.db.isDefined(joinNameTwo)) {
-    return joinNameTwo as Extract<keyof TModels, string>;
+    return joinNameTwo as StringKeys<TModels>;
   }
 
   // Throw an error if neither is defined
@@ -56,13 +50,16 @@ function determineThroughModelName<TModels extends ModelMap>(
  * @param name - The name of the association
  * @returns The options with modelName
  */
-export function setAs<TOpts extends AssociationModelName>(
+export function setAs<
+  TOpts extends AssociationModelName<TModelName>,
+  TModelName extends string
+>(
   { modelName, ...options }: TOpts,
   name: string,
 ): Requirize<TOpts, 'modelName'> {
   return {
     ...options,
-    modelName: modelName || name,
+    modelName: modelName || (name as TModelName),
     as: modelName ? name : undefined,
   };
 }
@@ -83,8 +80,11 @@ export default function configureAssociations<TModels extends ModelMap>(
     belongsToMany = {},
     hasMany = {},
     hasOne = {},
-  }: Associations,
-): ConfiguredAssociations {
+  }: Associations<StringKeys<TModels>>,
+): ConfiguredAssociations<StringKeys<TModels>> {
+  /** The model names in the db */
+  type TModelName = StringKeys<TModels>;
+
   const { db } = wildebeest;
 
   return {
@@ -92,7 +92,7 @@ export default function configureAssociations<TModels extends ModelMap>(
     belongsTo: apply(belongsTo, (options, associationName) =>
       typeof options === 'object'
         ? setAs(options, associationName)
-        : { ...NON_NULL, modelName: associationName },
+        : { ...NON_NULL, modelName: associationName as TModelName },
     ),
     // Through must be provided when defining a belongsToMany association
     belongsToMany: apply(belongsToMany, (options, associationName) => ({
@@ -105,13 +105,13 @@ export default function configureAssociations<TModels extends ModelMap>(
     hasMany: apply(hasMany, (options, associationName) =>
       typeof options === 'object'
         ? setAs(options, associationName)
-        : { ...CASCADE_HOOKS, modelName: associationName },
+        : { ...CASCADE_HOOKS, modelName: associationName as TModelName },
     ),
     // Replace CASCADE_HOOKS and tableName
     hasOne: apply(hasOne, (options, associationName) =>
       typeof options === 'object'
         ? setAs(options, associationName)
-        : { ...CASCADE_HOOKS, modelName: associationName },
+        : { ...CASCADE_HOOKS, modelName: associationName as TModelName },
     ),
   };
 }

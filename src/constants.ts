@@ -51,6 +51,10 @@ export const DEFAULT_NAMING_CONVENTIONS = {
     `${snakeCase(tableName)}_${fields
       .map((word) => snakeCase(typeof word === 'string' ? word : word.name))
       .join('_')}`,
+  /**
+   * The primary key of the model
+   */
+  primaryKey: (tableName: string): string => `${tableName}_pkey`,
 };
 
 /**

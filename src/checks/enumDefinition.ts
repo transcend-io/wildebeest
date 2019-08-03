@@ -5,7 +5,7 @@ import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
-import { ModelMap } from '@wildebeest/types';
+import { ModelMap, SyncError } from '@wildebeest/types';
 
 /**
  * Unnested Value
@@ -68,54 +68,56 @@ export async function hasEnum<TModels extends ModelMap>(
  * @param tableName - The name of the table to check
  * @param name - The name of the attribute
  * @param definition - The enum attribute definition
- * @returns True if the enum value is valid
+ * @returns Any errors related to enum definitions
  */
 export default async function EnumDefinition<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
+  { namingConventions, db }: Wildebeest<TModels>,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,
-): Promise<boolean> {
-  let valid = true;
+): Promise<SyncError[]> {
+  // Keep track of errors
+  const errors: SyncError[] = [];
 
   // The expected name of the enum
-  const expectedEnumName = wildebeest.namingConventions.enum(tableName, name);
+  const expectedEnumName = namingConventions.enum(tableName, name);
 
   // Check if the enum exists
-  const enumExists = await hasEnum(wildebeest.db, expectedEnumName);
-  valid = valid && enumExists;
+  const enumExists = await hasEnum(db, expectedEnumName);
 
   // Ensure that the enum values match
   if (enumExists) {
     // Determine the existing and expected values
-    const currentValues = await listEnumValues(wildebeest.db, expectedEnumName);
+    const currentValues = await listEnumValues(db, expectedEnumName);
     const expectedValues = definition.values || [];
 
     // Ensure there are no extra values
     const extraValues = difference(currentValues, expectedValues);
-    const hasExtraValues = extraValues.length > 0;
-    if (hasExtraValues) {
-      wildebeest.logger.error(
-        `Extra enum values for "${expectedEnumName}": "${extraValues.join(
+    if (extraValues.length > 0) {
+      errors.push({
+        message: `Extra enum values for "${expectedEnumName}": "${extraValues.join(
           '", "',
         )}"`,
-      );
+        tableName,
+      });
     }
 
     // Ensure there are no missing values
     const missingValues = difference(expectedValues, currentValues);
-    const hasMissingValues = missingValues.length > 0;
-    if (hasMissingValues) {
-      wildebeest.logger.error(
-        `Missing enum values for "${expectedEnumName}": "${missingValues.join(
+    if (missingValues.length > 0) {
+      errors.push({
+        message: `Missing enum values for "${expectedEnumName}": "${missingValues.join(
           '", "',
         )}"`,
-      );
+        tableName,
+      });
     }
-    valid = valid && !hasMissingValues && !hasExtraValues;
   } else {
-    wildebeest.logger.error(`Could not find enum: "${expectedEnumName}"`);
+    errors.push({
+      message: `Could not find enum: "${expectedEnumName}"`,
+      tableName,
+    });
   }
 
-  return valid;
+  return errors;
 }

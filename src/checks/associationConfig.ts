@@ -2,7 +2,7 @@
 import { QueryTypes } from 'sequelize';
 
 // global
-import { ConfiguredAttribute, ModelMap } from '@wildebeest/types';
+import { ConfiguredAttribute, ModelMap, SyncError } from '@wildebeest/types';
 import getForeignKeyConfig from '@wildebeest/utils/getForeignKeyConfig';
 
 // local
@@ -40,51 +40,45 @@ export async function hasConstraint<TModels extends ModelMap>(
  * @param tableName - The name of the table to check
  * @param name - The name of the column
  * @param definition - The attribute definition
- * @returns True if the association config is proper
+ * @returns Any errors with the association configuration
  */
 export default async function checkAssociationConfig<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
+  { namingConventions, db }: Wildebeest<TModels>,
   tableName: string,
   name: string,
   definition: ConfiguredAttribute,
-): Promise<boolean> {
-  let valid = true;
+): Promise<SyncError[]> {
+  // Keep track of errors
+  const errors: SyncError[] = [];
 
   // The name of the constraint
-  const constraintName = wildebeest.namingConventions.foreignKeyConstraint(
+  const constraintName = namingConventions.foreignKeyConstraint(
     tableName,
     name,
   );
 
   // Ensure that the constraint exists
-  const constraintExists = await hasConstraint(wildebeest.db, constraintName);
+  const constraintExists = await hasConstraint(db, constraintName);
   if (!constraintExists) {
-    wildebeest.logger.error(
-      `Missing foreign key constraint for "${name}" on table "${tableName}": "${constraintName}"`,
-    );
-  }
-  valid = valid && constraintExists;
-
-  if (constraintExists) {
+    errors.push({
+      message: `Missing foreign key constraint for "${name}" on table "${tableName}": "${constraintName}"`,
+      tableName,
+    });
+  } else {
     // Ensure the constraint has proper onDelete
-    const { delete_rule } = await getForeignKeyConfig(
-      wildebeest.db,
-      constraintName,
-    );
+    const { delete_rule } = await getForeignKeyConfig(db, constraintName);
     const expected =
       definition.associationOptions && definition.associationOptions.onDelete
         ? definition.associationOptions.onDelete.toUpperCase()
         : 'NO ACTION';
-    const onDeleteValid = delete_rule === expected;
 
-    if (!onDeleteValid) {
-      wildebeest.logger.error(
-        `Invalid foreign key onDelete for column "${name}" of table "${tableName}". Got "${delete_rule}" expected "${expected}"`, // eslint-disable-line max-len
-      );
+    if (delete_rule !== expected) {
+      errors.push({
+        message: `Invalid foreign key onDelete for column "${name}" of table "${tableName}". Got "${delete_rule}" expected "${expected}"`, // eslint-disable-line max-len
+        tableName,
+      });
     }
-
-    valid = valid && onDeleteValid;
   }
 
-  return valid;
+  return errors;
 } /* eslint-enable camelcase */

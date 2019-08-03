@@ -5,7 +5,12 @@ import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
-import { ConfiguredModelDefinition, ModelMap } from '@wildebeest/types';
+import {
+  ConfiguredModelDefinition,
+  ModelMap,
+  StringKeys,
+  SyncError,
+} from '@wildebeest/types';
 
 // local
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
@@ -58,57 +63,64 @@ export async function hasIndex<TModels extends ModelMap>(
  *
  * @param wildebeest - The wildebeest configuration
  * @param model - The database model definition to verify
- * @returns True if the model has indexes setup matching sequelize definitions
+ * @returns Any errors related to db indexes
  */
 export default async function checkIndexes<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
-  { options, attributes, tableName }: ConfiguredModelDefinition,
-): Promise<boolean> {
+  { db, namingConventions }: Wildebeest<TModels>,
+  {
+    options,
+    attributes,
+    tableName,
+  }: ConfiguredModelDefinition<StringKeys<TModels>>,
+): Promise<SyncError[]> {
+  // Keep track of errors
+  const errors: SyncError[] = [];
+
   // Get the indexes
   const { indexes = [] } = options;
 
   // Get the existing indexes
-  const existingIndexes = await listIndexNames(wildebeest.db, tableName);
+  const existingIndexes = await listIndexNames(db, tableName);
 
   // Get the expected indexes
   const expectedIndexes = indexes.map(({ fields }) =>
-    wildebeest.namingConventions
-      .fieldsConstraint(tableName, fields || [])
-      .slice(0, 63),
+    namingConventions.fieldsConstraint(tableName, fields || []).slice(0, 63),
   );
   Object.keys(attributes).forEach((columnName) => {
     const column = attributes[columnName] as (
       | string
       | ModelAttributeColumnOptions);
     if (typeof column === 'object' && column.primaryKey) {
-      expectedIndexes.push(`${tableName}_pkey`);
+      expectedIndexes.push(namingConventions.primaryKey(tableName));
     } else if (typeof column === 'object' && column.unique) {
-      expectedIndexes.push(`${tableName}_${columnName}_key`);
+      expectedIndexes.push(
+        namingConventions.uniqueConstraint(tableName, columnName),
+      );
     }
   });
 
   // Look for missing indexes
   const missingIndexes = difference(expectedIndexes, existingIndexes);
-  const hasMissingIndexes = missingIndexes.length > 0;
-  if (hasMissingIndexes) {
-    wildebeest.logger.error(
-      `Missing indexes: "${uniq(missingIndexes).join(
+  if (missingIndexes.length > 0) {
+    errors.push({
+      message: `Missing indexes: "${uniq(missingIndexes).join(
         '", "',
       )}" in table: ${tableName}`,
-    );
+      tableName,
+    });
   }
 
   // Look for extra indexes
   const extraIndexes = difference(existingIndexes, expectedIndexes);
-  const hasExtraIndexes = extraIndexes.length > 0;
-  if (hasExtraIndexes) {
-    wildebeest.logger.error(
-      `Extra indexes: "${uniq(extraIndexes).join(
+  if (extraIndexes.length > 0) {
+    errors.push({
+      message: `Extra indexes: "${uniq(extraIndexes).join(
         '", "',
       )}" in table: ${tableName}`,
-    );
+      tableName,
+    });
   }
 
   // Valid if all expected indexes exist
-  return !hasExtraIndexes && !hasMissingIndexes;
+  return errors;
 }

@@ -1,11 +1,13 @@
 // external modules
 import { ModelAttributeColumnOptions } from 'sequelize';
 
+// classes
+import Wildebeest from '@wildebeest/classes/Wildebeest';
+
 // global
-import { ModelMap } from '@wildebeest/types';
+import { ModelMap, SyncError } from '@wildebeest/types';
 import getColumnDefault from '@wildebeest/utils/getColumnDefault';
 import isEnum from '@wildebeest/utils/isEnum';
-import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 /**
  * Ensure the default value of a sequelize definition matches the default value in postgres
@@ -15,14 +17,17 @@ import Wildebeest from '@wildebeest/classes/Wildebeest';
  * @param model - The model to check
  * @param name - The name of the column
  * @param definition - The attribute definition
- * @returns True if the association config is proper
+ * @returns Any errors with the default value of a column
  */
 export default async function DefaultValue<TModels extends ModelMap>(
-  { db, logger, namingConventions }: Wildebeest<TModels>,
+  { db, namingConventions }: Wildebeest<TModels>,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,
-): Promise<boolean> {
+): Promise<SyncError[]> {
+  // Keep track of errors
+  const errors: SyncError[] = [];
+
   // Determine the current default
   const currentDefault = await getColumnDefault(db, tableName, name);
 
@@ -64,12 +69,12 @@ export default async function DefaultValue<TModels extends ModelMap>(
   }
 
   // Check if the default value is set
-  const defaultsMatch = expectedDefault === currentDefault;
-  if (!defaultsMatch) {
-    logger.error(
-      `Invalid default for "${name}" on table "${tableName}". Got "${currentDefault}" expected "${expectedDefault}"`,
-    );
+  if (expectedDefault !== currentDefault) {
+    errors.push({
+      message: `Invalid default for "${name}" on table "${tableName}". Got "${currentDefault}" expected "${expectedDefault}"`, // eslint-disable-line max-len
+      tableName,
+    });
   }
 
-  return defaultsMatch;
+  return errors;
 }

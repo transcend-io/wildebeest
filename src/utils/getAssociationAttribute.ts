@@ -13,8 +13,8 @@ import { Association } from '@wildebeest/types';
  * @param config - The attribute config of the column to join on
  * @returns The association attribute definition
  */
-export default function getAssociationAttribute(
-  association: Association,
+export default function getAssociationAttribute<TModelName extends string>(
+  association: Association<TModelName>,
   config: sequelize.ModelAttributeColumnOptions = {
     defaultValue: sequelize.UUIDV4,
     type: sequelize.UUID,

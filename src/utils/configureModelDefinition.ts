@@ -1,15 +1,17 @@
 // external modules
 import transform from 'lodash/transform';
+import * as sequelize from 'sequelize';
 
 // global
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 import {
   ConfiguredAssociations,
   ConfiguredAttributes,
   ConfiguredModelDefinition,
   ModelDefinition,
   ModelMap,
+  StringKeys,
 } from '@wildebeest/types';
-import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 // local
 import configureAssociations from './configureAssociations';
@@ -25,7 +27,7 @@ import getForeignKeyName from './getForeignKeyName';
  */
 export function createAttributesFromAssociations<TModels extends ModelMap>(
   wildebeest: Wildebeest<TModels>,
-  belongsTo: ConfiguredAssociations['belongsTo'],
+  belongsTo: ConfiguredAssociations<StringKeys<TModels>>['belongsTo'],
 ): ConfiguredAttributes {
   return transform(
     belongsTo,
@@ -79,8 +81,8 @@ export default function configureModelDefinition<TModels extends ModelMap>(
     skip = false,
     isJoin = false,
     dontMatchBelongsTo = false,
-  }: ModelDefinition,
-): ConfiguredModelDefinition {
+  }: ModelDefinition<StringKeys<TModels>>,
+): ConfiguredModelDefinition<StringKeys<TModels>> {
   const {
     belongsTo = {},
     belongsToMany = {},

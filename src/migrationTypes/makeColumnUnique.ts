@@ -37,24 +37,24 @@ export default function makeColumnUnique<TModels extends ModelMap>(
     constraintName,
     constraintType = 'unique',
   } = options;
-  // The name of the constraint
-  const name = constraintName || `${tableName}_${columnName}_key`;
-
   return {
     // Add the constraint
-    up: async ({ db }, withTransaction) =>
+    up: async ({ db, namingConventions }, withTransaction) =>
       withTransaction((transactionOptions) =>
         db.queryInterface.addConstraint(tableName, [columnName], {
           type: constraintType,
-          name,
+          name:
+            constraintName ||
+            namingConventions.uniqueConstraint(tableName, columnName),
           ...transactionOptions,
         }),
       ),
     // Remove the constraint
-    down: async ({ db }, withTransaction) =>
+    down: async ({ db, namingConventions }, withTransaction) =>
       withTransaction((transactionOptions) =>
         db.queryInterface.sequelize.query(
-          `ALTER TABLE "${tableName}" DROP CONSTRAINT IF EXISTS "${name}";`,
+          `ALTER TABLE "${tableName}" DROP CONSTRAINT IF EXISTS "${constraintName ||
+            namingConventions.uniqueConstraint(tableName, columnName)}";`,
           transactionOptions,
         ),
       ),

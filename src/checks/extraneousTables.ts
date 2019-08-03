@@ -3,8 +3,10 @@ import difference from 'lodash/difference';
 import { QueryTypes } from 'sequelize';
 
 // global
-import { ModelMap } from '@wildebeest/types';
-import Wildebeest from '@wildebeest/classes/Wildebeest';
+import { ModelMap, SyncError } from '@wildebeest/types';
+
+// classes
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 
 /**
  * When querying a table
@@ -21,14 +23,17 @@ export type TableDefinition = {
  *
  * @memberof module:checks
  *
- * @param wildebeest - The wildebeest config
+ * @param wildebeest - The wildebeest db to operate on
  * @param tableNames - The tables names that should exist
- * @returns True if there are no extra tables definitions in the db
+ * @returns Any errors related to extra tables.
  */
 export default async function checkExtraneousTables<TModels extends ModelMap>(
-  { db, logger }: Wildebeest<TModels>,
+  db: WildebeestDb<TModels>,
   tableNames: string[],
-): Promise<boolean> {
+): Promise<SyncError[]> {
+  // Keep track of errors
+  const errors: SyncError[] = [];
+
   // Check for existing tables tables
   const tables: TableDefinition[] = await db.query(
     'SELECT schemaname, tablename FROM pg_catalog.pg_tables where "schemaname"=\'public\';',
@@ -40,11 +45,14 @@ export default async function checkExtraneousTables<TModels extends ModelMap>(
     tables.map(({ tablename }) => tablename),
     tableNames,
   );
-  const hasExtra = extraTables.length > 0;
-  if (hasExtra) {
-    logger.error(`\nExtra table definitions: "${extraTables.join('", "')}"`);
+  if (extraTables.length > 0) {
+    extraTables.map((tableName) =>
+      errors.push({
+        message: `\nExtra table definitions: "${extraTables.join('", "')}"`,
+        tableName,
+      }),
+    );
   }
 
-  // Determine if the db is out of sync
-  return !hasExtra;
+  return errors;
 }

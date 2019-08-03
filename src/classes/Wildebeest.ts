@@ -10,6 +10,7 @@
 // external modules
 import { S3 } from 'aws-sdk';
 import { existsSync, readdirSync } from 'fs';
+import flatten from 'lodash/flatten';
 import keyBy from 'lodash/keyBy';
 import { join } from 'path';
 import pluralize from 'pluralize';
@@ -25,6 +26,7 @@ import getBackoffTime from '@wildebeest/utils/getBackoffTime';
 import getNumberedList, {
   NUMBERED_REGEX,
 } from '@wildebeest/utils/getNumberedList';
+import pascalCase from '@wildebeest/utils/pascalCase';
 import restoreFromDump from '@wildebeest/utils/restoreFromDump';
 import sleepPromise from '@wildebeest/utils/sleepPromise';
 import tableExists from '@wildebeest/utils/tableExists';
@@ -51,7 +53,10 @@ import {
   MigrationConfig,
   ModelDefinition,
   ModelMap,
+  StringKeys,
+  SyncError,
 } from '@wildebeest/types';
+import getKeys from '@wildebeest/utils/getKeys';
 
 // local
 import WildebeestDb from './WildebeestDb';
@@ -137,10 +142,16 @@ export default class Wildebeest<TModels extends ModelMap> {
   public models: TModels;
 
   /** The configured database model definitions */
-  public modelDefinitions: { [modelName in string]: ModelDefinition };
+  public modelDefinitions: {
+    [modelName in StringKeys<TModels>]: ModelDefinition<StringKeys<TModels>>;
+  };
 
   /** The configured database model definitions */
-  public configuredModels: { [modelName in string]: ConfiguredModelDefinition };
+  public configuredModels: {
+    [modelName in StringKeys<TModels>]: ConfiguredModelDefinition<
+      StringKeys<TModels>
+    >;
+  };
 
   /** Needed to restore schema dumps using pg_restore and pg_dump */
   public databaseUri: string;
@@ -333,7 +344,9 @@ export default class Wildebeest<TModels extends ModelMap> {
    * @param modelName - The model name to lookup
    * @returns Its model definition, throws error if not found
    */
-  public getModelDefinition(modelName: string): ModelDefinition {
+  public getModelDefinition(
+    modelName: StringKeys<TModels>,
+  ): ModelDefinition<StringKeys<TModels>> {
     const model = this.modelDefinitions[modelName];
     if (!model) {
       throw new Error(`Could not find model for: "${modelName}"`);
@@ -388,21 +401,21 @@ export default class Wildebeest<TModels extends ModelMap> {
    *
    * @returns True if the model definitions are exactly defined in the db
    */
-  public async isSynced(): Promise<boolean> {
+  public async getSyncErrors(): Promise<SyncError[]> {
     const results = await Promise.all([
       // Check that each model is in sync
-      ...Object.entries(this.configuredModels).map(([modelName, model]) =>
-        checkModel(this, model, modelName),
+      ...getKeys(this.configuredModels).map((modelName) =>
+        checkModel(this, this.configuredModels[modelName], modelName),
       ),
       // Check for extra tables
       checkExtraneousTables(
-        this,
-        Object.entries(this.configuredModels)
-          .map(([, { tableName }]) => tableName)
+        this.db,
+        Object.values(this.configuredModels)
+          .map(({ tableName }) => tableName)
           .concat(this.ignoredTableNames),
       ),
     ]);
-    return results.filter((synced) => !synced).length === 0;
+    return flatten(results);
   }
 
   /**
@@ -423,6 +436,16 @@ export default class Wildebeest<TModels extends ModelMap> {
    */
   public getSchemaFile(schemaName: string): string {
     return join(this.schemaDirectory, `${schemaName}.dump`);
+  }
+
+  /**
+   * Pluralize a word and convert to PascalCase
+   *
+   * @param word - The word to modify
+   * @returns The word in plural& pascal case
+   */
+  public pascalPluralCase(word: string): string {
+    return pascalCase(this.pluralCase(word));
   }
 
   /**
@@ -511,10 +534,14 @@ export default class Wildebeest<TModels extends ModelMap> {
     this.logger.info('Checking if the db is in sync...');
 
     // Determine if the db is out of sync
-    const isSynced = await this.isSynced();
+    const errors = await this.getSyncErrors();
 
     // throw an error if the setup is invalid
+    const isSynced = errors.length === 0;
     if (!isSynced) {
+      // Log the errors
+      errors.forEach((error) => this.logger.error(error.message));
+
       const msg =
         'The db is out of sync with Sequelize definitions. View output above to see where.';
       if (this.alwaysCheckSync) {

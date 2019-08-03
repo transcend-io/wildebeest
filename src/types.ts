@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  *
  * ## Migrations Type Definitions
@@ -37,6 +38,16 @@ export type AnyArray = any[]; // eslint-disable-line @typescript-eslint/no-expli
  */
 export type Requirize<T, K extends keyof T> = Omit<T, K> &
   Required<{ [P in K]: T[P] }>;
+
+/**
+ * An object keyed by strings
+ */
+export type ObjByString = { [key in string]: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+/**
+ * Extract string keys from an object
+ */
+export type StringKeys<TObj extends ObjByString> = Extract<keyof TObj, string>;
 
 // ///////// //
 // Sequelize //
@@ -90,9 +101,9 @@ export type DefineColumns<TModels extends ModelMap> = (
  * Since the keys of the associations object specify the `as`, the `modelName` must be procided when the association name !== modelName
  * to indicate what model the association is referring to.
  */
-export type AssociationModelName = {
+export type AssociationModelName<TModelName extends string> = {
   /** The name of the model that the association is to */
-  modelName?: string;
+  modelName?: TModelName;
 };
 
 /**
@@ -102,8 +113,8 @@ export type AssociationModelName = {
  *
  * When `NON_NULL` is provided, the options will be set to [NON_NULL]{@link module:constants.NON_NULL} and the association will have an `onDelete: 'CASCADE'`
  */
-export type BelongsToAssociation =
-  | (sequelize.BelongsToOptions & AssociationModelName)
+export type BelongsToAssociation<TModelName extends string> =
+  | (sequelize.BelongsToOptions & AssociationModelName<TModelName>)
   | 'NON_NULL';
 
 /**
@@ -113,8 +124,8 @@ export type BelongsToAssociation =
  *
  * When `CASCADE` is provided, the options will be set to [CASCADE_HOOKS]{@link module:constants.CASCADE_HOOKS}
  */
-export type HasOneAssociation =
-  | (sequelize.HasOneOptions & AssociationModelName)
+export type HasOneAssociation<TModelName extends string> =
+  | (sequelize.HasOneOptions & AssociationModelName<TModelName>)
   | 'CASCADE';
 
 /**
@@ -124,8 +135,8 @@ export type HasOneAssociation =
  *
  * When `CASCADE` is provided, the options will be set to [CASCADE_HOOKS]{@link module:constants.CASCADE_HOOKS}
  */
-export type HasManyAssociation =
-  | (sequelize.HasManyOptions & AssociationModelName)
+export type HasManyAssociation<TModelName extends string> =
+  | (sequelize.HasManyOptions & AssociationModelName<TModelName>)
   | 'CASCADE';
 
 /**
@@ -139,55 +150,60 @@ export type BelongsToManyAssociation = Omit<
 /**
  * The intersection of all of the different association types
  */
-export type Association =
-  | BelongsToAssociation
-  | HasOneAssociation
-  | HasManyAssociation
+export type Association<TModelName extends string> =
+  | BelongsToAssociation<TModelName>
+  | HasOneAssociation<TModelName>
+  | HasManyAssociation<TModelName>
   | BelongsToManyAssociation;
 
 /**
  * The associations for a model
  */
-export type Associations = {
+export type Associations<TModelNames extends string> = {
   /** The belongs to associations (adds `associationId` to the model) */
-  belongsTo?: { [associationName in string]: BelongsToAssociation };
+  belongsTo?: {
+    [associationName in string]: BelongsToAssociation<TModelNames>;
+  };
   /** The has one associations (adds `thisId` to the association model) */
-  hasOne?: { [associationName in string]: HasOneAssociation };
+  hasOne?: { [associationName in string]: HasOneAssociation<TModelNames> };
   /** The has many associations (adds `thisId` to the association model) */
-  hasMany?: { [associationName in string]: HasManyAssociation };
+  hasMany?: { [associationName in string]: HasManyAssociation<TModelNames> };
   /** Indicates there exists a join table with the association */
-  belongsToMany?: { [associationName in string]: BelongsToManyAssociation };
+  belongsToMany?: {
+    [associationName in string]: BelongsToManyAssociation;
+  }; // TODO [string in TModelName]
 };
 
 /**
  * The associations for a converted into standard sequelize options
  */
-export type ConfiguredAssociations = {
+export type ConfiguredAssociations<TModelNames extends string> = {
   /** The belongs to associations (adds `associationId` to the model) */
   belongsTo: {
     [associationName in string]: sequelize.BelongsToOptions &
-      Required<AssociationModelName>;
+      Required<AssociationModelName<TModelNames>>;
   };
   /** The has one associations (adds `thisId` to the association model) */
   hasOne: {
     [associationName in string]: sequelize.HasOneOptions &
-      Required<AssociationModelName>;
+      Required<AssociationModelName<TModelNames>>;
   };
   /** The has many associations (adds `thisId` to the association model) */
   hasMany: {
     [associationName in string]: sequelize.HasManyOptions &
-      Required<AssociationModelName>;
+      Required<AssociationModelName<TModelNames>>;
   };
   /** Indicates there exists a join table with the association */
   belongsToMany: {
     [associationName in string]: sequelize.BelongsToManyOptions;
-  };
+  }; // TODO [string in TModelName]
 };
 
 /**
  * A definition of a database model
  */
 export type ModelDefinition<
+  TModelNames extends string,
   TModel extends sequelize.Model = sequelize.Model
 > = {
   /** The name of the table */
@@ -195,7 +211,7 @@ export type ModelDefinition<
   /** The sequelize db model attribute definitions */
   attributes?: Attributes;
   /** The associations for that db model */
-  associations?: Associations;
+  associations?: Associations<TModelNames>;
   /** The sequelize db model options */
   options?: sequelize.ModelOptions<TModel>;
   /** Indicate if the model is a join table and extra checks will be enforced */
@@ -209,15 +225,21 @@ export type ModelDefinition<
 /**
  * A configured model definition with defaults filled out
  */
-export type ConfiguredModelDefinition = Required<
-  Omit<ModelDefinition, 'dontMatchBelongTo' | 'associations' | 'attributes'>
+export type ConfiguredModelDefinition<
+  TModelNames extends string,
+  TModel extends sequelize.Model = sequelize.Model
+> = Required<
+  Omit<
+    ModelDefinition<TModelNames, TModel>,
+    'dontMatchBelongTo' | 'associations' | 'attributes'
+  >
 > & {
   /** The configured model attributes */
   attributes: ConfiguredAttributes;
   /** The configured sequelize association options */
-  associations: ConfiguredAssociations;
+  associations: ConfiguredAssociations<TModelNames>;
   /** Save the initial associations */
-  rawAssociations: Required<Associations>;
+  rawAssociations: Required<Associations<TModelNames>>;
 };
 
 /**
@@ -339,4 +361,18 @@ export type WildebeestResponse<TModels extends ModelMap> = Omit<
     /** The wildebeest migrator */
     wildebeest: Wildebeest<TModels>;
   };
+};
+
+// //// //
+// Sync //
+// //// //
+
+/**
+ * An error report when checking the sync status of postgres and sequelize
+ */
+export type SyncError = {
+  /** The error message */
+  message: string;
+  /** The name (or names) of the related db models */
+  tableName: string;
 };

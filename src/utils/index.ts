@@ -23,7 +23,6 @@ export { default as createUmzugLogger } from './createUmzugLogger';
 export { default as createQueryMaker } from './createQueryMaker';
 export { default as dropEnum } from './dropEnum';
 export { default as expectedColumnNames } from './expectedColumnNames';
-export { default as getAssociationAs } from './getAssociationAs';
 export { default as getAssociationAttribute } from './getAssociationAttribute';
 export {
   default as getAssociationColumnName,
@@ -33,7 +32,11 @@ export { default as getColumnDefault } from './getColumnDefault';
 export { default as getForeignKeyConfig } from './getForeignKeyConfig';
 export { default as getNextNumber } from './getNextNumber';
 export { default as getNumberedList } from './getNumberedList';
+export {
+  default as getAssociationsByModelName,
+} from './getAssociationsByModelName';
 export { default as getForeignKeyName } from './getForeignKeyName';
+export { default as getKeys } from './getKeys';
 export { default as indexConstraints } from './indexConstraints';
 export { default as inferTableReference } from './inferTableReference';
 export { default as invert } from './invert';
@@ -45,9 +48,11 @@ export { default as logSection } from './logSection';
 export { default as mkEnum } from './mkEnum';
 export { default as migrateEnumColumn } from './migrateEnumColumn';
 export { default as migrateEnumValues } from './migrateEnumValues';
+export { default as pascalCase } from './pascalCase';
 export { default as renameS3File } from './renameS3File';
 export { default as restoreFromDump } from './restoreFromDump';
 export { default as reverseMigrator } from './reverseMigrator';
+export { default as setAssociations } from './setAssociations';
 export { default as sleepPromise } from './sleepPromise';
 export { default as tableExists } from './tableExists';
 export { default as updateRows } from './updateRows';

@@ -1,9 +1,6 @@
 // global
 import { Association } from '@wildebeest/types';
 
-// local
-import getAssociationAs from './getAssociationAs';
-
 /**
  * Get the name of the column for a belongsTo association
  *
@@ -13,13 +10,10 @@ import getAssociationAs from './getAssociationAs';
  * @param name - The name of the association
  * @returns The name of the column
  */
-export default function getAssociationColumnName(
-  association: Association,
-  name: string,
+export default function getAssociationColumnName<TModelName extends string>(
+  association: Association<TModelName>,
+  associationName: string,
 ): string {
-  // Get the name of model
-  const modelName = getAssociationAs(association, name);
-
   // Return name when specified
   if (
     typeof association === 'object' &&
@@ -36,5 +30,5 @@ export default function getAssociationColumnName(
   }
 
   // Return the default
-  return `${modelName}Id`;
+  return `${associationName}Id`;
 }

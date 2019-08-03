@@ -17,7 +17,7 @@ import {
 } from 'sequelize';
 
 // global
-import { ModelMap } from '@wildebeest/types';
+import { ModelMap, StringKeys } from '@wildebeest/types';
 
 /**
  * A db model
@@ -30,7 +30,7 @@ export default class WildebeestDb<TModels extends ModelMap> extends Sequelize {
   public DataTypes = DataTypes;
 
   /** Db model needs to be fixed */
-  public model!: <TModelName extends Extract<keyof TModels, string>>(
+  public model!: <TModelName extends StringKeys<TModels>>(
     modelName: TModelName,
   ) => TModels[TModelName];
 
