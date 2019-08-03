@@ -1,8 +1,8 @@
 /**
  *
- * ## Handlebars Views for Migrations
- * Handlebars templates used for the running migrations.
+ * ## Handlebars Views for Wildebeest Migrations
+ * Handlebars templates used for the running wildbeest migrations.
  *
- * @module migrations/views
- * @see module:migrations
+ * @module wildbeest/views
+ * @see module:wildbeest
  */

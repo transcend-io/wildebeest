@@ -257,9 +257,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# No snapshot schemas
-src/migrations/schemas/snapshot-*
-
 # Docs
 /docs/
 Internal-Documentation/
@@ -275,5 +272,4 @@ checks.json
 .nvmrc
 
 # Do not commit latest schema dump since it is always changing/only needed by test
-src/migrations/schemas/latest.dump
 *.hidden.dump

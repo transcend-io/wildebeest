@@ -26,11 +26,11 @@ import {
  */
 export default class WildebeestModel<TModels extends ModelMap> extends Model {
   /** The sequelize model definition */
-  public static definition: ModelDefinition<StringKeys<any>>;
+  public static definition: ModelDefinition<StringKeys<ModelMap>>;
 
   /** The configured sequelize model definition */
   public static configuredDefinition?: ConfiguredModelDefinition<
-    StringKeys<any>
+    StringKeys<ModelMap>
   >; // TODO set this
 
   /** The wildebeest configuration is added on the customInit setup */

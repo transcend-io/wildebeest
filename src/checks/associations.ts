@@ -79,7 +79,9 @@ export default async function checkAssociationsSync<TModels extends ModelMap>(
   // Validate the belongsToMany associations
   getKeys(belongsToMany).forEach((assocationName) => {
     // Get the associations of the association
-    const { associations = {} } = wildebeest.getModelDefinition(assocationName);
+    const { associations = {} } = wildebeest.getModelDefinition(
+      assocationName as StringKeys<TModels>, // TODO this should  be typed
+    );
     if (!associations.belongsToMany || !associations.belongsToMany[modelName]) {
       errors.push({
         message: `Missing belongsToMany on "${assocationName}" to ${modelName}`,

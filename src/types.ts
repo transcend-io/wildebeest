@@ -1,10 +1,10 @@
 /* eslint-disable max-lines */
 /**
  *
- * ## Migrations Type Definitions
- * Type definitions for the migrations container.
+ * ## Wildebeest Type Definitions
+ * Type definitions
  *
- * @module migrations/types
+ * @module wildbeest/types
  * @see module:migrations
  */
 
@@ -159,7 +159,7 @@ export type Association<TModelName extends string> =
 /**
  * The associations for a model
  */
-export type Associations<TModelNames extends string> = {
+export type Associations<TModelNames extends string = StringKeys<ModelMap>> = {
   /** The belongs to associations (adds `associationId` to the model) */
   belongsTo?: {
     [associationName in string]: BelongsToAssociation<TModelNames>;
@@ -244,6 +244,12 @@ export type ConfiguredModelDefinition<
 
 /**
  * Model map definition from model name to model definition
+ *
+ * This can be overwritten using a wildebeest.d.ts to enforce the true mapping globally
+ * ```ts
+ * declare module "wildebeest" {
+ *   type ModelMap = { ... }
+ * }
  */
 export type ModelMap = { [modelName in string]: typeof Model };
 

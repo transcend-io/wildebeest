@@ -1,9 +1,9 @@
 /**
  *
- * ## Db Migrations Routes
+ * ## Wildebeest Routes
  * Routes for running migrations
  *
- * @module migrations/routes
+ * @module wildbeest/routes
  * @see module:migrations
  */
 
