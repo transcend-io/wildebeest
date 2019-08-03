@@ -2,9 +2,9 @@
 import { QueryTypes } from 'sequelize';
 
 // global
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 import { ONE_MINUTE, ONE_SECOND } from '@wildebeest/constants';
 import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
-import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 /**
  * Options to define which rows to process

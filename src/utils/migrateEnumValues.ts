@@ -1,6 +1,6 @@
 // global
-import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
 import Wildebeest from '@wildebeest/classes/Wildebeest';
+import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
 
 // local
 import columnAllowsNull from './columnAllowsNull';

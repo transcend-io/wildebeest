@@ -1,10 +1,10 @@
 // global
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
   ModelMap,
 } from '@wildebeest/types';
-import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 
 /**
  * Some queries expect the primary key columnt to be called id TODO factor this out

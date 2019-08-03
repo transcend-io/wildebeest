@@ -2,9 +2,9 @@
 import sequelize from 'sequelize';
 
 // global
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
 import inferTableReference from '@wildebeest/utils/inferTableReference';
-import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 /**
  * Options for adding a constraint to a table

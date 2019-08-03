@@ -21,6 +21,14 @@ import {
   StringKeys,
 } from '@wildebeest/types';
 
+// /**
+//  * Apply mixins to a class definitions so they can be defined separately
+//  */
+// const ImplicitMixin = <TClass extends typeof DatamapModel, TMixins extends {}>(
+//   c: TClass,
+// ): new (...args: ConstructorParameters<TClass>) => InstanceType<TClass> &
+//   TMixins => c as any;
+
 /**
  * A MigrationLock db model
  */
@@ -38,6 +46,19 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
 
   /** The wildebeest sequelize database */
   public static db?: WildebeestDb<ModelMap>;
+
+  /**
+   * Apply mixins to a class definitions so they can be defined separately
+   */
+  public static implicitMixins<
+    TClass extends typeof WildebeestModel,
+    TMixins extends {}
+  >(
+    c: TClass,
+  ): new (...args: ConstructorParameters<TClass>) => InstanceType<TClass> &
+    TMixins {
+    return c as any;
+  }
 
   /**
    * Setup all relattions for this model

@@ -210,6 +210,8 @@ export type ModelDefinition<
   tableName?: string;
   /** The sequelize db model attribute definitions */
   attributes?: Attributes;
+  /** The default attributes to add to every model (ID, createdAt, updatedAt), set this to remove these columns */
+  defaultAttributes?: Attributes;
   /** The associations for that db model */
   associations?: Associations<TModelNames>;
   /** The sequelize db model options */

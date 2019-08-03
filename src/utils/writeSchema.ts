@@ -3,8 +3,8 @@ import { execSync } from 'child_process';
 import { copyFileSync } from 'fs';
 
 // global
-import { ModelMap } from '@wildebeest/types';
 import Wildebeest from '@wildebeest/classes/Wildebeest';
+import { ModelMap } from '@wildebeest/types';
 
 /**
  * Write the current database schema to a file

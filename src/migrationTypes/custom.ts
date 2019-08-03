@@ -1,10 +1,10 @@
 // global
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
   ModelMap,
 } from '@wildebeest/types';
-import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 
 /**
  * A migration that should run on the db

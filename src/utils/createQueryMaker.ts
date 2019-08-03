@@ -2,6 +2,7 @@
 import * as sequelize from 'sequelize';
 
 // global
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 import {
   AnyArray,
   MigrationTransactionOptions,
@@ -9,7 +10,6 @@ import {
   QueryHelpers,
   QueryWithTransaction,
 } from '@wildebeest/types';
-import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 // local
 import batchProcess from './batchProcess';

@@ -2,10 +2,10 @@
 import { ModelAttributeColumnOptions } from 'sequelize';
 
 // global
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import { MigrationDefinition, ModelMap } from '@wildebeest/types';
 import addTableColumnConstraint from '@wildebeest/utils/addTableColumnConstraint';
 import { TableReference } from '@wildebeest/utils/inferTableReference';
-import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 
 /**
  * Options for removing a column that is supposed to be non null

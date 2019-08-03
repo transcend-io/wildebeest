@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 
 // global
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import { OnDelete } from '@wildebeest/enums';
 import {
   MigrationDefinition,
@@ -8,7 +9,6 @@ import {
   ModelMap,
 } from '@wildebeest/types';
 import getForeignKeyConfig from '@wildebeest/utils/getForeignKeyConfig';
-import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 
 /**
  * Options for changing the onDelete of a table column

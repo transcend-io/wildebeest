@@ -49,6 +49,7 @@ import {
 import { DefaultTableNames } from '@wildebeest/enums';
 import Logger, { verboseLoggerDefault } from '@wildebeest/Logger';
 import {
+  Attributes,
   ConfiguredModelDefinition,
   MigrationConfig,
   ModelDefinition,
@@ -88,6 +89,8 @@ export type WildebeestOptions<TModels extends ModelMap> = {
   verboseLogger?: Logger;
   /** Override the names of the db model tables */
   tableNames?: typeof DefaultTableNames;
+  /** The default attributes to add to every model (ID, createdAt, updatedAt), set this to remove these columns */
+  defaultAttributes?: Attributes;
   /** One can override the naming conventions */
   namingConventions?: Partial<NamingConventions>;
   /** The maximum number of migrations to display on a page when rendered */

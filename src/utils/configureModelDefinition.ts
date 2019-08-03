@@ -1,6 +1,5 @@
 // external modules
 import transform from 'lodash/transform';
-import * as sequelize from 'sequelize';
 
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
@@ -77,6 +76,7 @@ export default function configureModelDefinition<TModels extends ModelMap>(
     tableName,
     attributes = {},
     associations = {},
+    defaultAttributes = {},
     options = {},
     skip = false,
     isJoin = false,
@@ -105,6 +105,7 @@ export default function configureModelDefinition<TModels extends ModelMap>(
       ...attributes,
     },
     associations: configuredAssociations,
+    defaultAttributes,
     rawAssociations: {
       belongsTo,
       belongsToMany,

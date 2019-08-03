@@ -2,11 +2,11 @@
 import { S3 } from 'aws-sdk';
 
 // global
+import Wildebeest from '@wildebeest/classes/Wildebeest';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import { MigrationDefinition, ModelMap } from '@wildebeest/types';
 import batchProcess from '@wildebeest/utils/batchProcess';
 import renameS3File from '@wildebeest/utils/renameS3File';
-import Wildebeest from '@wildebeest/classes/Wildebeest';
-import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 
 /**
  * Options for creating a migration that will rename s3 files

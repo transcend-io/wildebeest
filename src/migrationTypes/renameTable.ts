@@ -1,4 +1,5 @@
 // global
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 import { IndexType } from '@wildebeest/enums';
 import {
   IndexConfig,
@@ -7,7 +8,6 @@ import {
   ModelMap,
 } from '@wildebeest/types';
 import { listIndexNames } from '@wildebeest/utils';
-import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 // local
 import { changeConstraintName } from './renameConstraint';

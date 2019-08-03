@@ -3,6 +3,7 @@ import difference from 'lodash/difference';
 import uniq from 'lodash/uniq';
 
 // global
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
@@ -10,7 +11,6 @@ import {
 } from '@wildebeest/types';
 import listEnumAttributes from '@wildebeest/utils/listEnumAttributes';
 import migrateEnumValues from '@wildebeest/utils/migrateEnumValues';
-import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 /**
  * Options for adding or removing enum values

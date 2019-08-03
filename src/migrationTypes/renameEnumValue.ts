@@ -2,6 +2,7 @@
 import difference from 'lodash/difference';
 
 // global
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
@@ -9,7 +10,6 @@ import {
 } from '@wildebeest/types';
 import listEnumAttributes from '@wildebeest/utils/listEnumAttributes';
 import migrateEnumValues from '@wildebeest/utils/migrateEnumValues';
-import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 /**
  * Input for renaming the value of a sequelize enum

@@ -2,9 +2,9 @@
 import { execSync } from 'child_process';
 
 // global
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 import { IS_TEST } from '@wildebeest/constants';
 import { ModelMap } from '@wildebeest/types';
-import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 /**
  * Restore the database from a pd_dump output

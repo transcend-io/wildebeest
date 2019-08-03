@@ -2,8 +2,8 @@
 import { S3 } from 'aws-sdk';
 
 // global
-import { ModelMap } from '@wildebeest/types';
 import Wildebeest from '@wildebeest/classes/Wildebeest';
+import { ModelMap } from '@wildebeest/types';
 
 /**
  * Rename an s3 file

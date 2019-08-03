@@ -2,8 +2,8 @@
 import { Op } from 'sequelize';
 
 // global
-import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
 import Wildebeest from '@wildebeest/classes/Wildebeest';
+import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
 
 // local
 import dropEnum from './dropEnum';
