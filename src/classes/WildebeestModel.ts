@@ -53,13 +53,11 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   /**
    * Apply mixins to a class definitions so they can be defined separately
    */
-  public static mix<TMixins extends DefaultMixins>(): ImplicitMixin<
-    CollapseMixins<TMixins>
-  > {
+  public static mix<TMixins extends {}>(): ImplicitMixin<TMixins> {
     return <TClass extends typeof WildebeestModel>(
       c: TClass,
     ): new (...args: ConstructorParameters<TClass>) => InstanceType<TClass> &
-      CollapseMixins<TMixins> => c as any;
+      TMixins => c as any;
   }
 
   /**
