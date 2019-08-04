@@ -14,7 +14,7 @@ import { Model, Op } from 'sequelize';
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import { DefaultTableNames } from '@wildebeest/enums';
-import { ImplicitMixin, MergeMixins } from '@wildebeest/mixins';
+import { MergeMixins } from '@wildebeest/mixins';
 import {
   ConfiguredModelDefinition,
   ModelDefinition,
@@ -46,10 +46,10 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   /**
    * Apply mixins to a class definitions so they can be defined separately
    */
-  public static mix<TMixins extends {}>(): ImplicitMixin<TMixins> {
-    return <TClass extends typeof WildebeestModel>(
-      c: TClass,
-    ): MergeMixins<TClass, TMixins> => c as any;
+  public static mix<TClass extends typeof WildebeestModel, TMixins extends {}>(
+    c: TClass,
+  ): MergeMixins<TClass, TMixins> {
+    return c as any;
   }
 
   /**

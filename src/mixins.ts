@@ -231,12 +231,3 @@ export type MergeMixins<
   /** Modify the constructor to return the mixins in the instace */
   new (...args: ConstructorParameters<TClass>): InstanceType<TClass> & TMixins;
 };
-
-/**
- * Apply mixins to a class definitions so they can be defined separately
- */
-export type ImplicitMixin<TMixins extends {}> = <
-  TClass extends typeof WildebeestModel
->(
-  c: TClass,
-) => MergeMixins<TClass, TMixins>;
