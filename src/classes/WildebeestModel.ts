@@ -14,7 +14,6 @@ import { Model } from 'sequelize';
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import { DefaultTableNames } from '@wildebeest/enums';
-import { CollapseMixins, DefaultMixins } from '@wildebeest/mixins';
 import {
   ConfiguredModelDefinition,
   ModelDefinition,
