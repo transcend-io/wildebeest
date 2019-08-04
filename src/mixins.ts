@@ -167,7 +167,7 @@ export type Mixins<
           TAssociations[associationType]
         >]: associationType extends keyof GetValuesType<TModel, TAssociationId>
           ? GetValuesType<TModel, TAssociationId>[associationType]
-          : undefined;
+          : never;
       }
     : { [k in string]: undefined }; // should not be defined
 };
