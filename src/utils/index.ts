@@ -15,7 +15,6 @@ export { default as batchProcess } from './batchProcess';
 export { default as clearSchema } from './clearSchema';
 export { default as columnAllowsNull } from './columnAllowsNull';
 export { default as configureAssociations } from './configureAssociations';
-export { default as createAssociations } from './createAssociations';
 export {
   default as configureModelDefinition,
 } from './configureModelDefinition';

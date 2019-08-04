@@ -169,7 +169,7 @@ export type Mixins<
           TAssociationId
         >[associationType];
       }
-    : { [k in string]: undefined }; // should not be defined
+    : any; // should not be defined
 };
 
 /**
