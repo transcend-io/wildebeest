@@ -174,16 +174,14 @@ export type Mixins<
 export type DefaultMixins = Mixins<Associations, any, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
- * A generic type that will enforce a valid mixin definition
+ * Safely merge
  */
-export type DefineMixins<
-  TAssociations extends Associations,
-  TMixins extends Mixins<TAssociations, any, any> // eslint-disable-line @typescript-eslint/no-explicit-any
-> = TMixins;
+type MergeSafe<TMixins> = TMixins extends ObjByString ? Merge<TMixins> : never;
 
 /**
  * Collapse the key - values of the mixin definitions down from 3 levels to a single object { [k in string]: Function }
  */
-export type CollapseMixins<TMixins extends Mixins<Associations>> = Identity<
-  Merge<TMixins extends ObjByString ? Merge<TMixins> : never>
->;
+export type DefineMixins<
+  TAssociations extends Associations,
+  TMixins extends Mixins<TAssociations, any, any> // eslint-disable-line @typescript-eslint/no-explicit-any
+> = Identity<MergeSafe<MergeSafe<TMixins>>>;
