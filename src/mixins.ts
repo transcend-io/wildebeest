@@ -160,9 +160,7 @@ export type Mixins<
   TAssociationId = TModel['id']
 > = {
   // TODO ideally keyof TAssociations
-  [associationType in StringKeys<
-    Associations
-  >]: TAssociations[associationType] extends {}
+  [associationType in keyof Associations]?: TAssociations[associationType] extends {}
     ? {
         [k in StringKeys<TAssociations[associationType]>]: GetValuesType<
           TModel,
