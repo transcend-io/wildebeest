@@ -8,7 +8,7 @@
  */
 
 // external modules
-import { Model } from 'sequelize';
+import { Model, Op } from 'sequelize';
 
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
@@ -37,6 +37,9 @@ export type ImplicitMixin<TMixins extends {}> = <
 export default class WildebeestModel<TModels extends ModelMap> extends Model {
   /** The sequelize model definition */
   public static definition: ModelDefinition<StringKeys<ModelMap>>;
+
+  /** Sequelize operators */
+  public static Op: typeof Op = Op;
 
   /** The configured sequelize model definition */
   public static configuredDefinition?: ConfiguredModelDefinition<
