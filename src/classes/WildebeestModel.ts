@@ -21,13 +21,15 @@ import {
   StringKeys,
 } from '@wildebeest/types';
 
-// /**
-//  * Apply mixins to a class definitions so they can be defined separately
-//  */
-// const ImplicitMixin = <TClass extends typeof DatamapModel, TMixins extends {}>(
-//   c: TClass,
-// ): new (...args: ConstructorParameters<TClass>) => InstanceType<TClass> &
-//   TMixins => c as any;
+/**
+ * Apply mixins to a class definitions so they can be defined separately
+ */
+export type ImplicitMixin<TMixins extends {}> = <
+  TClass extends typeof WildebeestModel // eslint-disable-line no-use-before-define
+>(
+  c: TClass,
+) => new (...args: ConstructorParameters<TClass>) => InstanceType<TClass> &
+  TMixins;
 
 /**
  * A MigrationLock db model
@@ -50,14 +52,11 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   /**
    * Apply mixins to a class definitions so they can be defined separately
    */
-  public static implicitMixins<
-    TClass extends typeof WildebeestModel,
-    TMixins extends {}
-  >(
-    c: TClass,
-  ): new (...args: ConstructorParameters<TClass>) => InstanceType<TClass> &
-    TMixins {
-    return c as any;
+  public static implicitMixins<TMixins extends {}>(): ImplicitMixin<TMixins> {
+    return <TClass extends typeof WildebeestModel>(
+      c: TClass,
+    ): new (...args: ConstructorParameters<TClass>) => InstanceType<TClass> &
+      TMixins => c as any;
   }
 
   /**

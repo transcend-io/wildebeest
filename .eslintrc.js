@@ -34,6 +34,7 @@ module.exports = {
     "@typescript-eslint/interface-name-prefix": 0,
     "@typescript-eslint/no-var-requires": 0,
     "template-curly-spacing": 0,
+    '@typescript-eslint/no-use-before-define': 0,
     "arrow-parens": ["error", "always"],
     "arrow-body-style": [2, "as-needed"],
     "class-methods-use-this": ["error"],
