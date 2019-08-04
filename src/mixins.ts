@@ -116,7 +116,7 @@ export type GetValuesType<
   /** Mixins for a belongsTo association */
   belongsTo: {
     [k in string]:
-      | TAssociation // TODO ENFORCE TASSOCIATION AT THIS LEVEL
+      | (TAssociation | undefined) // TODO ENFORCE TASSOCIATION AT THIS LEVEL
       | BelongsToGetAssociationMixin<TAssociation>
       | BelongsToSetAssociationMixin<TAssociation, TAssociationId>
       | BelongsToCreateAssociationMixin<TAssociation>;
@@ -124,7 +124,7 @@ export type GetValuesType<
   /** Mixins for a hasMany association */
   hasMany: {
     [k in string]:
-      | readonly TAssociation[]
+      | (readonly TAssociation[] | undefined)
       | HasManyGetAssociationsMixin<TAssociation>
       | HasManyAddAssociationMixin<TAssociation, TAssociationId>
       | HasManyHasAssociationMixin<TAssociation, TAssociationId>
@@ -134,7 +134,7 @@ export type GetValuesType<
   /** Mixins for a hasOne association */
   hasOne: {
     [k in string]:
-      | TAssociation
+      | (TAssociation | undefined)
       | HasOneGetAssociationMixin<TAssociation>
       | HasOneSetAssociationMixin<TAssociation, TAssociationId>
       | HasOneCreateAssociationMixin<TAssociation>;
@@ -142,7 +142,7 @@ export type GetValuesType<
   /** Mixins for a belongsToMany association */
   belongsToMany: {
     [k in string]:
-      | readonly TAssociation[]
+      | (readonly TAssociation[] | undefined)
       | BelongsToManyGetAssociationsMixin<TAssociation>
       | BelongsToManyAddAssociationMixin<TAssociation, TAssociationId>
       | BelongsToManyHasAssociationMixin<TAssociation, TAssociationId>
@@ -169,7 +169,7 @@ export type Mixins<
           TAssociationId
         >[associationType];
       }
-    : any; // should not be defined
+    : { [k in string]: undefined }; // should not be defined
 };
 
 /**
