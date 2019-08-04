@@ -9,6 +9,7 @@
 
 // external modules
 import {
+  Association,
   BelongsToCreateAssociationMixin,
   BelongsToGetAssociationMixin,
   BelongsToManyAddAssociationMixin as SequelizeBelongsToManyAddAssociationMixin,
@@ -185,3 +186,35 @@ export type DefineMixins<
   TAssociations extends Associations,
   TMixins extends Mixins<TAssociations, any, any> // eslint-disable-line @typescript-eslint/no-explicit-any
 > = Identity<MergeSafe<MergeSafe<TMixins>>>;
+
+/**
+ * Filter keys in object T for those with value U
+ */
+type FilteredKeys<T, U> = {
+  [P in keyof T]: T[P] extends U ? P : never;
+}[keyof T];
+
+/**
+ * The type of the underlying array
+ */
+type ArrType<T> = T extends (infer TObj)[] ? TObj : T;
+
+/**
+ * Enforce that the result is a model
+ */
+export type IsModel<TM> = TM extends AnyModel ? TM : never;
+
+/**
+ * Extract the association definition from the set of mixins
+ */
+export type ExtractAssociations<
+  TModel extends AnyModel,
+  TMixins extends {}
+> = Required<
+  {
+    [k in FilteredKeys<Required<TMixins>, AnyModel | AnyModel[]>]: Association<
+      TModel,
+      IsModel<ArrType<Required<TMixins>[k]>>
+    >;
+  }
+>;
