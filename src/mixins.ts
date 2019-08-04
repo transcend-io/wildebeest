@@ -223,7 +223,8 @@ export type ExtractAssociations<
  * Merge mixins
  */
 export type MergeMixins<
-  TClass extends typeof WildebeestModel,
+  TClassBase extends new (...args: any) => any,
+  TClass extends TClassBase,
   TMixins extends {}
 > = Omit<TClass, 'new'> & {
   /** Indicator that model was merged */
@@ -231,3 +232,13 @@ export type MergeMixins<
   /** Modify the constructor to return the mixins in the instace */
   new (...args: ConstructorParameters<TClass>): InstanceType<TClass> & TMixins;
 };
+
+/**
+ * Apply mixins to a class definitions so they can be defined separately
+ */
+export type ImplicitMixin<
+  TClassBase extends new (...args: any) => any,
+  TMixins extends {}
+> = <TClass extends TClassBase>(
+  c: TClass,
+) => MergeMixins<TClassBase, TClass, TMixins>;

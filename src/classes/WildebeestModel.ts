@@ -14,22 +14,12 @@ import { Model, Op } from 'sequelize';
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import { DefaultTableNames } from '@wildebeest/enums';
-import { MergeMixins } from '@wildebeest/mixins';
 import {
   ConfiguredModelDefinition,
   ModelDefinition,
   ModelMap,
   StringKeys,
 } from '@wildebeest/types';
-
-/**
- * Apply mixins to a class definitions so they can be defined separately
- */
-export type ImplicitMixin<TMixins extends {}> = <
-  TClass extends typeof WildebeestModel // eslint-disable-line no-use-before-define
->(
-  c: TClass,
-) => MergeMixins<TClass, TMixins>;
 
 /**
  * A MigrationLock db model
@@ -51,15 +41,6 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
 
   /** The wildebeest sequelize database */
   public static db?: WildebeestDb<ModelMap>;
-
-  /**
-   * Apply mixins to a class definitions so they can be defined separately
-   */
-  public static mix<TMixins extends {}>(): ImplicitMixin<TMixins> {
-    return <TClass extends typeof WildebeestModel>(
-      c: TClass,
-    ): MergeMixins<TClass, TMixins> => c as any;
-  }
 
   /**
    * Setup all relattions for this model
