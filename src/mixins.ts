@@ -159,17 +159,13 @@ export type Mixins<
   TModel extends AnyModel = AnyModel,
   TAssociationId = TModel['id']
 > = {
-  [associationType in keyof TAssociations]?: TAssociations[associationType] extends (
-    | {}
-    | string)
-    ? {
-        [k in StringKeys<
-          TAssociations[associationType]
-        >]: associationType extends keyof GetValuesType<TModel, TAssociationId>
-          ? GetValuesType<TModel, TAssociationId>[associationType]
-          : never;
-      }
-    : { [k in string]: undefined }; // should not be defined
+  [associationType in keyof TAssociations]?: {
+    [k in StringKeys<
+      TAssociations[associationType]
+    >]: associationType extends keyof GetValuesType<TModel, TAssociationId>
+      ? GetValuesType<TModel, TAssociationId>[associationType]
+      : never;
+  };
 };
 
 /**
