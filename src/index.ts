@@ -21,7 +21,9 @@ export * from './migrationTypes';
 
 // Types
 export * from './models';
+export * from './mixins';
 export * from './types';
+export const { createAssociations } = utils;
 export { default as Logger } from './Logger';
 export {
   checks,

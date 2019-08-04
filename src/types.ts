@@ -34,6 +34,11 @@ import { RowUpdater, UpdateRowOptions } from './utils/updateRows';
 export type AnyArray = any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
+ * To make the inspected type more tractable than a bunch of intersections
+ */
+export type Identity<T> = { [K in keyof T]: T[K] };
+
+/**
  * Make select arguments of a type required
  */
 export type Requirize<T, K extends keyof T> = Omit<T, K> &
@@ -45,9 +50,25 @@ export type Requirize<T, K extends keyof T> = Omit<T, K> &
 export type ObjByString = { [key in string]: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
+ * Merge an object of objects into a single object
+ */
+export type Merge<TObj extends ObjByString> = UnionToIntersection<
+  TObj[keyof TObj]
+>;
+
+/**
  * Extract string keys from an object
  */
 export type StringKeys<TObj extends ObjByString> = Extract<keyof TObj, string>;
+
+/**
+ * Convert unions to intersection
+ */
+export type UnionToIntersection<U> = (U extends any // eslint-disable-line @typescript-eslint/no-explicit-any
+  ? (k: U) => void
+  : never) extends ((k: infer I) => void)
+  ? I
+  : never;
 
 // ///////// //
 // Sequelize //

@@ -116,6 +116,9 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   /** Time the API key was updated */
   public readonly updatedAt!: Date;
 
+  /** Id is required */
+  public readonly id?: any;
+
   /** The wildebeest configuration */
   public readonly wildebeest!: Wildebeest<TModels>;
 
