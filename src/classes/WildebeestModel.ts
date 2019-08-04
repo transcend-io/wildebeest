@@ -23,6 +23,15 @@ import {
 } from '@wildebeest/types';
 
 /**
+ * Apply mixins to a class definitions so they can be defined separately
+ */
+export type ImplicitMixin<TMixins extends {}> = <
+  TClass extends typeof WildebeestModel // eslint-disable-line no-use-before-define
+>(
+  c: TClass,
+) => MergeMixins<TClass, TMixins>;
+
+/**
  * A MigrationLock db model
  */
 export default class WildebeestModel<TModels extends ModelMap> extends Model {
@@ -46,10 +55,10 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   /**
    * Apply mixins to a class definitions so they can be defined separately
    */
-  public static mix<TClass extends typeof WildebeestModel, TMixins extends {}>(
-    c: TClass,
-  ): MergeMixins<TClass, TMixins> {
-    return c as any;
+  public static mix<TMixins extends {}>(): ImplicitMixin<TMixins> {
+    return <TClass extends typeof WildebeestModel>(
+      c: TClass,
+    ): MergeMixins<TClass, TMixins> => c as any;
   }
 
   /**
