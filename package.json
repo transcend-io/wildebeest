@@ -1,6 +1,6 @@
 {
   "name": "@transcend-io/wildebeest",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Simple class for manipulating files from a relative path",
   "main": "build/index.js",
   "homepage": "https://github.com/transcend-io/wildebeest#readme",
@@ -33,7 +33,7 @@
     "check:deps": "npm-check --ignore \"{}\"",
     "check:deps:interactive": "npm-check -u",
     "####### Build #######": "",
-    "_prepare": "npm run build",
+    "prepare": "npm run build",
     "build": "rimraf build && tsc",
     "build:watch": "tsc --watch"
   },
