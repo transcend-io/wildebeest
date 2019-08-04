@@ -359,14 +359,20 @@ export type QueryHelpers<TModels extends ModelMap> = {
 };
 
 /**
+ * Options for running a query with a transaction
+ */
+export type TransactionOptions = {
+  /** The database transaction */
+  transaction: sequelize.Transaction;
+};
+
+/**
  * Transaction options when running a migration come with helper functions
  */
 export type MigrationTransactionOptions<TModels extends ModelMap> = {
   /** Helper functions that run within the migration transaction */
   queryT: QueryHelpers<TModels>;
-  /** The transaction itself */
-  transaction: sequelize.Transaction;
-};
+} & TransactionOptions;
 
 // /////// //
 // Express //
