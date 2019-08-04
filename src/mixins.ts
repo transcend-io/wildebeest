@@ -11,20 +11,20 @@
 import {
   BelongsToCreateAssociationMixin,
   BelongsToGetAssociationMixin,
-  BelongsToManyAddAssociationMixin,
+  BelongsToManyAddAssociationMixin as SequelizeBelongsToManyAddAssociationMixin,
   BelongsToManyCountAssociationsMixin,
   BelongsToManyCreateAssociationMixin,
   BelongsToManyGetAssociationsMixin,
-  BelongsToManyHasAssociationMixin,
-  BelongsToSetAssociationMixin,
-  HasManyAddAssociationMixin,
+  BelongsToManyHasAssociationMixin as SequelizeBelongsToManyHasAssociationMixin,
+  BelongsToSetAssociationMixin as SequelizeBelongsToSetAssociationMixin,
+  HasManyAddAssociationMixin as SequelizeHasManyAddAssociationMixin,
   HasManyCountAssociationsMixin,
   HasManyCreateAssociationMixin,
   HasManyGetAssociationsMixin,
-  HasManyHasAssociationMixin,
+  HasManyHasAssociationMixin as SequelizeHasManyHasAssociationMixin,
   HasOneCreateAssociationMixin,
   HasOneGetAssociationMixin,
-  HasOneSetAssociationMixin,
+  HasOneSetAssociationMixin as SequelizeHasOneSetAssociationMixin,
 } from 'sequelize/types';
 
 // db
@@ -43,27 +43,74 @@ import {
 export {
   BelongsToCreateAssociationMixin,
   BelongsToGetAssociationMixin,
-  BelongsToManyAddAssociationMixin,
   BelongsToManyCountAssociationsMixin,
   BelongsToManyCreateAssociationMixin,
   BelongsToManyGetAssociationsMixin,
-  BelongsToManyHasAssociationMixin,
-  BelongsToSetAssociationMixin,
-  HasManyAddAssociationMixin,
   HasManyCountAssociationsMixin,
   HasManyCreateAssociationMixin,
   HasManyGetAssociationsMixin,
-  HasManyHasAssociationMixin,
   HasOneCreateAssociationMixin,
   HasOneGetAssociationMixin,
-  HasOneSetAssociationMixin,
 };
+
+/**
+ * Any wildebeest model
+ */
+export type AnyModel = WildebeestModel<ModelMap>;
+
+/**
+ * HasOneSetAssociationMixin with primary key set by default
+ */
+export type HasOneSetAssociationMixin<
+  TModel extends AnyModel,
+  TModelPrimaryKey = TModel['id']
+> = SequelizeHasOneSetAssociationMixin<TModel, TModelPrimaryKey>;
+
+/**
+ * HasManyHasAssociationMixin with primary key set by default
+ */
+export type HasManyHasAssociationMixin<
+  TModel extends AnyModel,
+  TModelPrimaryKey = TModel['id']
+> = SequelizeHasManyHasAssociationMixin<TModel, TModelPrimaryKey>;
+
+/**
+ * HasManyAddAssociationMixin with primary key set by default
+ */
+export type HasManyAddAssociationMixin<
+  TModel extends AnyModel,
+  TModelPrimaryKey = TModel['id']
+> = SequelizeHasManyAddAssociationMixin<TModel, TModelPrimaryKey>;
+
+/**
+ * BelongsToSetAssociationMixin with primary key set by default
+ */
+export type BelongsToSetAssociationMixin<
+  TModel extends AnyModel,
+  TPrimaryKey = TModel['id']
+> = SequelizeBelongsToSetAssociationMixin<TModel, TPrimaryKey>;
+
+/**
+ * BelongsToManyHasAssociationMixin with primary key set by default
+ */
+export type BelongsToManyHasAssociationMixin<
+  TModel extends AnyModel,
+  TModelPrimaryKey = TModel['id']
+> = SequelizeBelongsToManyHasAssociationMixin<TModel, TModelPrimaryKey>;
+
+/**
+ * BelongsToManyAddAssociationMixin with primary key set by default
+ */
+export type BelongsToManyAddAssociationMixin<
+  TModel extends AnyModel,
+  TModelPrimaryKey = TModel['id']
+> = SequelizeBelongsToManyAddAssociationMixin<TModel, TModelPrimaryKey>;
 
 /**
  * These are the mixin options that can be set for each type of association
  */
 export type GetValuesType<
-  TAssociation extends WildebeestModel<ModelMap>,
+  TAssociation extends AnyModel,
   TAssociationId = TAssociation['id']
 > = {
   /** Mixins for a belongsTo association */
@@ -109,7 +156,7 @@ export type GetValuesType<
  */
 export type Mixins<
   TAssociations extends Associations,
-  TModel extends WildebeestModel<ModelMap> = WildebeestModel<ModelMap>,
+  TModel extends AnyModel = AnyModel,
   TAssociationId = TModel['id']
 > = {
   // TODO ideally keyof TAssociations

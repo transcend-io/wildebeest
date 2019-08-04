@@ -7,8 +7,8 @@ import { Associations } from '@wildebeest/types';
  * @param associations - The association definitions
  * @returns The type enforced associations
  */
-export default async function createAssociations<
-  TAssociations extends Associations
->(associations: TAssociations): Promise<TAssociations> {
+export default function createAssociations<TAssociations extends Associations>(
+  associations: TAssociations,
+): TAssociations {
   return associations;
 }
