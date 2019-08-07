@@ -177,7 +177,9 @@ export type DefaultMixins = Mixins<Associations, any, any>; // eslint-disable-li
 /**
  * Safely merge
  */
-type MergeSafe<TMixins> = TMixins extends ObjByString ? Merge<TMixins> : never;
+export type MergeSafe<TMixins> = TMixins extends ObjByString
+  ? Merge<TMixins>
+  : never;
 
 /**
  * Collapse the key - values of the mixin definitions down from 3 levels to a single object { [k in string]: Function }
@@ -190,7 +192,7 @@ export type DefineMixins<
 /**
  * Filter keys in object T for those with value U
  */
-type FilteredKeys<T, U> = {
+export type FilteredKeys<T, U> = {
   [P in keyof T]: T[P] extends U ? P : never;
 }[keyof T];
 
@@ -242,3 +244,8 @@ export type ImplicitMixin<
 > = <TClass extends TClassBase>(
   c: TClass,
 ) => MergeMixins<TClassBase, TClass, TMixins>;
+
+/**
+ * A generic class constructor
+ */
+export type Constructor<T = {}> = new (...args: any[]) => T;
