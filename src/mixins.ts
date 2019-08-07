@@ -207,18 +207,31 @@ type ArrType<T> = T extends (infer TObj)[] ? TObj : T;
 export type IsModel<TM> = TM extends AnyModel ? TM : never;
 
 /**
+ * Omit the id on the model definition
+ */
+export type InstanceWithoutId<
+  TMixinModel extends typeof WildebeestModel
+> = InstanceType<TMixinModel>;
+
+/**
  * Extract the association definition from the set of mixins
  */
 export type ExtractAssociations<
   TModel extends AnyModel,
-  TMixins extends {}
-> = Required<
-  {
-    [k in FilteredKeys<Required<TMixins>, AnyModel | AnyModel[]>]: Association<
-      TModel,
-      IsModel<ArrType<Required<TMixins>[k]>>
-    >;
-  }
+  TMixinModel extends typeof WildebeestModel
+> = Omit<
+  Required<
+    {
+      [k in FilteredKeys<
+        Required<InstanceWithoutId<TMixinModel>>,
+        AnyModel | AnyModel[]
+      >]: Association<
+        TModel,
+        IsModel<ArrType<Required<InstanceWithoutId<TMixinModel>>[k]>>
+      >;
+    }
+  >,
+  'id'
 >;
 
 /**
