@@ -199,7 +199,7 @@ export type FilteredKeys<T, U> = {
 /**
  * The type of the underlying array
  */
-type ArrType<T> = T extends (infer TObj)[] ? TObj : T;
+export type ArrType<T> = T extends (infer TObj)[] ? TObj : T;
 
 /**
  * Enforce that the result is a model
@@ -212,27 +212,6 @@ export type IsModel<TM> = TM extends AnyModel ? TM : never;
 export type InstanceWithoutId<
   TMixinModel extends typeof WildebeestModel
 > = InstanceType<TMixinModel>;
-
-/**
- * Extract the association definition from the set of mixins
- */
-export type ExtractAssociations<
-  TModel extends AnyModel,
-  TMixinModel extends typeof WildebeestModel
-> = Omit<
-  Required<
-    {
-      [k in FilteredKeys<
-        Required<InstanceWithoutId<TMixinModel>>,
-        AnyModel | AnyModel[]
-      >]: Association<
-        TModel,
-        IsModel<ArrType<Required<InstanceWithoutId<TMixinModel>>[k]>>
-      >;
-    }
-  >,
-  'id'
->;
 
 /**
  * Merge mixins
