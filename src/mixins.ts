@@ -13,6 +13,7 @@ import {
   BelongsToCreateAssociationMixin,
   BelongsToGetAssociationMixin,
   BelongsToManyAddAssociationMixin as SequelizeBelongsToManyAddAssociationMixin,
+  BelongsToManyAddAssociationsMixin as SequelizeBelongsToManyAddAssociationsMixin,
   BelongsToManyCountAssociationsMixin,
   BelongsToManyCreateAssociationMixin,
   BelongsToManyGetAssociationsMixin,
@@ -106,6 +107,14 @@ export type BelongsToManyAddAssociationMixin<
   TModel extends AnyModel,
   TModelPrimaryKey = TModel['id']
 > = SequelizeBelongsToManyAddAssociationMixin<TModel, TModelPrimaryKey>;
+
+/**
+ * BelongsToManyAddAssociationsMixin with primary key set by default
+ */
+export type BelongsToManyAddAssociationsMixin<
+  TModel extends AnyModel,
+  TModelPrimaryKey = TModel['id']
+> = SequelizeBelongsToManyAddAssociationsMixin<TModel, TModelPrimaryKey>;
 
 /**
  * These are the mixin options that can be set for each type of association
