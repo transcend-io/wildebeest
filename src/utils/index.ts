@@ -23,6 +23,7 @@ export { default as createUmzugLogger } from './createUmzugLogger';
 export { default as createQueryMaker } from './createQueryMaker';
 export { default as dropEnum } from './dropEnum';
 export { default as expectedColumnNames } from './expectedColumnNames';
+export { default as freshIndexes } from './freshIndexes';
 export { default as getAssociationAttribute } from './getAssociationAttribute';
 export {
   default as getAssociationColumnName,

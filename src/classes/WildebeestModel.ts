@@ -22,6 +22,7 @@ import {
   ModelMap,
   StringKeys,
 } from '@wildebeest/types';
+import freshIndexes from '@wildebeest/utils/freshIndexes';
 import getKeys from '@wildebeest/utils/getKeys';
 
 /**
@@ -98,20 +99,20 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
     otherOptions?: ModelOptions,
   ): ModelOptions {
     if (!otherOptions) {
-      return defaultOptions;
+      return freshIndexes(defaultOptions);
     }
 
     // Break up other options
     const { hooks, indexes, ...otherOpts } = otherOptions;
 
     // Result is simply a copy of default
-    const result = Object.assign({}, defaultOptions, otherOpts);
+    const result = { ...defaultOptions, ...otherOpts };
 
     // Apply new options
     result.hooks = WildebeestModel.mergeHooks(defaultOptions.hooks, hooks);
     result.indexes = [...(defaultOptions.indexes || []), ...(indexes || [])];
 
-    return result;
+    return freshIndexes(result);
   }
 
   /**
