@@ -268,9 +268,8 @@ export default class Wildebeest<TModels extends ModelMap> {
     this.pluralCase = pluralCase;
     this.allowSchemaWrites = allowSchemaWrites;
     this.models = models;
-    this.modelDefinitions = (apply(
-      models,
-      ({ definition }) => definition,
+    this.modelDefinitions = (apply(models, (model) =>
+      model.getDefinition(),
     ) as any) as {
       [modelName in StringKeys<TModels>]: ModelDefinition<StringKeys<TModels>>;
     };

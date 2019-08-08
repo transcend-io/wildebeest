@@ -8,23 +8,31 @@
  */
 
 // external modules
-import { Model, Op } from 'sequelize';
+import { Model, ModelOptions, Op } from 'sequelize';
+import { ModelHooks } from 'sequelize/types/lib/hooks';
 
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import { DefaultTableNames } from '@wildebeest/enums';
 import {
+  Associations,
   ConfiguredModelDefinition,
   ModelDefinition,
   ModelMap,
   StringKeys,
 } from '@wildebeest/types';
+import getKeys from '@wildebeest/utils/getKeys';
 
 /**
  * A MigrationLock db model
  */
 export default class WildebeestModel<TModels extends ModelMap> extends Model {
+  /** These values can be set as defaults for all models that extend this model */
+  public static definitionDefaults: Partial<
+    ModelDefinition<StringKeys<ModelMap>>
+  > = {};
+
   /** The sequelize model definition */
   public static definition: ModelDefinition<StringKeys<ModelMap>>;
 
@@ -41,6 +49,132 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
 
   /** The wildebeest sequelize database */
   public static db?: WildebeestDb<ModelMap>;
+
+  /**
+   * Merge db model hooks
+   *
+   * @param defaultHooks - The default hooks
+   * @param otherHooks - Additional hooks provided that should be merged
+   * @returns The model options merged
+   */
+  public static mergeHooks(
+    defaultHooks: Partial<ModelHooks> = {},
+    otherHooks: Partial<ModelHooks> = {},
+  ): Partial<ModelHooks> {
+    // Copy the default hooks
+    const copy = { ...defaultHooks } as any;
+
+    // Loop over each of the other hooks
+    getKeys(otherHooks).forEach((name) => {
+      const hook = otherHooks[name] as any;
+
+      // Set the hook when it does not exist
+      if (!copy[name]) {
+        copy[name] = hook;
+      }
+
+      // Merge the hooks
+      const oldHook = copy[name];
+      copy[name] = async (...args: any[]) => {
+        // Call the old hook
+        await Promise.resolve(oldHook(...args));
+        // Call the new hook
+        await Promise.resolve(hook(...args));
+      };
+    });
+
+    return copy;
+  }
+
+  /**
+   * Helper function to merge db model options with a default set. Only merges hooks and indexes
+   *
+   * @param defaultOptions - The default options
+   * @param options - The options to override
+   * @returns The combined model options
+   */
+  public static mergeOptions(
+    defaultOptions: ModelOptions = {},
+    otherOptions?: ModelOptions,
+  ): ModelOptions {
+    if (!otherOptions) {
+      return defaultOptions;
+    }
+
+    // Break up other options
+    const { hooks, indexes, ...otherOpts } = otherOptions;
+
+    // Result is simply a copy of default
+    const result = Object.assign({}, defaultOptions, otherOpts);
+
+    // Apply new options
+    result.hooks = WildebeestModel.mergeHooks(defaultOptions.hooks, hooks);
+    result.indexes = [...(defaultOptions.indexes || []), ...(indexes || [])];
+
+    return result;
+  }
+
+  /**
+   * Merge two association definitions
+   *
+   * @param defaultAssociations - The base set of associations
+   * @param otherAssociations - The associations to merge
+   * @returns The merged model associations
+   */
+  public static mergeAssociations(
+    defaultAssociations: Associations = {},
+    otherAssociations: Associations = {},
+  ): Associations {
+    // Clone the defaults
+    const result = { ...defaultAssociations } as any;
+
+    // Iterate over each associationType
+    getKeys(otherAssociations).forEach((associationType) => {
+      const associations = otherAssociations[associationType];
+      // Create if does not exist
+      if (!result[associationType]) {
+        result[associationType] = associations;
+      } else {
+        // Merge if exists
+        result[associationType] = {
+          ...result[associationType],
+          ...associations,
+        };
+      }
+    });
+    return result;
+  }
+
+  /**
+   * Get the model definition by merging the default definition and definition
+   */
+  public static getDefinition(): ModelDefinition<StringKeys<ModelMap>> {
+    return {
+      // Definition overrides defaults
+      ...this.definitionDefaults,
+      ...this.definition,
+      // Attributes are merged
+      attributes: Object.assign(
+        {},
+        this.definitionDefaults.attributes,
+        this.definition.attributes,
+      ),
+      defaultAttributes: Object.assign(
+        {},
+        this.definitionDefaults.defaultAttributes,
+        this.definition.defaultAttributes,
+      ),
+      // associations and options are combined indiviudally
+      associations: WildebeestModel.mergeAssociations(
+        this.definitionDefaults.associations,
+        this.definition.associations,
+      ),
+      options: WildebeestModel.mergeOptions(
+        this.definitionDefaults.options,
+        this.definition.options,
+      ),
+    };
+  }
 
   /**
    * Setup all relattions for this model
