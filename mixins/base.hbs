@@ -1,0 +1,43 @@
+/* tslint:disable completed-docs max-classes-per-file */
+/**
+ *
+ * ## {{ pascalCase container }} Base Model
+ * The db model definition from which this model definition is inheriting from.
+ *
+ * WARNING: This file is 100% generated.
+ *
+ * This is the base class definition with all [Sequelize mixins](https://sequelize.readthedocs.io/en/latest/api/associations/) applied.
+ *
+ * This class definition is an [abstract](https://www.typescriptlang.org/docs/handbook/classes.html#abstract-classes) class and may require a certain API to be properly implemented.
+ *
+ * @module {{ container }}/BaseModel
+ * @see module:{{ container }}
+ */
+
+// wildebeest
+import * as w from '@transcend-io/wildebeest';
+
+// db
+import * as m from '{{ modelDefinitionsPath }}';
+
+// {{ modelBaseFolder }}
+import {{ ModelBaseName }} from '@bk/{{ modelBaseFolder }}/{{ ModelBaseName }}';
+
+/**
+ * This is the base class definition with all mixins applied from associations on the {{ pascalCase container }}
+ */
+export default class {{ pascalCase container }}Base extends {{ ModelBaseName }} {
+  {{#each sections}}
+
+  // {{ pad associationType }} //
+  // {{ associationType }} //
+  // {{ pad associationType }} //
+  {{#each definitions}}
+
+  /** Association with `{{ modelName }}`{{#ifNotEqual associationName modelName}} as `{{ associationName }}`{{/ifNotEqual}} */
+  {{#each attributes}}
+  {{{ attribute }}}
+  {{/each}}
+  {{/each}}
+  {{/each}}
+};

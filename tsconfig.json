@@ -12,8 +12,8 @@
     "baseUrl": ".",
     "paths": {
       "@generators/*": ["@transcend-io/generators/src/*"],
-      "@wildebeest/*": ["./src/*"],
-      "@wildebeest": ["./src/index"]
+      "@wildebeest*": ["./src*"],
+      "@mixins*": ["./mixins*"]
     },
     "outDir": "./build",
     "types": ["node", "mocha", "chai"],
@@ -21,6 +21,7 @@
   },
   "include": [
     "src/**/*",
+    "mixins/**/*",
     // "generators/**/*" TODO
   ],
   "exclude": [
