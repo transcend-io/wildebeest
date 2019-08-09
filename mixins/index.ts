@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+// Convert all paths at first
+import './convert_paths';
+
 /* tslint:disable no-relative-imports */
 // external modules
 import { existsSync, readFileSync } from 'fs';
