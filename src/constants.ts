@@ -9,11 +9,7 @@
 
 // external modules
 import snakeCase from 'lodash/snakeCase';
-import {
-  BelongsToOptions,
-  HasManyOptions,
-  ModelIndexesOptions,
-} from 'sequelize';
+import { ModelIndexesOptions } from 'sequelize';
 
 /**
  * One can override the naming conventions for various database values
@@ -60,7 +56,7 @@ export const DEFAULT_NAMING_CONVENTIONS = {
 /**
  * Add hooks: true onDelete: cascade
  */
-export const CASCADE_HOOKS: HasManyOptions = {
+export const CASCADE_HOOKS = {
   hooks: true,
   onDelete: 'cascade',
 };
@@ -68,7 +64,7 @@ export const CASCADE_HOOKS: HasManyOptions = {
 /**
  * Make the foreignKey be NOT NULL
  */
-export const NON_NULL: BelongsToOptions = { foreignKey: { allowNull: false } };
+export const NON_NULL = { foreignKey: { allowNull: false } };
 
 /**
  * The maximum number of migrations to show on a page
