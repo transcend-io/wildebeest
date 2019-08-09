@@ -21,7 +21,7 @@
   },
   "include": [
     "src/**/*",
-    "mixins/**/*",
+    "mixins/**/*"
     // "generators/**/*" TODO
   ],
   "exclude": [
