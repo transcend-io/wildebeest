@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /* tslint:disable no-relative-imports */
 // external modules
 import { existsSync, readFileSync } from 'fs';
