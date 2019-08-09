@@ -1,3 +1,20 @@
+// global
+import { ObjByString } from '@wildebeest/types';
+
+/**
+ * The function to apply
+ */
+export type ApplyFunc<
+  TInput extends ObjByString,
+  TOutput,
+  TObjType extends TInput
+> = (
+  value: TInput[keyof TInput],
+  key: Extract<keyof TInput, string>,
+  fullObj: TObjType,
+  index: number,
+) => TOutput;
+
 /**
  * Apply a function to each value of an object. Similar to lodash.mapValues but should preserver the typing of the keys.
  *
@@ -9,14 +26,9 @@
  * @param applyFunc - The function to apply
  * @returns The updated object
  */
-export default function apply<TInput extends { [k in string]: any }, TOutput>( // eslint-disable-line @typescript-eslint/no-explicit-any,max-len
+export default function apply<TInput extends ObjByString, TOutput>(
   obj: TInput,
-  applyFunc: (
-    value: TInput[keyof TInput],
-    key: Extract<keyof TInput, string>,
-    fullObj: typeof obj,
-    index: number,
-  ) => TOutput,
+  applyFunc: ApplyFunc<TInput, TOutput, typeof obj>,
 ): { [key in keyof TInput]: TOutput } {
   const result = Object.keys(obj).reduce(
     (acc, key, ind) =>
