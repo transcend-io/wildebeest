@@ -51,11 +51,8 @@ const tsConfig = JSON.parse(tscJson); // semicolon necessary prior to IIFE
       // tsc compiles src/* to the build root dir, so we want to resolve 'src/foo' to 'foo'
       // which we do here by simply snipping off the 'src'
       let path = replaceWith.split('/*')[0];
-      if (!path.includes('node_modules')) {
-        path =
-          path === 'src'
-            ? 'build/backend/src'
-            : `build/${path.replace('../', '')}`;
+      if (path.startsWith('./')) {
+        path = path.replace('./', './build/');
       }
 
       return { ...map, [keyPrefix]: path };
