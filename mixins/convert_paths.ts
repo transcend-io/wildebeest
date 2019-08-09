@@ -27,7 +27,7 @@
 import fs from 'fs';
 import { join } from 'path';
 
-const rootPath = join(__dirname, '..', '..', '..');
+const rootPath = join(__dirname, '..', '..');
 const tscJson = fs
   .readFileSync(join(rootPath, 'tsconfig.json'), 'utf-8')
   // Remove single-line comments.
