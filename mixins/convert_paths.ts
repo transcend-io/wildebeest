@@ -47,10 +47,10 @@ const tsConfig = JSON.parse(tscJson); // semicolon necessary prior to IIFE
       const replaceWith = paths[key][0]; // .replace('src', 'build');
       // No true wildcard support, just assuming that there is always 1 wildcard and it's '/*'
       // No support for multiple paths per key, either.
-      const keyPrefix = key.split('/*')[0];
+      const keyPrefix = key.split('/*')[0].split('*')[0];
       // tsc compiles src/* to the build root dir, so we want to resolve 'src/foo' to 'foo'
       // which we do here by simply snipping off the 'src'
-      let path = replaceWith.split('/*')[0];
+      let path = replaceWith.split('/*')[0].split('*')[0];
       if (path.startsWith('./')) {
         path = path.replace('./', './build/');
       }

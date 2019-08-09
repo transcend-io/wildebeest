@@ -68,4 +68,4 @@ function main(configPath: string = join(process.cwd(), 'wildebeest.js')): void {
 }
 
 // Run the main script
-main(process.argv[1]);
+main(process.argv[2]);
