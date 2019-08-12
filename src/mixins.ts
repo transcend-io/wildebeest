@@ -3,7 +3,7 @@
  * ## Wildebeest Mixing Type Definitions
  * Type definitions used to define the type for dynamically injected sequelize prototypes
  *
- * @module wildbeest/types
+ * @module wildebeest/types
  * @see module:migrations
  */
 

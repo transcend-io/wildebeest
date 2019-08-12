@@ -3,7 +3,7 @@
  * ## Wildebeest Routes
  * Routes for running migrations
  *
- * @module wildbeest/routes
+ * @module wildebeest/routes
  * @see module:migrations
  */
 

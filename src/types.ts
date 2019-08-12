@@ -4,7 +4,7 @@
  * ## Wildebeest Type Definitions
  * Type definitions
  *
- * @module wildbeest/types
+ * @module wildebeest/types
  * @see module:migrations
  */
 
@@ -119,7 +119,7 @@ export type DefineColumns<TModels extends ModelMap> = (
 ) => Attributes;
 
 /**
- * Since the keys of the associations object specify the `as`, the `modelName` must be procided when the association name !== modelName
+ * Since the keys of the associations object specify the `as`, the `modelName` must be provided when the association name !== modelName
  * to indicate what model the association is referring to.
  */
 export type AssociationModelName<TModelName extends string> = {
@@ -241,7 +241,7 @@ export type ModelDefinition<
   isJoin?: boolean;
   /** You can skip the sync check by setting this to true */
   skip?: boolean;
-  /** When ture, this model does not need an opposite hasOne or hasMany association for opposing belongsTo associations */
+  /** When true, this model does not need an opposite hasOne or hasMany association for opposing belongsTo associations */
   dontMatchBelongsTo?: boolean;
 };
 
@@ -385,7 +385,7 @@ export type WildebeestResponse<TModels extends ModelMap> = Omit<
   express.Response,
   'locals'
 > & {
-  /** Local values accessesible in controller functions */
+  /** Local values accessible in controller functions */
   locals: {
     /** The wildebeest migrator */
     wildebeest: Wildebeest<TModels>;

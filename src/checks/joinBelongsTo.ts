@@ -12,7 +12,7 @@ import {
  *
  * @param db - The wildebeest db
  * @param model - The model to check the associations for
- * @returns Any errors relaetd to the belongs to association config of a join table
+ * @returns Any errors related to the belongs to association config of a join table
  */
 export default async function checkJoinBelongsTo<TModels extends ModelMap>(
   db: WildebeestDb<TModels>,
@@ -25,7 +25,7 @@ export default async function checkJoinBelongsTo<TModels extends ModelMap>(
   if (!db) {
     // TODO maybe have a type that has these enforced to be set to prevent need for type check all over
     throw new Error(
-      `Wildbeest instance must be initialized before checking belongsTo`,
+      `wildebeest instance must be initialized before checking belongsTo`,
     );
   }
 

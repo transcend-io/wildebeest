@@ -68,7 +68,7 @@ import WildebeestDb from './WildebeestDb';
 export type NamingConventions = typeof DEFAULT_NAMING_CONVENTIONS;
 
 /**
- * The opitons needed to configure a wildebeest
+ * The options needed to configure a wildebeest
  */
 export type WildebeestOptions<TModels extends ModelMap> = {
   /** The uri of the database to connect o */
@@ -77,7 +77,7 @@ export type WildebeestOptions<TModels extends ModelMap> = {
   directory: string;
   /** The directory that holds schemas dump */
   schemaDirectory: string;
-  /** The name of the schehma file to be used to restore the database to when it is completed empty */
+  /** The name of the schema file to be used to restore the database to when it is completed empty */
   restoreSchemaOnEmpty: string;
   /** The database model definitions to be validated */
   models: TModels;
@@ -107,7 +107,7 @@ export type WildebeestOptions<TModels extends ModelMap> = {
   allowSchemaWrites?: boolean;
   /** When true, anytime the migration lock is released, a sync check will be performed */
   alwaysCheckSync?: boolean;
-  /** When testing migrations, this shold be the bottom migration to run down to. Defaults to 2 since 1 must be a genesis migration */
+  /** When testing migrations, this should be the bottom migration to run down to. Defaults to 2 since 1 must be a genesis migration */
   bottomTest?: number;
 };
 
@@ -165,7 +165,7 @@ export default class Wildebeest<TModels extends ModelMap> {
   /** Names of the db models */
   public tableNames: typeof DefaultTableNames;
 
-  /** The name of the schehma file to be used to restore the database to when it is completed empty */
+  /** The name of the schema file to be used to restore the database to when it is completed empty */
   public restoreSchemaOnEmpty: string;
 
   /** Can forcefully unlock the migration lock table (useful in testing or auto-reloading environment) */
@@ -212,7 +212,7 @@ export default class Wildebeest<TModels extends ModelMap> {
   /** The list of migrations to run */
   public migrations: MigrationConfig[];
 
-  /** For accessibiliy in reverse order */
+  /** For accessibility in reverse order */
   public reversedMigrations: MigrationConfig[];
 
   /** Lookup from number to migration config */
@@ -230,7 +230,7 @@ export default class Wildebeest<TModels extends ModelMap> {
   /** When true, anytime the migration lock is released, a sync check will be performed */
   public alwaysCheckSync: boolean;
 
-  /** When testing migrations, this shold be the bottom migration to run down to */
+  /** When testing migrations, this should be the bottom migration to run down to */
   public bottomTest: number;
 
   /** The umzug instance that will run the migrations up and down */
@@ -428,7 +428,7 @@ export default class Wildebeest<TModels extends ModelMap> {
   /**
    * Validate whether a schema exists
    *
-   * @param schemaName - The name of the schema to checl
+   * @param schemaName - The name of the schema to check
    * @returns True if it exists
    */
   public schemaExists(schemaName: string): boolean {
@@ -438,7 +438,7 @@ export default class Wildebeest<TModels extends ModelMap> {
   /**
    * Validate whether a schema exists
    *
-   * @param schemaName - The name of the schema to checl
+   * @param schemaName - The name of the schema to check
    * @returns The absolute path to the schema
    */
   public getSchemaFile(schemaName: string): string {
