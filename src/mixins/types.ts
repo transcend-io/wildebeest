@@ -244,7 +244,7 @@ export type HasManyUpdateAllAssociationsMixin<TModel extends AnyModel> = (
 export type HasManyUpdateOneAssociationMixin<TModel extends AnyModel> = (
   findOptions: FindOptions,
   input: AttributeInputs,
-  options: UpdateOptions,
+  options?: UpdateOptions,
 ) => Promise<TModel>;
 
 /**
@@ -253,5 +253,5 @@ export type HasManyUpdateOneAssociationMixin<TModel extends AnyModel> = (
 export type HasManyUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
   findOptions: FindOptions,
   input: AttributeInputs,
-  options: UpdateOptions,
+  options?: UpdateOptions,
 ) => Promise<TModel>;
