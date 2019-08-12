@@ -48,6 +48,23 @@ export type AnyModel = WildebeestModel<ModelMap>;
  */
 export type AttributeInputs = { [name in string]: unknown };
 
+/**
+ * Filter keys in object T for those with value U
+ */
+export type FilteredKeys<T, U> = {
+  [P in keyof T]: T[P] extends U ? P : never;
+}[keyof T];
+
+/**
+ * The type of the underlying array
+ */
+export type ArrType<T> = T extends (infer TObj)[] ? TObj : T;
+
+/**
+ * Enforce that the result is a model
+ */
+export type IsModel<TM> = TM extends AnyModel ? TM : never;
+
 // ///////////// //
 // belongsToMany //
 // ///////////// //
