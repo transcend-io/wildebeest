@@ -25,7 +25,7 @@ import logSection from '@wildebeest/utils/logSection';
  */
 export default class Migration<
   TModels extends ModelMap
-> extends WildebeestModel<TModels> {
+> extends WildebeestModel<TModels, number> {
   /** The current batch number to add */
   public static batch: number;
 
