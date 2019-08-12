@@ -9,15 +9,7 @@
  */
 
 // local
-import * as attributes from './attributes';
 import Migration from './Migration';
-import * as options from './options';
-
-// Set the definition
-Migration.definition = {
-  attributes,
-  options,
-};
 
 /**
  * A Migration db model

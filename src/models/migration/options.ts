@@ -14,7 +14,7 @@ import { ModelHooks } from 'sequelize/types/lib/hooks';
 import { ModelMap } from '@wildebeest/types';
 
 // local
-import Migration from './index';
+import Migration from './Migration';
 
 const getNumber = (name: string): number =>
   parseInt(name.match(/^\d+/) as any, 10);

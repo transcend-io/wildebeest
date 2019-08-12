@@ -20,12 +20,22 @@ import WildebeestModel from '@wildebeest/classes/WildebeestModel';
 import { ModelMap, UpToOptions } from '@wildebeest/types';
 import logSection from '@wildebeest/utils/logSection';
 
+// local
+import * as attributes from './attributes';
+import * as options from './options';
+
 /**
  * A Migration db model
  */
 export default class Migration<
   TModels extends ModelMap
 > extends WildebeestModel<TModels, number> {
+  /** The model definition */
+  public static definition = {
+    attributes,
+    options,
+  };
+
   /** The current batch number to add */
   public static batch: number;
 

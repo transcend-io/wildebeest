@@ -22,12 +22,20 @@ import tableExists from '@wildebeest/utils/tableExists';
 import Migration from '@wildebeest/models/migration/Migration';
 import { ModelMap } from '@wildebeest/types';
 
+// local
+import * as attributes from './attributes';
+
 /**
  * A MigrationLock db model
  */
 export default class MigrationLock<
   TModels extends ModelMap
 > extends WildebeestModel<TModels> {
+  /** The model definition */
+  public static definition = {
+    attributes,
+  };
+
   /**
    * Lock the migrations so no one else attempts to migrate the db at the same time.
    *
