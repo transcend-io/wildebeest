@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  *
  * ## Wildebeest Db Model
@@ -154,6 +155,40 @@ export default class WildebeestModel<
       }
     });
     return result;
+  }
+
+  /**
+   * Get the model definition by merging the default definition and definition
+   */
+  public static mergeDefaultDefinitions(
+    initialDefaults: Partial<ModelDefinition<StringKeys<ModelMap>>>,
+    mergeDefaults: Partial<ModelDefinition<StringKeys<ModelMap>>>,
+  ): Partial<ModelDefinition<StringKeys<ModelMap>>> {
+    return {
+      // Definition overrides defaults
+      ...initialDefaults,
+      ...mergeDefaults,
+      // Attributes are merged
+      attributes: Object.assign(
+        {},
+        initialDefaults.attributes,
+        mergeDefaults.attributes,
+      ),
+      defaultAttributes: Object.assign(
+        {},
+        initialDefaults.defaultAttributes,
+        mergeDefaults.defaultAttributes,
+      ),
+      // associations and options are combined individually
+      associations: WildebeestModel.mergeAssociations(
+        initialDefaults.associations,
+        mergeDefaults.associations,
+      ),
+      options: WildebeestModel.mergeOptions(
+        initialDefaults.options,
+        mergeDefaults.options,
+      ),
+    };
   }
 
   /**
