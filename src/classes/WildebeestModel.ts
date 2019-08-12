@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /**
  *
  * ## Wildebeest Db Model
@@ -159,33 +158,35 @@ export default class WildebeestModel<
 
   /**
    * Get the model definition by merging the default definition and definition
+   *
+   * @param mergeDefaults - The defaults to merge with the existing defaults
+   * @returns The merged default definitions
    */
   public static mergeDefaultDefinitions(
-    initialDefaults: Partial<ModelDefinition<StringKeys<ModelMap>>>,
     mergeDefaults: Partial<ModelDefinition<StringKeys<ModelMap>>>,
   ): Partial<ModelDefinition<StringKeys<ModelMap>>> {
     return {
       // Definition overrides defaults
-      ...initialDefaults,
+      ...this.definitionDefaults,
       ...mergeDefaults,
       // Attributes are merged
       attributes: Object.assign(
         {},
-        initialDefaults.attributes,
+        this.definitionDefaults.attributes,
         mergeDefaults.attributes,
       ),
       defaultAttributes: Object.assign(
         {},
-        initialDefaults.defaultAttributes,
+        this.definitionDefaults.defaultAttributes,
         mergeDefaults.defaultAttributes,
       ),
       // associations and options are combined individually
       associations: WildebeestModel.mergeAssociations(
-        initialDefaults.associations,
+        this.definitionDefaults.associations,
         mergeDefaults.associations,
       ),
       options: WildebeestModel.mergeOptions(
-        initialDefaults.options,
+        this.definitionDefaults.options,
         mergeDefaults.options,
       ),
     };
@@ -195,31 +196,7 @@ export default class WildebeestModel<
    * Get the model definition by merging the default definition and definition
    */
   public static getDefinition(): ModelDefinition<StringKeys<ModelMap>> {
-    return {
-      // Definition overrides defaults
-      ...this.definitionDefaults,
-      ...this.definition,
-      // Attributes are merged
-      attributes: Object.assign(
-        {},
-        this.definitionDefaults.attributes,
-        this.definition.attributes,
-      ),
-      defaultAttributes: Object.assign(
-        {},
-        this.definitionDefaults.defaultAttributes,
-        this.definition.defaultAttributes,
-      ),
-      // associations and options are combined individually
-      associations: WildebeestModel.mergeAssociations(
-        this.definitionDefaults.associations,
-        this.definition.associations,
-      ),
-      options: WildebeestModel.mergeOptions(
-        this.definitionDefaults.options,
-        this.definition.options,
-      ),
-    };
+    return this.mergeDefaultDefinitions(this.definition);
   }
 
   /**
