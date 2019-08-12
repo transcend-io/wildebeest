@@ -35,7 +35,10 @@ import mixins, { Prototypes } from '@wildebeest/mixins';
 /**
  * A MigrationLock db model
  */
-export default class WildebeestModel<TModels extends ModelMap> extends Model {
+export default class WildebeestModel<
+  TModels extends ModelMap,
+  TId = string
+> extends Model {
   /** These values can be set as defaults for all models that extend this model */
   public static definitionDefaults: Partial<
     ModelDefinition<StringKeys<ModelMap>>
@@ -318,7 +321,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   public readonly updatedAt!: Date;
 
   /** Id is required */
-  public readonly id?: any;
+  public readonly id?: TId;
 
   /** The wildebeest configuration */
   public readonly wildebeest!: Wildebeest<TModels>;
