@@ -26,7 +26,7 @@ import {{ ModelBaseName }} from '@bk/{{ modelBaseFolder }}/{{ ModelBaseName }}';
 /**
  * This is the base class definition with all mixins applied from associations on the {{ pascalCase container }}
  */
-export default class {{ pascalCase container }}Base extends {{ ModelBaseName }} {
+export default abstract class {{ pascalCase container }}Base extends {{ ModelBaseName }} {
   {{#each sections}}
 
   // {{ pad associationType }} //
