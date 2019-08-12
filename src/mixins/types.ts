@@ -32,16 +32,21 @@ import {
   UpdateOptions,
 } from 'sequelize/types';
 
-// db
-import WildebeestModel from './classes/WildebeestModel';
+// global
+import { ModelMap } from '@wildebeest/types';
 
-// local
-import { ModelMap } from './types';
+// classes
+import WildebeestModel from '@wildebeest/classes/WildebeestModel';
 
 /**
  * Any wildebeest model
  */
 export type AnyModel = WildebeestModel<ModelMap>;
+
+/**
+ * Attribute inputs are not typed yet TODO
+ */
+export type AttributeInputs = { [name in string]: unknown };
 
 // ///////////// //
 // belongsToMany //
@@ -101,16 +106,16 @@ export type BelongsToGetCachedAssociationMixin<TModel extends AnyModel> = (
 /**
  * Lookup the relationship and return the cached value if already looked up
  */
-export type BelongsToGetOrDefaultAssociationMixin<
-  TModel extends AnyModel
-> = (defaultInput?: { [attribute: string]: unknown }) => Promise<TModel>;
+export type BelongsToGetOrDefaultAssociationMixin<TModel extends AnyModel> = (
+  defaultInput?: AttributeInputs,
+) => Promise<TModel>;
 
 /**
  * Lookup a child and update it, or create a new instance when not found
  */
 export type BelongsToUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
   findOptions: FindOptions,
-  input: { [attribute: string]: unknown },
+  input: AttributeInputs,
   options?: UpdateOptions,
 ) => Promise<TModel>;
 
@@ -138,16 +143,16 @@ export type HasOneGetCachedAssociationMixin<TModel extends AnyModel> = (
 /**
  * Lookup the relationship and return the cached value if already looked up
  */
-export type HasOneGetOrDefaultAssociationMixin<
-  TModel extends AnyModel
-> = (defaultInput?: { [attribute: string]: unknown }) => Promise<TModel>;
+export type HasOneGetOrDefaultAssociationMixin<TModel extends AnyModel> = (
+  defaultInput?: AttributeInputs,
+) => Promise<TModel>;
 
 /**
  * Lookup a child and update it, or create a new instance when not found
  */
 export type HasOneUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
   findOptions: FindOptions,
-  input: { [attribute: string]: unknown },
+  input: AttributeInputs,
   options?: UpdateOptions,
 ) => Promise<TModel>;
 
@@ -181,7 +186,7 @@ export type HasManyAddAssociationMixin<
  * Bulk create a handful of models
  */
 export type HasManyCreateManyAssociationsMixin<TModel extends AnyModel> = (
-  inputs: { [attribute: string]: unknown }[],
+  inputs: AttributeInputs[],
   allOptions?: CreateOptions,
 ) => Promise<TModel[]>;
 
@@ -212,7 +217,7 @@ export type HasManyGetOneAssociationMixin<TModel extends AnyModel> = (
  * Update all children of a model
  */
 export type HasManyUpdateAllAssociationsMixin<TModel extends AnyModel> = (
-  input: { [attribute: string]: unknown },
+  input: AttributeInputs,
   options?: UpdateOptions,
 ) => Promise<TModel>;
 
@@ -221,7 +226,7 @@ export type HasManyUpdateAllAssociationsMixin<TModel extends AnyModel> = (
  */
 export type HasManyUpdateOneAssociationMixin<TModel extends AnyModel> = (
   findOptions: FindOptions,
-  input: { [attribute: string]: unknown },
+  input: AttributeInputs,
   options: UpdateOptions,
 ) => Promise<TModel>;
 
@@ -230,6 +235,6 @@ export type HasManyUpdateOneAssociationMixin<TModel extends AnyModel> = (
  */
 export type HasManyUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
   findOptions: FindOptions,
-  input: { [attribute: string]: unknown },
+  input: AttributeInputs,
   options: UpdateOptions,
 ) => Promise<TModel>;

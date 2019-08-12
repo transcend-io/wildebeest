@@ -21,7 +21,7 @@ export * from './migrationTypes';
 
 // Types
 export * from './models';
-export * from './mixins';
+export * from './mixins/types';
 export * from './types';
 export { default as Logger } from './Logger';
 export const { createAssociationApply } = utils;

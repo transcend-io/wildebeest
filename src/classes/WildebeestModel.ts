@@ -1,7 +1,7 @@
 /**
  *
  * ## Wildebeest Db Model
- * A database model definied for the wildebeest db management tooling
+ * A database model defined for the wildebeest db management tooling
  *
  * @module models/Model
  * @see module:models
@@ -14,16 +14,23 @@ import { ModelHooks } from 'sequelize/types/lib/hooks';
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
-import { DefaultTableNames } from '@wildebeest/enums';
+import { AssociationType, DefaultTableNames } from '@wildebeest/enums';
 import {
   Associations,
+  BelongsToAssociation,
   ConfiguredModelDefinition,
+  HasManyAssociation,
+  HasOneAssociation,
   ModelDefinition,
   ModelMap,
   StringKeys,
 } from '@wildebeest/types';
+import apply from '@wildebeest/utils/apply';
 import freshIndexes from '@wildebeest/utils/freshIndexes';
 import getKeys from '@wildebeest/utils/getKeys';
+
+// mixins
+import mixins, { Prototypes } from '@wildebeest/mixins';
 
 /**
  * A MigrationLock db model
@@ -165,7 +172,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
         this.definitionDefaults.defaultAttributes,
         this.definition.defaultAttributes,
       ),
-      // associations and options are combined indiviudally
+      // associations and options are combined individually
       associations: WildebeestModel.mergeAssociations(
         this.definitionDefaults.associations,
         this.definition.associations,
@@ -178,7 +185,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   }
 
   /**
-   * Setup all relattions for this model
+   * Setup all relations for this model
    */
   public static createRelations<TInitModels extends ModelMap>(
     wildebeest: Wildebeest<TInitModels>,
@@ -186,6 +193,74 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   ): void {
     // TODO
     console.log(this.db);
+  }
+
+  /**
+   * Get prototype helper methods not supplied by sequelize
+   *
+   * @param associations - The associations to generate mixins for
+   * @returns The prototypes to inject onto the model
+   */
+  public static createMixinPrototypes(
+    associations: Associations<string>,
+  ): Prototypes {
+    // Ensure wildebeest is defined
+    const { wildebeest } = this;
+    if (!wildebeest) {
+      throw new Error(
+        `Must initialize with wildebeest before calling "getAssociationPrototypes`,
+      );
+    }
+
+    /** Helper function for constructing prototypes */
+    type GetHelper = (
+      association:
+        | BelongsToAssociation<string>
+        | HasOneAssociation<string>
+        | HasManyAssociation<string>,
+      associationName: string,
+    ) => Prototypes;
+
+    // Get prototypes for an association
+    const createPrototypes = (type: AssociationType): GetHelper => (
+      association:
+        | BelongsToAssociation<string>
+        | HasOneAssociation<string>
+        | HasManyAssociation<string>,
+      associationName: string,
+    ): Prototypes =>
+      mixins(
+        associationName,
+        type,
+        typeof association === 'string'
+          ? associationName
+          : association.modelName || associationName,
+        wildebeest.ClientError,
+        wildebeest.pluralCase,
+      );
+
+    // Additional prototypes to attach for quick access to associations
+    return Object.assign(
+      {},
+      ...Object.values(
+        apply(
+          associations.hasMany || {},
+          createPrototypes(AssociationType.HasMany),
+        ),
+      ),
+      ...Object.values(
+        apply(
+          associations.hasOne || {},
+          createPrototypes(AssociationType.HasOne),
+        ),
+      ),
+      ...Object.values(
+        apply(
+          associations.belongsTo || {},
+          createPrototypes(AssociationType.BelongsTo),
+        ),
+      ),
+    );
   }
 
   /**
@@ -201,31 +276,39 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
       keyof TInitModels | keyof typeof DefaultTableNames,
       string
     >,
-    tableName?: string,
+    tableName: string,
   ): void {
     if (!this.definition) {
       throw new Error(
-        `Model definition is not defined for model: "${this.name}". Attach as a static attributet`,
+        `Model definition is not defined for model: "${this.name}". Attach as a static attribute`,
       );
     }
 
+    const definition = this.getDefinition();
+
     // Call the sequelize init form the model definition
-    WildebeestModel.init(this.definition.attributes || {}, {
-      ...this.definition.options,
+    this.init(definition.attributes || {}, {
+      ...definition.options,
       modelName,
-      tableName: tableName || this.definition.tableName,
+      tableName: tableName || definition.tableName,
       sequelize: wildebeest.db,
     });
 
     // Attach wildebeest to the class instance and class itself
-    Object.defineProperty(WildebeestModel.prototype, 'wildebeest', {
+    Object.defineProperty(this.prototype, 'wildebeest', {
       get: () => wildebeest,
     });
-    Object.defineProperty(WildebeestModel.prototype, 'db', {
+    Object.defineProperty(this.prototype, 'db', {
       get: () => wildebeest.db,
     });
-    WildebeestModel.wildebeest = wildebeest;
-    WildebeestModel.db = wildebeest.db;
+    this.wildebeest = wildebeest;
+    this.db = wildebeest.db;
+
+    // Define additional mixins
+    Object.assign(
+      this.prototype,
+      this.createMixinPrototypes(definition.associations || {}),
+    );
   }
 
   /** Time the API key was created */

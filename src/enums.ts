@@ -11,6 +11,20 @@
 import mkEnum from '@wildebeest/utils/mkEnum';
 
 /**
+ * A type of association
+ */
+export enum AssociationType {
+  /** Belongs to add id to col */
+  BelongsTo = 'belongsTo',
+  /** Join */
+  BelongsToMany = 'belongsToMany',
+  /** Has many */
+  HasMany = 'hasMany',
+  /** Has one */
+  HasOne = 'hasOne',
+}
+
+/**
  * The supported postgres index types
  */
 export enum IndexType {
