@@ -26,7 +26,7 @@ type ApplyFuncForAssociation<TOutputBase> = <
 type AssociationApply<TDatabaseModelName extends string> = {
   /** Enforce a belongsTo association */
   belongsTo: ApplyFuncForAssociation<BelongsToAssociation<TDatabaseModelName>>;
-  /** Enforce a hasMany asociation */
+  /** Enforce a hasMany association */
   hasMany: ApplyFuncForAssociation<HasManyAssociation<TDatabaseModelName>>;
   /** Enforce a hasOne association */
   hasOne: ApplyFuncForAssociation<HasOneAssociation<TDatabaseModelName>>;

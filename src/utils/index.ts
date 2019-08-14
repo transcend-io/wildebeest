@@ -19,6 +19,9 @@ export {
   default as configureModelDefinition,
 } from './configureModelDefinition';
 export { default as createAssociationApply } from './createAssociationApply';
+export {
+  default as createAssociationApplyValue,
+} from './createAssociationApplyValue';
 export { default as createIndex } from './createIndex';
 export { default as createUmzugLogger } from './createUmzugLogger';
 export { default as createQueryMaker } from './createQueryMaker';
