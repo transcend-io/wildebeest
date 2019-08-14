@@ -11,7 +11,7 @@ import apply from './apply';
 /**
  * A typescript enum
  */
-type Enum<E> = Record<keyof E, string> &
+type Enum<E extends string> = Record<E, string> &
   ({ [k: number]: string } | { [k: string]: string });
 
 /**
