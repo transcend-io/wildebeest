@@ -131,7 +131,6 @@ export type BelongsToGetOrDefaultAssociationMixin<TModel extends AnyModel> = (
  * Lookup a child and update it, or create a new instance when not found
  */
 export type BelongsToUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
-  findOptions: FindOptions,
   input: AttributeInputs,
   options?: UpdateOptions,
 ) => Promise<TModel>;
