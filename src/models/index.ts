@@ -1,7 +1,7 @@
 /**
  *
  * ## Migration DB Models
- * Database models needed to run migratinos
+ * Database models needed to run migrations
  *
  * @module wildebeest/models
  */
