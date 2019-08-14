@@ -33,7 +33,7 @@ type ApplyFunc<TEnumValue extends string, TOutput> = (
 type ApplyFuncForAssociation<TOutputBase, TEnumValue extends string> = <
   TOutput extends TOutputBase
 >(
-  obj: Enum<string>,
+  obj: any, // TODO https://stackoverflow.com/questions/50158272/what-is-the-type-of-an-enum-in-typescript
   applyFunc: ApplyFunc<TEnumValue, TOutput>,
 ) => { [key in TEnumValue]: TOutput };
 
@@ -99,21 +99,21 @@ export default function createAssociationApplyValue<
 
   return <TEnumValue extends string>() => ({
     belongsTo: <TOutput extends BelongsToAssociation<TDatabaseModelName>>(
-      obj: Enum<string>,
+      obj: any,
       applyFunc: ApplyFunc<TEnumValue, TOutput>,
     ) =>
       apply(toEnum<TEnumValue>(obj), (value, key, fullObj, ind) =>
         asBelongsTo(applyFunc(value, key, fullObj, ind)),
       ),
     hasMany: <TOutput extends HasManyAssociation<TDatabaseModelName>>(
-      obj: Enum<string>,
+      obj: any,
       applyFunc: ApplyFunc<TEnumValue, TOutput>,
     ) =>
       apply(toEnum<TEnumValue>(obj), (value, key, fullObj, ind) =>
         asHasMany(applyFunc(value, key, fullObj, ind)),
       ),
     hasOne: <TOutput extends HasManyAssociation<TDatabaseModelName>>(
-      obj: Enum<string>,
+      obj: any,
       applyFunc: ApplyFunc<TEnumValue, TOutput>,
     ) =>
       apply(toEnum<TEnumValue>(obj), (value, key, fullObj, ind) =>
