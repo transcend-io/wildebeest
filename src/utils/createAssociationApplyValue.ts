@@ -27,25 +27,35 @@ type ApplyFunc<TEnumValue extends string, TOutput> = (
 /**
  * Function to apply over associations and enforce
  */
-type ApplyFuncForAssociation<TOutputBase> = <
-  TEnumValue extends string,
-  TInput extends Enum<TEnumValue>,
+type ApplyFuncForAssociation<TOutputBase, TEnumValue extends string> = <
   TOutput extends TOutputBase
 >(
-  obj: TInput,
+  obj: Enum<TEnumValue>,
   applyFunc: ApplyFunc<TEnumValue, TOutput>,
 ) => { [key in TEnumValue]: TOutput };
 
 /**
  * Apply functions with association
  */
-type AssociationApply<TDatabaseModelName extends string> = {
+type AssociationApply<
+  TDatabaseModelName extends string,
+  TEnumValue extends string
+> = {
   /** Enforce a belongsTo association */
-  belongsTo: ApplyFuncForAssociation<BelongsToAssociation<TDatabaseModelName>>;
+  belongsTo: ApplyFuncForAssociation<
+    BelongsToAssociation<TDatabaseModelName>,
+    TEnumValue
+  >;
   /** Enforce a hasMany association */
-  hasMany: ApplyFuncForAssociation<HasManyAssociation<TDatabaseModelName>>;
+  hasMany: ApplyFuncForAssociation<
+    HasManyAssociation<TDatabaseModelName>,
+    TEnumValue
+  >;
   /** Enforce a hasOne association */
-  hasOne: ApplyFuncForAssociation<HasOneAssociation<TDatabaseModelName>>;
+  hasOne: ApplyFuncForAssociation<
+    HasOneAssociation<TDatabaseModelName>,
+    TEnumValue
+  >;
 };
 
 // Convert the object to be keyed by values
@@ -66,7 +76,10 @@ const toEnum = <TEnumValue extends string>(
  */
 export default function createAssociationApplyValue<
   TDatabaseModelName extends string
->(): AssociationApply<TDatabaseModelName> {
+>(): <TEnumValue extends string>() => AssociationApply<
+  TDatabaseModelName,
+  TEnumValue
+> {
   const asBelongsTo = <
     TBelongsTo extends BelongsToAssociation<TDatabaseModelName>
   >(
@@ -81,39 +94,27 @@ export default function createAssociationApplyValue<
     x: THasOne,
   ): THasOne => x;
 
-  return {
-    belongsTo: <
-      TEnumValue extends string,
-      TInput extends Enum<TEnumValue>,
-      TOutput extends BelongsToAssociation<TDatabaseModelName>
-    >(
-      obj: TInput,
+  return <TEnumValue extends string>() => ({
+    belongsTo: <TOutput extends BelongsToAssociation<TDatabaseModelName>>(
+      obj: Enum<TEnumValue>,
       applyFunc: ApplyFunc<TEnumValue, TOutput>,
     ) =>
       apply(toEnum<TEnumValue>(obj), (value, key, fullObj, ind) =>
         asBelongsTo(applyFunc(value, key, fullObj, ind)),
       ),
-    hasMany: <
-      TEnumValue extends string,
-      TInput extends Enum<TEnumValue>,
-      TOutput extends HasManyAssociation<TDatabaseModelName>
-    >(
-      obj: TInput,
+    hasMany: <TOutput extends HasManyAssociation<TDatabaseModelName>>(
+      obj: Enum<TEnumValue>,
       applyFunc: ApplyFunc<TEnumValue, TOutput>,
     ) =>
       apply(toEnum<TEnumValue>(obj), (value, key, fullObj, ind) =>
         asHasMany(applyFunc(value, key, fullObj, ind)),
       ),
-    hasOne: <
-      TEnumValue extends string,
-      TInput extends Enum<TEnumValue>,
-      TOutput extends HasManyAssociation<TDatabaseModelName>
-    >(
-      obj: TInput,
+    hasOne: <TOutput extends HasManyAssociation<TDatabaseModelName>>(
+      obj: Enum<TEnumValue>,
       applyFunc: ApplyFunc<TEnumValue, TOutput>,
     ) =>
       apply(toEnum<TEnumValue>(obj), (value, key, fullObj, ind) =>
         asHasOne(applyFunc(value, key, fullObj, ind)),
       ),
-  };
+  });
 }
