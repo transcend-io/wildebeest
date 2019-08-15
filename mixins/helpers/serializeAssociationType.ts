@@ -1,6 +1,9 @@
 // external modules
 import get from 'lodash/get';
 
+// global
+import { AssociationDefinition } from '@mixins/types';
+
 /**
  * Callback when failed to properly serialize association
  *
@@ -15,7 +18,6 @@ function failedToSerialize(key: string, fileName: string): void {
   console.log('Ensure you are not casting the type of the association');
   /* eslint-enable no-console */
 }
-
 /**
  * Process a member of the type definition (known types in the case of associations)
  *
@@ -26,7 +28,7 @@ function failedToSerialize(key: string, fileName: string): void {
 export default function serializeAssociationType(
   member: any,
   originalFileName: string,
-): { [k in string]: string } {
+): { [k in string]: AssociationDefinition } {
   // Grab the child types
   const innerMembers = get(member, 'type.members');
 
@@ -34,20 +36,33 @@ export default function serializeAssociationType(
   if (!innerMembers) {
     return {};
   }
-  const results: { [k in string]: string } = {};
+  const results: { [k in string]: AssociationDefinition } = {};
   innerMembers.forEach(({ type }: any, key: string) => {
     // The inner members of the type if an object
-    const getInnerMap = get(type, 'symbol.members');
+    const innerMap = get(type, 'symbol.members');
+
+    // Determine the name of the primary key column joining the tables
+    const foreignKeyMap = get(
+      innerMap && innerMap.get('foreignKey'),
+      'valueDeclaration.initializer.symbol.members',
+    );
+
+    // Defaults to ${modelName}Id
+    const primaryKeyName =
+      get(
+        foreignKeyMap && foreignKeyMap.get('name'),
+        'valueDeclaration.initializer.text',
+      ) || `${key}Id`;
 
     // If the association is defined with a string, then the model name is the same as the key
     if (typeof type.value === 'string') {
-      results[key] = key;
-    } else if (getInnerMap && !getInnerMap.get('modelName')) {
+      results[key] = { modelName: key, primaryKeyName };
+    } else if (innerMap && !innerMap.get('modelName')) {
       // If an object but no modelName, then also the key
-      results[key] = key;
-    } else if (getInnerMap && getInnerMap.get('modelName')) {
+      results[key] = { modelName: key, primaryKeyName };
+    } else if (innerMap && innerMap.get('modelName')) {
       // Determine what the provided modelName is
-      const modelNameSymbol = getInnerMap.get('modelName');
+      const modelNameSymbol = innerMap.get('modelName');
       const modelName = get(
         modelNameSymbol,
         'valueDeclaration.initializer.text',
@@ -55,14 +70,14 @@ export default function serializeAssociationType(
 
       // If fetched properly, assign
       if (typeof modelName === 'string') {
-        results[key] = modelName;
+        results[key] = { modelName, primaryKeyName };
       } else {
         failedToSerialize(key, originalFileName);
-        results[key] = key;
+        results[key] = { modelName: key, primaryKeyName };
       }
     } else {
       failedToSerialize(key, originalFileName);
-      results[key] = key;
+      results[key] = { modelName: key, primaryKeyName };
     }
   });
 

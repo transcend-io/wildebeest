@@ -25,13 +25,15 @@ export enum AssociationType {
 }
 
 /**
- * Casing inputs eneded to define the attributes
+ * Casing inputs needed to define the attributes
  */
 export type MixinAttributeInput = {
   /** The name of the model being associated */
   modelName: ChangeCase;
   /** The name of the association (the `as` or the `modelName`) */
   associationName: ChangeCase;
+  /** The name of the primary ket joining the tables */
+  primaryKeyName: string;
 };
 
 /**
@@ -60,10 +62,20 @@ export type ObjByString = { [key in string]: any }; // eslint-disable-line @type
 export type StringKeys<TObj extends ObjByString> = Extract<keyof TObj, string>;
 
 /**
+ * The information needed to generate mixins for the association definition
+ */
+export type AssociationDefinition = {
+  /** The name of the model */
+  modelName: string;
+  /** The name of the primary key that is creating the join */
+  primaryKeyName: string;
+};
+
+/**
  * Mapping of association definitions
  */
 export type AssociationsMapping = {
-  [k in AssociationType]: { [k in string]: string };
+  [k in AssociationType]: { [k in string]: AssociationDefinition };
 };
 
 /**
@@ -72,7 +84,7 @@ export type AssociationsMapping = {
 export type AssociationsDefinition = {
   /** The full path to the associations */
   filePath: string;
-  /** The relative path to the associations from the rootePath */
+  /** The relative path to the associations from the root Path */
   relativePath: string;
   /** Documentation for the associations definition */
   documentation: string;
@@ -111,7 +123,7 @@ export type GenerateMixinsConfig = {
     associationsDefinition: AssociationsDefinition,
     config: Required<GenerateMixinsConfig>,
   ) => Omit<BaseFileInput, 'sections'>;
-  /** Helper functions to add to the handleabars template */
+  /** Helper functions to add to the handlebars template */
   handlebarsHelpers?: { [k in string]: (...args: any[]) => string };
 };
 
@@ -119,6 +131,8 @@ export type GenerateMixinsConfig = {
  * An association input definition
  */
 export type AssociationInput = {
+  /** The name of the primary key column that joins the association */
+  primaryKeyName: string;
   /** The association name */
   associationName: string;
   /** The name of the model */

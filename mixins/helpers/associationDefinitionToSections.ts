@@ -34,12 +34,12 @@ export default function associationDefinitionToSections(
         definitions: getKeys(associations[associationType]).map(
           (associationName) => ({
             associationName,
-            modelName: associations[associationType][associationName],
+            ...associations[associationType][associationName],
             // Determine the mixin attributes to inject
             attributes: calculateMixinAttributes(
               {
                 associationName,
-                modelName: associations[associationType][associationName],
+                ...associations[associationType][associationName],
               },
               associationType,
               config.getCustomMixinAttributes,

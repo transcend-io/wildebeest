@@ -19,7 +19,7 @@ import {
 import { BaseFileInput } from './types';
 
 /**
- * Main runnner for mixin generation
+ * Main runner for mixin generation
  *
  * @param configPath - The path to the config specified via command line arg
  */
@@ -37,7 +37,7 @@ function main(configPath: string = join(process.cwd(), 'wildebeest.js')): void {
     Handlebars.registerHelper(name, func),
   );
 
-  // Compile the handelbars template
+  // Compile the handlebars template
   const TEMPLATE = Handlebars.compile<BaseFileInput>(
     readFileSync(config.baseModelTemplatePath, 'utf-8'),
   );

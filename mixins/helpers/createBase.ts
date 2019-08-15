@@ -16,7 +16,7 @@ import associationDefinitionToSections from './associationDefinitionToSections';
  * Process file
  *
  * @param associationsDefinition - The associations defined for a db mode
- * @param createBaseFile - A function to construct the base model file (usually handlebars compield template)
+ * @param createBaseFile - A function to construct the base model file (usually handlebars compiled template)
  * @param config - The config for generating mixins
  */
 export default function createBase(
@@ -24,16 +24,16 @@ export default function createBase(
   createBaseFile: (input: BaseFileInput) => void,
   config: Required<GenerateMixinsConfig>,
 ): void {
-  // convert into input sections for the handelbars template
+  // convert into input sections for the handlebars template
   const allAssociations = associationDefinitionToSections(
     associationsDefinition,
     config,
   );
 
   // Get te file path with
-  const splt = associationsDefinition.filePath.split('/');
-  if (splt[splt.length - 1] === config.associationFileName) {
-    splt.pop();
+  const splitter = associationsDefinition.filePath.split('/');
+  if (splitter[splitter.length - 1] === config.associationFileName) {
+    splitter.pop();
   }
 
   const compiled = createBaseFile({
@@ -41,5 +41,8 @@ export default function createBase(
     sections: allAssociations,
   });
 
-  writeFileSync(join(splt.concat([config.baseFileName]).join('/')), compiled);
+  writeFileSync(
+    join(splitter.concat([config.baseFileName]).join('/')),
+    compiled,
+  );
 }

@@ -38,9 +38,11 @@ export const SEQUELIZE_MIXINS: AssociationMixins = {
       attribute: `public create${associationName.pascalCase}: w.BelongsToManyCreateAssociationMixin<M.I${modelName.pascalCase}>;`,
     },
   ],
-  belongsTo: ({ modelName, associationName }) => [
+  belongsTo: ({ modelName, associationName, primaryKeyName }) => [
     {
-      attribute: `public ${associationName.plain}Id: M.I${modelName.pascalCase}['id'];`,
+      attribute: `public ${primaryKeyName}: M.I${modelName.pascalCase}[${
+        primaryKeyName === `${associationName.plain}Id` ? 'id' : primaryKeyName
+      }];`,
     },
     {
       attribute: `public readonly ${associationName.plain}?: M.I${modelName.pascalCase};`,

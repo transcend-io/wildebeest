@@ -5,6 +5,7 @@ import {
   AssociationInput,
   AssociationMixins,
   AssociationType,
+  MixinAttributeInput,
   MixinAttributes,
 } from '@mixins/types';
 
@@ -23,9 +24,10 @@ export default function calculateMixinAttributes(
   additionMixins: Partial<AssociationMixins> = {},
   pluralCase?: (word: string) => string,
 ): MixinAttributes[] {
-  const attributeInput = {
+  const attributeInput: MixinAttributeInput = {
     modelName: new ChangeCase(association.modelName, pluralCase),
     associationName: new ChangeCase(association.associationName, pluralCase),
+    primaryKeyName: association.primaryKeyName,
   };
 
   // Check if there are custom mixins
