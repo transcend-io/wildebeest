@@ -400,9 +400,10 @@ export async function removeTableColumns<
  * @param options - Options for adding new columns to a table
  * @returns The add columns migrator
  */
-export default function addColumns<T extends {}, TModels extends ModelMap>(
-  options: AddColumnsOptions<T, TModels>,
-): MigrationDefinition<TModels> {
+export default function addColumns<
+  T extends {},
+  TModels extends ModelMap = ModelMap
+>(options: AddColumnsOptions<T, TModels>): MigrationDefinition<TModels> {
   const { tableName, ...rest } = options;
   // List of tables
   const tablesNames = Array.isArray(tableName) ? tableName : [tableName];
