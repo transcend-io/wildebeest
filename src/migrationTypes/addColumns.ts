@@ -419,7 +419,7 @@ export async function removeTableColumns<
  */
 export default function addColumns<
   TAttributes extends Attributes, // TODO will have to provide ugh
-  TModels extends ModelMap = ModelMap
+  TModels extends ModelMap
 >(
   options: AddColumnsOptions<TAttributes, TModels>,
 ): MigrationDefinition<TModels> {

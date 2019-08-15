@@ -7,10 +7,7 @@ import { MigrationDefinition, ModelMap } from '@wildebeest/types';
  * @param createMigrator - The higher order migrator to reverse
  * @returns The higher order migrator reversed
  */
-export default function reverseMigrator<
-  TOptions,
-  TModels extends ModelMap = ModelMap
->(
+export default function reverseMigrator<TOptions, TModels extends ModelMap>(
   createMigrator: (options: TOptions) => MigrationDefinition<TModels>,
 ): (options: TOptions) => MigrationDefinition<TModels> {
   return (options: TOptions): MigrationDefinition<TModels> => {
