@@ -1,5 +1,6 @@
 // external modules
-import cases from 'change-case';
+import camelCase from 'lodash/camelCase';
+import upperFirst from 'lodash/upperFirst';
 
 /**
  * Make a word pascal case
@@ -8,5 +9,5 @@ import cases from 'change-case';
  * @returns The word in pascal case
  */
 export default function pascalCase(word: string): string {
-  return cases.pascalCase(word);
+  return upperFirst(camelCase(word));
 }
