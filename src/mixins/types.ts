@@ -17,6 +17,8 @@ import {
   BelongsToManyCreateAssociationMixin,
   BelongsToManyGetAssociationsMixin,
   BelongsToManyHasAssociationMixin as SequelizeBelongsToManyHasAssociationMixin,
+  BelongsToManyRemoveAssociationMixin,
+  BelongsToManyRemoveAssociationsMixin,
   BelongsToSetAssociationMixin as SequelizeBelongsToSetAssociationMixin,
   CreateOptions,
   DestroyOptions,
@@ -98,6 +100,22 @@ export type BelongsToManyAddAssociationsMixin<
   TModel extends AnyModel,
   TModelPrimaryKey = TModel['id']
 > = SequelizeBelongsToManyAddAssociationsMixin<TModel, TModelPrimaryKey>;
+
+/**
+ * BelongsToManyRemoveAssociationMixin with primary key set by default
+ */
+export type BelongsToManyRemoveAssociationMixin<
+  TModel extends AnyModel,
+  TModelPrimaryKey = TModel['id']
+> = BelongsToManyRemoveAssociationMixin<TModel, TModelPrimaryKey>;
+
+/**
+ * BelongsToManyRemoveAssociationsMixin with primary key set by default
+ */
+export type BelongsToManyRemoveAssociationsMixin<
+  TModel extends AnyModel,
+  TModelPrimaryKey = TModel['id']
+> = BelongsToManyRemoveAssociationsMixin<TModel, TModelPrimaryKey>;
 
 // ///////// //
 // belongsTo //
