@@ -4,7 +4,6 @@ import WildebeestModel from '@wildebeest/classes/WildebeestModel';
 
 // local
 import apply from './apply';
-import pascalCase from './pascalCase';
 
 /**
  * Setup the associations for a db model, saving the association to the class definition of the model
@@ -30,15 +29,13 @@ export default function setAssociations<T extends typeof WildebeestModel>(
   }
   const { associations } = configuredDefinition;
 
-  const AnyModel = Model as any;
-
   // Process `hasMany` associations
   apply(associations.hasMany, (association, associationName) => {
     // Get the child model
     const childModel = db.model(association.modelName);
 
     // Has many relation
-    AnyModel[wildebeest.pascalPluralCase(associationName)] = Model.hasMany(
+    Model.associations[wildebeest.pluralCase(associationName)] = Model.hasMany(
       childModel,
       association,
     );
@@ -50,10 +47,7 @@ export default function setAssociations<T extends typeof WildebeestModel>(
     const childModel = db.model(association.modelName);
 
     // Has one child relation
-    AnyModel[pascalCase(associationName)] = Model.hasOne(
-      childModel,
-      association,
-    );
+    Model.associations[associationName] = Model.hasOne(childModel, association);
   });
 
   // Process `belongsTo` associations
@@ -62,7 +56,7 @@ export default function setAssociations<T extends typeof WildebeestModel>(
     const parentModel = db.model(association.modelName);
 
     // Belongs to
-    AnyModel[pascalCase(associationName)] = Model.belongsTo(
+    Model.associations[associationName] = Model.belongsTo(
       parentModel,
       association,
     );
@@ -74,8 +68,8 @@ export default function setAssociations<T extends typeof WildebeestModel>(
     const associationModel = db.model(associationName);
 
     // Belongs to
-    AnyModel[
-      wildebeest.pascalPluralCase(associationName)
+    Model.associations[
+      wildebeest.pluralCase(associationName)
     ] = Model.belongsToMany(associationModel, association);
   });
 

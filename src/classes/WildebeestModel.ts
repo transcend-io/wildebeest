@@ -28,6 +28,7 @@ import {
 import apply from '@wildebeest/utils/apply';
 import freshIndexes from '@wildebeest/utils/freshIndexes';
 import getKeys from '@wildebeest/utils/getKeys';
+import setAssociations from '@wildebeest/utils/setAssociations';
 
 // mixins
 import mixins, { Prototypes } from '@wildebeest/mixins';
@@ -46,6 +47,9 @@ export default class WildebeestModel<
 
   /** The sequelize model definition */
   public static definition: ModelDefinition<StringKeys<ModelMap>>;
+
+  /** The name of the db model, set after initialization */
+  public static modelName: string;
 
   /** Sequelize operators */
   public static Op: typeof Op = Op;
@@ -202,12 +206,8 @@ export default class WildebeestModel<
   /**
    * Setup all relations for this model
    */
-  public static createRelations<TInitModels extends ModelMap>(
-    wildebeest: Wildebeest<TInitModels>,
-    modelName: Extract<keyof TInitModels, string>,
-  ): void {
-    // TODO
-    console.log(this.db);
+  public static createRelations(): void {
+    setAssociations(this);
   }
 
   /**
@@ -308,6 +308,9 @@ export default class WildebeestModel<
       tableName: tableName || definition.tableName,
       sequelize: wildebeest.db,
     });
+
+    // Save the model name
+    this.modelName = modelName;
 
     // Attach wildebeest to the class instance and class itself
     Object.defineProperty(this.prototype, 'wildebeest', {

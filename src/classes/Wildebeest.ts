@@ -9,6 +9,7 @@
 
 // external modules
 import { S3 } from 'aws-sdk';
+import * as express from 'express';
 import { existsSync, readdirSync } from 'fs';
 import flatten from 'lodash/flatten';
 import keyBy from 'lodash/keyBy';
@@ -48,6 +49,7 @@ import {
 } from '@wildebeest/constants';
 import { DefaultTableNames } from '@wildebeest/enums';
 import Logger, { verboseLoggerDefault } from '@wildebeest/Logger';
+import createRoutes from '@wildebeest/routes';
 import {
   Attributes,
   ConfiguredModelDefinition,
@@ -245,6 +247,9 @@ export default class Wildebeest<TModels extends ModelMap> {
   /** The umzug instance that will run the migrations up and down */
   public umzug: Umzug.Umzug;
 
+  /** A router containing routes that can be used to run migrations and check the status of synced models */
+  public routes: express.Router;
+
   /**
    * Initialize a wildebeest migration runner
    */
@@ -354,6 +359,9 @@ export default class Wildebeest<TModels extends ModelMap> {
 
     // Initialize all of the models
     this.initializeModels();
+
+    // Construct the router
+    this.routes = createRoutes(this);
   }
 
   /**
@@ -599,8 +607,6 @@ export default class Wildebeest<TModels extends ModelMap> {
     );
 
     // Set their relations once all have been initialized
-    apply(this.models, (ModelDef, name) =>
-      ModelDef.createRelations(this, name),
-    );
+    apply(this.models, (ModelDef) => ModelDef.createRelations());
   }
 }
