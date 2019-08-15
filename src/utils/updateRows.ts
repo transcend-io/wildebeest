@@ -22,8 +22,8 @@ export type RowUpdater<
   transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
   db: WildebeestDb<TModels>,
 ) =>
-  | (T & ExtractAttributes<TAttributes>)
-  | PromiseLike<T & ExtractAttributes<TAttributes>>;
+  | (Partial<T> & ExtractAttributes<TAttributes>)
+  | PromiseLike<Partial<T> & ExtractAttributes<TAttributes>>;
 
 /**
  * Extra options that can be provided when updating values in a table

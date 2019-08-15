@@ -24,8 +24,6 @@ import logSection from '@wildebeest/utils/logSection';
 import attributes from './attributes';
 import * as options from './options';
 
-type TAttributes = ExtractAttributes<typeof attributes>;
-
 /**
  * A Migration db model
  */
