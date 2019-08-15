@@ -588,7 +588,7 @@ export default class Wildebeest<TModels extends ModelMap> {
   /**
    * Initialize all of the sequelize models
    */
-  private initializeModels(): void {
+  public initializeModels(): void {
     // Initialize the migration models
     Migration.customInit(this, 'migration', this.tableNames.migration);
     MigrationLock.customInit(
