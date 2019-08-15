@@ -1,15 +1,50 @@
 // global
+import Wildebeest from '@wildebeest/classes/Wildebeest';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import {
+  AttributeInputs,
   Attributes,
   ExtractAttributes,
+  Identity,
   MigrationTransactionOptions,
   ModelMap,
 } from '@wildebeest/types';
+import getKeys from '@wildebeest/utils/getKeys';
 
 // local
-import Wildebeest from '@wildebeest/classes/Wildebeest';
-import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import batchProcess from './batchProcess';
+
+/**
+ * Inverse of SubType
+ */
+export type SubNotType<Base, Condition> = Pick<
+  Base,
+  { [Key in keyof Base]: Base[Key] extends Condition ? never : Key }[keyof Base]
+>;
+
+/**
+ * Take the attribute definitions and extract out the typings that should be assigned to the db model
+ */
+export type ExtractUpdateAttributes<TAttributes extends Attributes> = Identity<
+  ExtractAttributes<
+    SubNotType<
+      TAttributes,
+      | {
+          /** If null values are allowed, we do not need to create a mapping */
+          allowNull: true;
+        }
+      | {
+          /** If null values are allowed, we do not need to create a mapping */
+          defaultValue: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+        }
+      | {
+          /** If null values are allowed, we do not need to create a mapping */
+          autoIncrement: true;
+        }
+    >
+  > &
+    Partial<ExtractAttributes<TAttributes>>
+>;
 
 /**
  * Database column definitions, often found in attributes.js
@@ -17,13 +52,13 @@ import batchProcess from './batchProcess';
 export type RowUpdater<
   TModels extends ModelMap,
   TAttributes extends Attributes
-> = <T extends {}>(
-  row: T,
+> = (
+  row: AttributeInputs,
   transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
   db: WildebeestDb<TModels>,
 ) =>
-  | (Partial<T> & ExtractAttributes<TAttributes>)
-  | PromiseLike<Partial<T> & ExtractAttributes<TAttributes>>;
+  | ExtractUpdateAttributes<TAttributes>
+  | PromiseLike<ExtractUpdateAttributes<TAttributes>>;
 
 /**
  * Extra options that can be provided when updating values in a table
@@ -69,14 +104,14 @@ export default async function updateRows<
     { attributes: '*' },
     async (row) => {
       // Get the default values to update in the table
-      const defaultValues = await getRowDefaults(
+      const defaultValues: any = await getRowDefaults(
         row,
         transactionOptions,
         wildebeest.db,
       );
 
       // Ensure each column is defined
-      Object.keys(columnDefinitions)
+      getKeys(columnDefinitions)
         // Find columns that are not defined
         .filter(
           (columnName) =>

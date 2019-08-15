@@ -50,6 +50,13 @@ export type Requirize<T, K extends keyof T> = Omit<T, K> &
 export type ObjByString = { [key in string]: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
+ * Make selected object keys defined by K optional in type T
+ */
+export type Optionalize<T, K extends keyof T> = Identity<
+  Omit<T, K> & Partial<T>
+>;
+
+/**
  * Merge an object of objects into a single object
  */
 export type Merge<TObj extends ObjByString> = UnionToIntersection<
@@ -90,29 +97,39 @@ export type IndexConfig = {
 export type Attribute = sequelize.ModelAttributeColumnOptions;
 
 /**
+ * Attribute inputs are not typed yet TODO
+ */
+export type AttributeInputs = { [name in string]: unknown };
+
+/**
  * The db model column definitions, keyed by column name
  */
 export type Attributes = { [columnName in string]: Attribute };
 
 /**
+ * Convert an attribute definition to a type
+ */
+export type AttributeToType<
+  TAttribute extends Attribute
+> = TAttribute['type'] extends typeof sequelize.DataTypes.INTEGER
+  ? number
+  : TAttribute['type'] extends typeof sequelize.DataTypes.DATE
+  ? Date
+  : TAttribute['type'] extends typeof sequelize.DataTypes.STRING
+  ? string
+  : TAttribute['type'] extends sequelize.DataTypeAbstract
+  ? (TAttribute['defaultValue'] extends boolean
+      ? boolean
+      : TAttribute['defaultValue'] extends typeof sequelize.UUIDV4
+      ? string // TODO ID<>
+      : unknown)
+  : unknown;
+
+/**
  * Take the attribute definitions and extract out the typings that should be assigned to the db model
  */
 export type ExtractAttributes<TAttributes extends Attributes> = {
-  [k in StringKeys<
-    TAttributes
-  >]: TAttributes[k]['type'] extends typeof sequelize.DataTypes.INTEGER
-    ? number
-    : TAttributes[k]['type'] extends typeof sequelize.DataTypes.DATE
-    ? Date
-    : TAttributes[k]['type'] extends typeof sequelize.DataTypes.STRING
-    ? string
-    : TAttributes[k]['type'] extends sequelize.DataTypeAbstract
-    ? (TAttributes[k]['defaultValue'] extends boolean
-        ? boolean
-        : TAttributes[k]['defaultValue'] extends typeof sequelize.UUIDV4
-        ? string // TODO ID<>
-        : unknown)
-    : unknown;
+  [k in StringKeys<TAttributes>]: AttributeToType<TAttributes[k]>;
 };
 
 /**

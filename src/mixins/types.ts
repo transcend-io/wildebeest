@@ -35,7 +35,7 @@ import {
 } from 'sequelize/types';
 
 // global
-import { ModelMap } from '@wildebeest/types';
+import { AttributeInputs, ModelMap } from '@wildebeest/types';
 
 // classes
 import WildebeestModel from '@wildebeest/classes/WildebeestModel';
@@ -44,11 +44,6 @@ import WildebeestModel from '@wildebeest/classes/WildebeestModel';
  * Any wildebeest model
  */
 export type AnyModel = WildebeestModel<ModelMap>;
-
-/**
- * Attribute inputs are not typed yet TODO
- */
-export type AttributeInputs = { [name in string]: unknown };
 
 /**
  * Filter keys in object T for those with value U

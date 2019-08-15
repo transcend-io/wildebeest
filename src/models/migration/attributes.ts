@@ -12,6 +12,7 @@ import { DataTypes } from 'sequelize';
 
 // global
 import createAttributes from '@wildebeest/utils/createAttributes';
+import { ExtractUpdateAttributes } from '../../utils/updateRows';
 
 /**
  * Attribute definitions for the model
@@ -48,3 +49,5 @@ const ATTRIBUTES = createAttributes({
   },
 });
 export default ATTRIBUTES;
+
+type tTTTTTT = ExtractUpdateAttributes<typeof ATTRIBUTES>;

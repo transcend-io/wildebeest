@@ -18,10 +18,11 @@ import {
 
 // global
 import { AssociationType } from '@wildebeest/enums';
+import { AttributeInputs } from '@wildebeest/types';
 import { pascalCase } from '@wildebeest/utils';
 
 // local
-import { AnyModel, AttributeInputs } from './types';
+import { AnyModel } from './types';
 
 /**
  * A db model prototype function. This is a function made available to a row on the db table
