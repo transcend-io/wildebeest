@@ -107,8 +107,12 @@ export type WildebeestOptions<TModels extends ModelMap> = {
   pluralCase?: (word: string) => string;
   /** Expose a route that will allow schemas to be written to file (defaults to NODE_ENV === 'development') */
   allowSchemaWrites?: boolean;
-  /** When true, anytime the migration lock is released, a sync check will be performed */
-  alwaysCheckSync?: boolean;
+  /**
+   * When true, every-time migration are run, a sync check will be performed and an error is thrown if the check fails
+   *
+   * This will also throw an error if `syncTest` fails
+   */
+  errOnSyncFailure?: boolean;
   /** When testing migrations, this should be the bottom migration to run down to. Defaults to 2 since 1 must be a genesis migration */
   bottomTest?: number;
 };
@@ -233,7 +237,7 @@ export default class Wildebeest<TModels extends ModelMap> {
   public allowSchemaWrites: boolean;
 
   /** When true, anytime the migration lock is released, a sync check will be performed */
-  public alwaysCheckSync: boolean;
+  public errOnSyncFailure: boolean;
 
   /** When testing migrations, this should be the bottom migration to run down to */
   public bottomTest: number;
@@ -263,7 +267,7 @@ export default class Wildebeest<TModels extends ModelMap> {
     forceUnlock = false,
     pluralCase = pluralize,
     allowSchemaWrites = process.env.NODE_ENV === 'development',
-    alwaysCheckSync = process.env.NODE_ENV === 'production',
+    errOnSyncFailure = process.env.NODE_ENV === 'production',
   }: WildebeestOptions<TModels>) {
     // The db as a sequelize migrator
     this.db = new WildebeestDb(databaseUri, sequelizeOptions);
@@ -279,7 +283,7 @@ export default class Wildebeest<TModels extends ModelMap> {
     ) as any) as {
       [modelName in StringKeys<TModels>]: ModelDefinition<StringKeys<TModels>>;
     };
-    this.alwaysCheckSync = alwaysCheckSync;
+    this.errOnSyncFailure = errOnSyncFailure;
     this.bottomTest = bottomTest;
 
     // Save the loggers
@@ -531,7 +535,7 @@ export default class Wildebeest<TModels extends ModelMap> {
     const end = new Date().getTime();
 
     // Check that the db is in sync
-    if (this.alwaysCheckSync) {
+    if (this.errOnSyncFailure) {
       await this.syncTest();
     }
 
@@ -542,7 +546,7 @@ export default class Wildebeest<TModels extends ModelMap> {
   /**
    * Test if the model definitions are properly setup
    *
-   * @returns True on success. Will throw an error if alwaysCheckSync=true
+   * @returns True on success. Will throw an error if errOnSyncFailure=true
    */
   public async syncTest(): Promise<boolean> {
     this.logger.info('Checking if the db is in sync...');
@@ -558,7 +562,7 @@ export default class Wildebeest<TModels extends ModelMap> {
 
       const msg =
         'The db is out of sync with Sequelize definitions. View output above to see where.';
-      if (this.alwaysCheckSync) {
+      if (this.errOnSyncFailure) {
         throw new Error(msg);
       } else {
         this.logger.error(msg);
