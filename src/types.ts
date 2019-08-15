@@ -95,6 +95,27 @@ export type Attribute = sequelize.ModelAttributeColumnOptions;
 export type Attributes = { [columnName in string]: Attribute };
 
 /**
+ * Take the attribute definitions and extract out the typings that should be assigned to the db model
+ */
+export type ExtractAttributes<TAttributes extends Attributes> = {
+  [k in StringKeys<
+    TAttributes
+  >]: TAttributes[k]['type'] extends typeof sequelize.DataTypes.INTEGER
+    ? number
+    : TAttributes[k]['type'] extends typeof sequelize.DataTypes.DATE
+    ? Date
+    : TAttributes[k]['type'] extends typeof sequelize.DataTypes.STRING
+    ? string
+    : TAttributes[k]['type'] extends sequelize.DataTypeAbstract
+    ? (TAttributes[k]['defaultValue'] extends boolean
+        ? boolean
+        : TAttributes[k]['defaultValue'] extends typeof sequelize.UUIDV4
+        ? string // TODO ID<>
+        : unknown)
+    : unknown;
+};
+
+/**
  * Once associations have been collapsed into attributes, extra options are added
  */
 export type ConfiguredAttribute = Attribute & {

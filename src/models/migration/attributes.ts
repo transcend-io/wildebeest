@@ -8,48 +8,43 @@
  */
 
 // external modules
-import { DataTypes, ModelAttributeColumnOptions } from 'sequelize';
+import { DataTypes } from 'sequelize';
+
+// global
+import createAttributes from '@wildebeest/utils/createAttributes';
 
 /**
- * The id is an integer
+ * Attribute definitions for the model
  */
-export const id: ModelAttributeColumnOptions = {
-  autoIncrement: true,
-  primaryKey: true,
-  type: DataTypes.INTEGER,
-};
-
-/**
- * Created at time
- */
-export const createdAt: ModelAttributeColumnOptions = {
-  allowNull: false,
-  defaultValue: () => new Date(),
-  type: DataTypes.DATE,
-};
-
-/**
- * Updated at time
- */
-export const updatedAt: ModelAttributeColumnOptions = {
-  allowNull: false,
-  defaultValue: () => new Date(),
-  type: DataTypes.DATE,
-};
-
-/**
- * The batch the migration was run in
- */
-export const batch: ModelAttributeColumnOptions = {
-  allowNull: true,
-  type: DataTypes.INTEGER,
-};
-
-/**
- * The name of the migration that has been run
- */
-export const name: ModelAttributeColumnOptions = {
-  allowNull: false,
-  type: DataTypes.STRING,
-  unique: 'name must be unique',
-};
+const ATTRIBUTES = createAttributes({
+  /** The id is an integer */
+  id: {
+    autoIncrement: true,
+    primaryKey: true,
+    type: DataTypes.INTEGER,
+  },
+  /** Created at time */
+  createdAt: {
+    allowNull: false,
+    defaultValue: () => new Date(),
+    type: DataTypes.DATE,
+  },
+  /** Updated at time */
+  updatedAt: {
+    allowNull: false,
+    defaultValue: () => new Date(),
+    type: DataTypes.DATE,
+  },
+  /** The batch the migration was run in */
+  batch: {
+    allowNull: true,
+    type: DataTypes.INTEGER,
+  },
+  /** The name of the migration that has been run */
+  name: {
+    allowNull: false,
+    type: DataTypes.STRING,
+    unique: 'name must be unique',
+  },
+});
+export default ATTRIBUTES;

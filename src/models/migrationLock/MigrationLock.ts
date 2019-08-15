@@ -20,17 +20,17 @@ import tableExists from '@wildebeest/utils/tableExists';
 
 // models
 import Migration from '@wildebeest/models/migration/Migration';
-import { ModelMap } from '@wildebeest/types';
+import { ExtractAttributes, ModelMap } from '@wildebeest/types';
 
 // local
-import * as attributes from './attributes';
+import attributes from './attributes';
 
 /**
  * A MigrationLock db model
  */
-export default class MigrationLock<
-  TModels extends ModelMap
-> extends WildebeestModel<TModels> {
+export default class MigrationLock<TModels extends ModelMap>
+  extends WildebeestModel<TModels>
+  implements ExtractAttributes<typeof attributes> {
   /** The model definition */
   public static definition = {
     attributes,
@@ -169,7 +169,7 @@ export default class MigrationLock<
   /**
    * Runs migrations down to a number
    *
-   * @paramto - The migration to run down to
+   * @param to - The migration to run down to
    * @returns The down to promise
    */
   public downTo(to: number | string): Promise<void> {

@@ -17,19 +17,21 @@ import {
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestModel from '@wildebeest/classes/WildebeestModel';
-import { ModelMap, UpToOptions } from '@wildebeest/types';
+import { ExtractAttributes, ModelMap, UpToOptions } from '@wildebeest/types';
 import logSection from '@wildebeest/utils/logSection';
 
 // local
-import * as attributes from './attributes';
+import attributes from './attributes';
 import * as options from './options';
+
+type TAttributes = ExtractAttributes<typeof attributes>;
 
 /**
  * A Migration db model
  */
-export default class Migration<
-  TModels extends ModelMap
-> extends WildebeestModel<TModels, number> {
+export default class Migration<TModels extends ModelMap>
+  extends WildebeestModel<TModels, number>
+  implements ExtractAttributes<typeof attributes> {
   /** The model definition */
   public static definition = {
     attributes,

@@ -6,6 +6,9 @@
  * @module wildebeest
  */
 
+// external modules
+import { DataTypes } from 'sequelize';
+
 // local
 import * as checks from './checks';
 import Wildebeest, {
@@ -24,8 +27,13 @@ export * from './models';
 export * from './mixins/types';
 export * from './types';
 export { default as Logger } from './Logger';
-export const { createAssociationApply, createAssociationApplyValue } = utils;
+export const {
+  createAssociationApply,
+  createAssociationApplyValue,
+  createAttributes,
+} = utils;
 export {
+  DataTypes,
   checks,
   utils,
   CASCADE_HOOKS,

@@ -19,6 +19,7 @@ export {
   default as configureModelDefinition,
 } from './configureModelDefinition';
 export { default as createAssociationApply } from './createAssociationApply';
+export { default as createAttributes } from './createAttributes';
 export {
   default as createAssociationApplyValue,
 } from './createAssociationApplyValue';
