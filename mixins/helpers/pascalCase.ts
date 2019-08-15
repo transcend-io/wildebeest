@@ -1,5 +1,5 @@
 // external modules
-import camelcaCase from 'lodash/camelCase';
+import camelCase from 'lodash/camelCase';
 import upperFirst from 'lodash/upperFirst';
 
 /**
