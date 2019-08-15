@@ -135,9 +135,10 @@ export type ConfiguredAttributes = {
 /**
  * Function that returns column definition where key is column name and value is column definition
  */
-export type DefineColumns<TModels extends ModelMap> = (
-  db: WildebeestDb<TModels>,
-) => Attributes;
+export type DefineColumns<
+  TModels extends ModelMap,
+  TAttributes extends Attributes
+> = (db: WildebeestDb<TModels>) => TAttributes;
 
 /**
  * Since the keys of the associations object specify the `as`, the `modelName` must be provided when the association name !== modelName
@@ -349,7 +350,10 @@ export type QueryWithTransaction = <T extends AnyArray = AnyArray>(
 /**
  * The helper functions wrapped in transactions
  */
-export type QueryHelpers<TModels extends ModelMap> = {
+export type QueryHelpers<
+  TModels extends ModelMap,
+  TAttributes extends Attributes
+> = {
   /** Run a SELECT query in the transaction that returns a list */
   select: QueryWithTransaction;
   /** Delete rows inside the transaction */
@@ -371,11 +375,11 @@ export type QueryHelpers<TModels extends ModelMap> = {
     processRow: (row: T) => void,
   ) => Promise<number>;
   /** Batch update a table */
-  batchUpdate: <T extends {}>(
+  batchUpdate: (
     tableName: string,
-    getRowDefaults: RowUpdater<T, TModels>,
-    columnDefinitions: Attributes,
-    options: UpdateRowOptions<T>,
+    getRowDefaults: RowUpdater<TModels, TAttributes>,
+    columnDefinitions: TAttributes,
+    options: UpdateRowOptions,
   ) => Promise<number>;
 };
 
@@ -390,9 +394,12 @@ export type TransactionOptions = {
 /**
  * Transaction options when running a migration come with helper functions
  */
-export type MigrationTransactionOptions<TModels extends ModelMap> = {
+export type MigrationTransactionOptions<
+  TModels extends ModelMap,
+  TAttributes extends Attributes = Attributes
+> = {
   /** Helper functions that run within the migration transaction */
-  queryT: QueryHelpers<TModels>;
+  queryT: QueryHelpers<TModels, TAttributes>;
 } & TransactionOptions;
 
 // /////// //

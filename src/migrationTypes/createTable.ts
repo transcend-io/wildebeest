@@ -8,27 +8,38 @@ import {
   MigrationTransactionOptions,
   ModelMap,
 } from '@wildebeest/types';
-import { addTableColumnConstraint, dropEnum, isEnum } from '@wildebeest/utils';
+import {
+  addTableColumnConstraint,
+  dropEnum,
+  getKeys,
+  isEnum,
+} from '@wildebeest/utils';
 import { RawConstraint } from '@wildebeest/utils/indexConstraints';
 
 /**
  * Options for dropping a table
  */
-export type DropTableOptions<TModels extends ModelMap> = {
+export type DropTableOptions<
+  TAttributes extends Attributes,
+  TModels extends ModelMap
+> = {
   /** The name of the table to drop */
   tableName: string;
   /** A function that returns the column definitions for the new table */
-  getColumns?: DefineColumns<TModels>;
+  getColumns?: DefineColumns<TModels, TAttributes>;
 };
 
 /**
  * Options for creating a new table
  */
-export type CreateTableOptions<TModels extends ModelMap> = {
+export type CreateTableOptions<
+  TAttributes extends Attributes,
+  TModels extends ModelMap
+> = {
   /** The name of the table to create */
   tableName: string;
   /** A function that returns the column definitions for the new table */
-  getColumns: DefineColumns<TModels>;
+  getColumns: DefineColumns<TModels, TAttributes>;
   /** The columns that should get cascade constraints */
   constraints?: RawConstraint[];
   /** When true, the columns id, createdAt, and updatedAt will not be added in addition to columns from `getColumns` */
@@ -41,9 +52,12 @@ export type CreateTableOptions<TModels extends ModelMap> = {
  * @param options - The options for creating the table
  * @returns The create table promise
  */
-export async function createNewTable<TModels extends ModelMap>(
+export async function createNewTable<
+  TAttributes extends Attributes,
+  TModels extends ModelMap
+>(
   wildebeest: Wildebeest<TModels>,
-  options: CreateTableOptions<TModels>,
+  options: CreateTableOptions<TAttributes, TModels>,
   transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   // Raw query interface
@@ -99,9 +113,12 @@ export async function createNewTable<TModels extends ModelMap>(
  * @param transactionOptions - The current transaction
  * @returns The remove table promise
  */
-export async function dropTable<TModels extends ModelMap>(
+export async function dropTable<
+  TAttributes extends Attributes,
+  TModels extends ModelMap
+>(
   { db, namingConventions }: Wildebeest<TModels>,
-  options: DropTableOptions<TModels>,
+  options: DropTableOptions<TAttributes, TModels>,
   transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   // Raw query interface
@@ -112,11 +129,12 @@ export async function dropTable<TModels extends ModelMap>(
   await queryInterface.dropTable(tableName, transactionOptions);
 
   // Find enum columns
+  const columns = getColumns(db);
   await Promise.all(
-    Object.entries(getColumns(db))
-      .filter(([, value]) => isEnum(value))
+    getKeys(columns)
+      .filter((columnName) => isEnum(columns[columnName]))
       // Drop the enums
-      .map(([columnName]) =>
+      .map((columnName) =>
         dropEnum(
           db,
           namingConventions.enum(tableName, columnName),
@@ -134,8 +152,11 @@ export async function dropTable<TModels extends ModelMap>(
  * @param options - Options for creating a new table
  * @returns The create table migrator
  */
-export default function createTable<TModels extends ModelMap>(
-  options: CreateTableOptions<TModels>,
+export default function createTable<
+  TAttributes extends Attributes,
+  TModels extends ModelMap
+>(
+  options: CreateTableOptions<TAttributes, TModels>,
 ): MigrationDefinition<TModels> {
   const {
     tableName,

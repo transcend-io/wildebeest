@@ -3,7 +3,11 @@ import sequelize from 'sequelize';
 
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
-import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
+import {
+  Attributes,
+  MigrationTransactionOptions,
+  ModelMap,
+} from '@wildebeest/types';
 import inferTableReference from '@wildebeest/utils/inferTableReference';
 
 /**
@@ -31,11 +35,12 @@ export type AddTableConstraintOptions = {
  * @returns The create constraint promise
  */
 export default async function addTableColumnConstraint<
-  TModels extends ModelMap
+  TModels extends ModelMap,
+  TAttributes extends Attributes
 >(
   { db, namingConventions, pluralCase }: Wildebeest<TModels>,
   options: AddTableConstraintOptions,
-  transactionOptions: MigrationTransactionOptions<TModels>,
+  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
 ): Promise<void> {
   // Raw query interface
   const { queryInterface } = db;

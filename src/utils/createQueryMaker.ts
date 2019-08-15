@@ -5,6 +5,7 @@ import * as sequelize from 'sequelize';
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import {
   AnyArray,
+  Attributes,
   MigrationTransactionOptions,
   ModelMap,
   QueryHelpers,
@@ -18,15 +19,21 @@ import updateRows from './updateRows';
 /**
  * A function should be run with all queries inside a transaction a transaction
  */
-export type RunInTransaction<TModels extends ModelMap> = (
-  transactionOptions: MigrationTransactionOptions<TModels>,
+export type RunInTransaction<
+  TModels extends ModelMap,
+  TAttributes extends Attributes = Attributes
+> = (
+  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
 ) => PromiseLike<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
  * Similar to the function provided to db.transaction
  */
-export type WithTransaction<TModels extends ModelMap> = (
-  runInTransaction: RunInTransaction<TModels>,
+export type WithTransaction<
+  TModels extends ModelMap,
+  TAttributes extends Attributes = Attributes
+> = (
+  runInTransaction: RunInTransaction<TModels, TAttributes>,
 ) => PromiseLike<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
@@ -66,17 +73,22 @@ export default function createQueryMaker(
  * @param wildebeest - The wildebeest configuration
  * @returns A function that takes in the argument of db.transaction but wrapped with extras
  */
-export function transactionWrapper<TModels extends ModelMap>(
+export function transactionWrapper<
+  TModels extends ModelMap,
+  TAttributes extends Attributes
+>(
   wildebeest: Wildebeest<TModels>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): (runInTransaction: RunInTransaction<TModels>) => PromiseLike<any> {
+): (
+  runInTransaction: RunInTransaction<TModels, TAttributes>,
+) => PromiseLike<any> {
   const { db } = wildebeest;
-  return async (runInTransaction: RunInTransaction<TModels>) =>
+  return async (runInTransaction: RunInTransaction<TModels, TAttributes>) =>
     db.transaction(async (transaction) => {
       const tOpt = { transaction };
 
       // Run select with the transaction
-      const qT: QueryHelpers<TModels> = {
+      const qT: QueryHelpers<TModels, TAttributes> = {
         delete: async (tableName, options = {}) =>
           db.queryInterface.bulkDelete(tableName, options, tOpt),
         insert: async (tableName, items) => {

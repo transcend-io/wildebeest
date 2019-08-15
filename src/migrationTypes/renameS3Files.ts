@@ -4,7 +4,7 @@ import { S3 } from 'aws-sdk';
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
-import { MigrationDefinition, ModelMap } from '@wildebeest/types';
+import { Attributes, MigrationDefinition, ModelMap } from '@wildebeest/types';
 import batchProcess from '@wildebeest/utils/batchProcess';
 import renameS3File from '@wildebeest/utils/renameS3File';
 
@@ -87,7 +87,11 @@ async function moveFile<T, TModels extends ModelMap>(
  * @param options - The rename file options
  * @returns The rename promise
  */
-async function renameFiles<T, TModels extends ModelMap>(
+async function renameFiles<
+  T,
+  TModels extends ModelMap,
+  TAttributes extends Attributes
+>(
   wildebeest: Wildebeest<TModels>,
   options: RenameS3FileOptions<T, TModels>,
 ): Promise<void> {
@@ -105,7 +109,7 @@ async function renameFiles<T, TModels extends ModelMap>(
   if (!attributes.includes('mimetype')) {
     useAttributes = `mimetype${useAttributes ? `,${useAttributes}` : ''}`;
   }
-  await batchProcess<T & File, TModels>(
+  await batchProcess<T & File, TModels, TAttributes>(
     wildebeest,
     tableName,
     { attributes: useAttributes },

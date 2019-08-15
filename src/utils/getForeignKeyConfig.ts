@@ -3,7 +3,11 @@ import { QueryTypes } from 'sequelize';
 
 // global
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
-import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
+import {
+  Attributes,
+  MigrationTransactionOptions,
+  ModelMap,
+} from '@wildebeest/types';
 
 /**
  * The foreign key constraint
@@ -40,7 +44,7 @@ export type ForeignKeyConstraintConfig = {
 export default async function getForeignKeyConfig<TModels extends ModelMap>(
   db: WildebeestDb<TModels>,
   name: string,
-  transactionOptions?: MigrationTransactionOptions<TModels>,
+  transactionOptions?: MigrationTransactionOptions<TModels, Attributes>,
 ): Promise<ForeignKeyConstraintConfig> {
   const [config] = await db.queryInterface.sequelize.query(
     `

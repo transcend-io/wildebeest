@@ -32,7 +32,7 @@ export default async function listEnumAttributes<TModels extends ModelMap>(
   //  Determine the indexes
   const values: UnnestedAttr[] = await queryInterface.sequelize.query(
     `SELECT unnest(enum_range(NULL::"${name}"))`,
-    { type: QueryTypes.SELECT, ...transactionOptions },
+    { ...transactionOptions, type: QueryTypes.SELECT },
   );
   return values.map(({ unnest }) => unnest);
 }

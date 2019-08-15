@@ -1,6 +1,7 @@
 // global
 import {
   Attributes,
+  ExtractAttributes,
   MigrationTransactionOptions,
   ModelMap,
 } from '@wildebeest/types';
@@ -13,18 +14,23 @@ import batchProcess from './batchProcess';
 /**
  * Database column definitions, often found in attributes.js
  */
-export type RowUpdater<T extends {}, TModels extends ModelMap> = (
+export type RowUpdater<
+  TModels extends ModelMap,
+  TAttributes extends Attributes
+> = <T extends {}>(
   row: T,
-  transactionOptions: MigrationTransactionOptions<TModels>,
+  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
   db: WildebeestDb<TModels>,
-) => T | PromiseLike<T>;
+) =>
+  | (T & ExtractAttributes<TAttributes>)
+  | PromiseLike<T & ExtractAttributes<TAttributes>>;
 
 /**
  * Extra options that can be provided when updating values in a table
  */
-export type UpdateRowOptions<T extends {}> = {
+export type UpdateRowOptions = {
   /** The name of the primary key column in the table */
-  idName?: Extract<keyof T, string>;
+  idName?: string; // Extract<keyof T, string>;
   /** What to set for columns when no default is provided */
   onNullValue?: (dv: any) => any; // TODO remove
 };
@@ -43,20 +49,21 @@ export type UpdateRowOptions<T extends {}> = {
  */
 export default async function updateRows<
   T extends {},
-  TModels extends ModelMap
+  TModels extends ModelMap,
+  TAttributes extends Attributes
 >(
   wildebeest: Wildebeest<TModels>,
   tableName: string,
-  getRowDefaults: RowUpdater<T, TModels>,
-  columnDefinitions: Attributes,
-  options: UpdateRowOptions<T> = {},
-  transactionOptions: MigrationTransactionOptions<TModels>,
+  getRowDefaults: RowUpdater<TModels, TAttributes>,
+  columnDefinitions: TAttributes,
+  options: UpdateRowOptions = {},
+  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
 ): Promise<number> {
   const { queryT } = transactionOptions;
   const { onNullValue, idName = 'id' } = options;
 
   // Update rows in batches
-  return batchProcess<T, TModels>(
+  return batchProcess<T, TModels, TAttributes>(
     wildebeest,
     tableName,
     { attributes: '*' },
