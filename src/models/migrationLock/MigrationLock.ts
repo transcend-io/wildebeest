@@ -179,6 +179,30 @@ export default class MigrationLock<TModels extends ModelMap>
   }
 
   /**
+   * Clear the db removing all tables
+   *
+   * @param to - The migration to run down to
+   * @returns The clear promise
+   */
+  public dropAll(): Promise<void> {
+    return clearSchema(this.db.queryInterface);
+  }
+
+  /**
+   * Restore the database from a schema checkpoint
+   *
+   * @param schema - the name of the schema
+   * @returns The promise that loads in the db from that state
+   */
+  public async restoreSchema(schema: string): Promise<void> {
+    // Clear the schema and restore from latest dump
+    await this.dropAll();
+
+    // Restore the db to the latest save
+    await restoreFromDump(this.wildebeest, schema);
+  }
+
+  /**
    * Load in the latest empty db state
    *
    * @param schema - The schema to restore to
@@ -187,11 +211,8 @@ export default class MigrationLock<TModels extends ModelMap>
   public async latest(
     schema = this.wildebeest.restoreSchemaOnEmpty,
   ): Promise<void> {
-    // Clear the schema and restore from latest dump
-    await clearSchema(this.db.queryInterface);
-
     // Restore the db to the latest save
-    await restoreFromDump(this.wildebeest, schema);
+    await this.restoreSchema(schema);
 
     // When the restore is not named latest, migrate forward
     if (schema !== 'latest') {
@@ -214,7 +235,7 @@ export default class MigrationLock<TModels extends ModelMap>
       // Migrate from latest
       await Migration.up({ from: nextMigration });
     } catch (err) {
-      // Retry the migration when cannot find the migrations folder for some reason... TODO
+      // Retry the migration when cannot find the migrations folder due to auto-reloading
       if (err.code === 'EIO') {
         this.wildebeest.verboseLogger.error(
           `Encountered i/o error: ${err.message}`,
@@ -273,7 +294,7 @@ export default class MigrationLock<TModels extends ModelMap>
    */
   public async wipe(): Promise<void> {
     // Run all the way down
-    await clearSchema(this.db.queryInterface);
+    await this.dropAll();
 
     // Re-setup
     await this.wildebeest.setup();

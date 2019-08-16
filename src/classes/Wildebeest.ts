@@ -413,11 +413,6 @@ export default class Wildebeest<TModels extends ModelMap> {
     // Ensure the migrations table it setup
     await this.setup();
 
-    // Unlock if force is un
-    if (this.forceUnlock) {
-      await MigrationLock.releaseLock();
-    }
-
     // Run the new migrations if auto migrate is on
     await this.runWithLock((lock) => lock.migrate());
   }
@@ -493,6 +488,11 @@ export default class Wildebeest<TModels extends ModelMap> {
     // Only one server at a time should be able to run migrations
     let lock;
     let attempts = 0;
+
+    // Unlock if force is on
+    if (this.forceUnlock) {
+      await MigrationLock.releaseLock();
+    }
 
     try {
       // Start the server
