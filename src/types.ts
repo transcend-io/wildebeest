@@ -231,7 +231,7 @@ export type BelongsToManyAssociation<TModelName extends string> = Omit<
   'through'
 > & {
   /** The name of the model joining through */
-  throughModel: TModelName;
+  throughModelName: TModelName;
 };
 
 /**

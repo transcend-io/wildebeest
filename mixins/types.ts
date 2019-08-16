@@ -139,6 +139,8 @@ export type AssociationInput = {
   primaryKeyName: string;
   /** The association name */
   associationName: string;
+  /** The name of the through model */
+  throughModelName?: string;
   /** The name of the model */
   modelName: string;
   /** The compiled attribute definitions to inject */

@@ -63,8 +63,8 @@ export default function configureAssociations<TModels extends ModelMap>(
         : { ...NON_NULL, modelName: associationName as TModelName },
     ),
     // Through must be provided when defining a belongsToMany association
-    belongsToMany: apply(belongsToMany, ({ throughModel, ...options }) => ({
-      through: db.model(throughModel),
+    belongsToMany: apply(belongsToMany, ({ throughModelName, ...options }) => ({
+      through: db.model(throughModelName),
       ...options,
     })),
     // Replace CASCADE_HOOKS and tableName

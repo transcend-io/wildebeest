@@ -28,6 +28,7 @@ export default function calculateMixinAttributes(
     modelName: new ChangeCase(association.modelName, pluralCase),
     associationName: new ChangeCase(association.associationName, pluralCase),
     primaryKeyName: association.primaryKeyName,
+    throughModelName: association.throughModelName,
   };
 
   // Check if there are custom mixins
