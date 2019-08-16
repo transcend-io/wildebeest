@@ -4,10 +4,11 @@ import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import {
   AttributeInputs,
   Attributes,
-  ExtractAttributes,
+  ExtractRequiredAttributes,
   Identity,
   MigrationTransactionOptions,
   ModelMap,
+  SubNotType,
 } from '@wildebeest/types';
 import getKeys from '@wildebeest/utils/getKeys';
 
@@ -15,18 +16,12 @@ import getKeys from '@wildebeest/utils/getKeys';
 import batchProcess from './batchProcess';
 
 /**
- * Inverse of SubType
- */
-export type SubNotType<Base, Condition> = Pick<
-  Base,
-  { [Key in keyof Base]: Base[Key] extends Condition ? never : Key }[keyof Base]
->;
-
-/**
  * Take the attribute definitions and extract out the typings that should be assigned to the db model
+ *
+ * TODO actually enforce this in migrationTypes for column mappers and ensure mapper is provided when there are required values
  */
 export type ExtractUpdateAttributes<TAttributes extends Attributes> = Identity<
-  ExtractAttributes<
+  ExtractRequiredAttributes<
     SubNotType<
       TAttributes,
       | {
@@ -43,7 +38,7 @@ export type ExtractUpdateAttributes<TAttributes extends Attributes> = Identity<
         }
     >
   > &
-    Partial<ExtractAttributes<TAttributes>>
+    Partial<ExtractRequiredAttributes<TAttributes>>
 >;
 
 /**

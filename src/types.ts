@@ -69,6 +69,14 @@ export type Merge<TObj extends ObjByString> = UnionToIntersection<
 export type StringKeys<TObj extends ObjByString> = Extract<keyof TObj, string>;
 
 /**
+ * Filter object for values that do not extend some condition
+ */
+export type SubNotType<Base, Condition> = Pick<
+  Base,
+  { [Key in keyof Base]: Base[Key] extends Condition ? never : Key }[keyof Base]
+>;
+
+/**
  * Convert unions to intersection
  */
 export type UnionToIntersection<U> = (U extends any // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -126,11 +134,27 @@ export type AttributeToType<
   : unknown;
 
 /**
- * Take the attribute definitions and extract out the typings that should be assigned to the db model
+ * Take the attribute definitions and extract out the typings that should be assigned to the db model but make them all required
  */
-export type ExtractAttributes<TAttributes extends Attributes> = {
+export type ExtractRequiredAttributes<TAttributes extends Attributes> = {
   [k in StringKeys<TAttributes>]: AttributeToType<TAttributes[k]>;
 };
+
+/**
+ * Take the attribute definitions and extract out the typings that should be assigned to the db model
+ */
+export type ExtractAttributes<TAttributes extends Attributes> = Identity<
+  ExtractRequiredAttributes<
+    SubNotType<
+      TAttributes,
+      {
+        /** Filter out values that are allowed to be null */
+        allowNull: true;
+      }
+    >
+  > &
+    Partial<ExtractRequiredAttributes<TAttributes>>
+>;
 
 /**
  * Once associations have been collapsed into attributes, extra options are added

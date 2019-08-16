@@ -106,7 +106,7 @@ export default class Migration<TModels extends ModelMap>
       this.batch += 1;
     } else {
       const last = await this.latest();
-      this.batch = last ? last.batch + 1 : 1;
+      this.batch = last ? (last.batch || 0) + 1 : 1;
     }
   }
 
