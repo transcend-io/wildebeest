@@ -23,6 +23,9 @@ export const SEQUELIZE_MIXINS: AssociationMixins = {
       attribute: `public get${associationName.pascalPluralCase}: w.BelongsToManyGetAssociationsMixin<M.I${modelName.pascalCase}>;`,
     },
     {
+      attribute: `public set${associationName.pascalPluralCase}: w.BelongsToManySetAssociationsMixin<M.I${modelName.pascalCase}>;`,
+    },
+    {
       attribute: `public add${associationName.pascalCase}: w.BelongsToManyAddAssociationMixin<M.I${modelName.pascalCase}>;`,
     },
     {
