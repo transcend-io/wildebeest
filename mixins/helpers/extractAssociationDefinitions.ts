@@ -67,10 +67,7 @@ export default function extractAssociationDefinitions(
     // Determine the association configurations
     const associations: Partial<AssociationsMapping> = {};
     Object.values(AssociationType).forEach((type: AssociationType) => {
-      associations[type] = serializeAssociationType(
-        members.get(type),
-        originalFileName,
-      );
+      associations[type] = serializeAssociationType(members.get(type));
     });
 
     return {

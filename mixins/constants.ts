@@ -103,7 +103,11 @@ export const SEQUELIZE_MIXINS: AssociationMixins = {
  * Additional mixins added by wildebeest
  */
 export const WILDEBEEST_MIXINS: AssociationMixins = {
-  belongsToMany: () => [],
+  belongsToMany: ({ throughModelName }) => [
+    {
+      attribute: `public ${throughModelName}?: M.I${throughModelName};`,
+    },
+  ],
   belongsTo: ({ modelName, associationName }) => [
     {
       attribute: `public getCached${associationName.pascalCase}: w.BelongsToGetCachedAssociationMixin<M.I${modelName.pascalCase}>;`,

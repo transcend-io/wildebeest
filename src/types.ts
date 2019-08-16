@@ -226,10 +226,13 @@ export type HasManyAssociation<TModelName extends string> =
 /**
  * This model belongsToMany of another model. This adds a join table between the models.
  */
-export type BelongsToManyAssociation = Omit<
+export type BelongsToManyAssociation<TModelName extends string> = Omit<
   sequelize.BelongsToManyOptions,
   'through'
->;
+> & {
+  /** The name of the model joining through */
+  throughModel: TModelName;
+};
 
 /**
  * The intersection of all of the different association types
@@ -238,7 +241,7 @@ export type Association<TModelName extends string> =
   | BelongsToAssociation<TModelName>
   | HasOneAssociation<TModelName>
   | HasManyAssociation<TModelName>
-  | BelongsToManyAssociation;
+  | BelongsToManyAssociation<TModelName>;
 
 /**
  * The associations for a model
@@ -254,7 +257,7 @@ export type Associations<TModelNames extends string = StringKeys<ModelMap>> = {
   hasMany?: { [associationName in string]: HasManyAssociation<TModelNames> };
   /** Indicates there exists a join table with the association */
   belongsToMany?: {
-    [associationName in string]: BelongsToManyAssociation;
+    [associationName in string]: BelongsToManyAssociation<TModelNames>;
   }; // TODO [string in TModelName]
 };
 

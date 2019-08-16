@@ -37,7 +37,7 @@ export default async function checkColumnDefinitions<TModels extends ModelMap>(
   // Compare columns to what exist
   const expectedColumns = expectedColumnNames(
     model.attributes,
-    model.associations,
+    model.rawAssociations,
   );
   const existingColumns = await listColumns(wildebeest.db, model.tableName);
 

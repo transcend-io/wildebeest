@@ -34,6 +34,8 @@ export type MixinAttributeInput = {
   associationName: ChangeCase;
   /** The name of the primary ket joining the tables */
   primaryKeyName: string;
+  /** The name of the model that the association is being made through */
+  throughModelName?: string;
 };
 
 /**
@@ -69,6 +71,8 @@ export type AssociationDefinition = {
   modelName: string;
   /** The name of the primary key that is creating the join */
   primaryKeyName: string;
+  /** The name of the through model */
+  throughModelName?: string;
 };
 
 /**
