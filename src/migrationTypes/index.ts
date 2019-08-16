@@ -19,6 +19,7 @@ export { default as changeColumn } from './changeColumn';
 export { default as changeEnumColumn } from './changeEnumColumn';
 export { default as changeOnDelete } from './changeOnDelete';
 export { default as custom } from './custom';
+export { default as convertEnumValues } from './convertEnumValues';
 export { default as createTable } from './createTable';
 export { default as dropTable } from './dropTable';
 export { default as makeColumnAllowNull } from './makeColumnAllowNull';
