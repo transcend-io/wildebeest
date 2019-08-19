@@ -51,6 +51,11 @@ export type ModelToJson<M extends Model> = Pick<
 >;
 
 /**
+ * Decorator that enforces static types
+ */
+export type StaticTypeEnforcement<T> = <U extends T>(c: U) => void;
+
+/**
  * A MigrationLock db model
  */
 export default class WildebeestModel<TModels extends ModelMap> extends Model {
@@ -78,6 +83,17 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
 
   /** The wildebeest sequelize database */
   public static db?: WildebeestDb<ModelMap>;
+
+  /**
+   * A decorator that can be used to enforce static type definitions
+   *
+   * @returns A decorator that will type-enforce the class constructor
+   */
+  public static statics<T>(): StaticTypeEnforcement<T> {
+    return <U extends T>(constructor: U) => {
+      constructor; /* eslint-disable-line no-unused-expressions */
+    };
+  }
 
   /**
    * Merge db model hooks
