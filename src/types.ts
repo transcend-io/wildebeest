@@ -343,10 +343,8 @@ export type ConfiguredModelDefinition<
 /**
  * Model map definition from model name to model definition
  */
-export type ModelMap<
-  TModelConstructor extends typeof WildebeestModel = typeof WildebeestModel
-> = {
-  [modelName in string]: TModelConstructor;
+export type ModelMap = {
+  [modelName in string]: typeof WildebeestModel;
 };
 
 // ///// //

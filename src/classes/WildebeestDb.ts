@@ -19,16 +19,10 @@ import {
 // global
 import { ModelMap, StringKeys } from '@wildebeest/types';
 
-// local
-import WildebeestModel from './WildebeestModel'; // eslint-disable-line @typescript-eslint/no-unused-vars
-
 /**
  * A db model
  */
-export default class WildebeestDb<
-  TModels extends ModelMap<TModelConstructor>,
-  TModelConstructor extends typeof WildebeestModel = typeof WildebeestModel
-> extends Sequelize {
+export default class WildebeestDb<TModels extends ModelMap> extends Sequelize {
   /** No need to call getter to access queryInterface during migrations */
   public queryInterface: QueryInterface;
 
