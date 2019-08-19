@@ -63,6 +63,7 @@ import getKeys from '@wildebeest/utils/getKeys';
 
 // local
 import WildebeestDb from './WildebeestDb';
+import WildebeestModel from './WildebeestModel';
 
 /**
  * Only a subset of the naming conventions need to be overwritten
@@ -72,7 +73,10 @@ export type NamingConventions = typeof DEFAULT_NAMING_CONVENTIONS;
 /**
  * The options needed to configure a wildebeest
  */
-export type WildebeestOptions<TModels extends ModelMap> = {
+export type WildebeestOptions<
+  TModels extends ModelMap<TModelConstructor>,
+  TModelConstructor extends typeof WildebeestModel = typeof WildebeestModel
+> = {
   /** The uri of the database to connect o */
   databaseUri: string;
   /** The path to the folder where the migrations themselves are defined */
@@ -122,7 +126,10 @@ export type WildebeestOptions<TModels extends ModelMap> = {
 /**
  * A migration runner interface
  */
-export default class Wildebeest<TModels extends ModelMap> {
+export default class Wildebeest<
+  TModels extends ModelMap<TModelConstructor>,
+  TModelConstructor extends typeof WildebeestModel = typeof WildebeestModel
+> {
   /**
    * Index the migrations and validate that the numbering is correct
    */
