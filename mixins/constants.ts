@@ -127,10 +127,10 @@ export const WILDEBEEST_MIXINS: AssociationMixins = {
       attribute: `public createMany${associationName.pascalPluralCase}: w.HasManyCreateManyAssociationsMixin<M.I${modelName.pascalCase}>;`,
     },
     {
-      attribute: `public destroyAll${associationName.pascalPluralCase}: w.HasManyDestroyAllAssociationMixin;`,
+      attribute: `public destroyAll${associationName.pascalPluralCase}: w.HasManyDestroyAllAssociationMixin<M.I${modelName.pascalCase}>;`,
     },
     {
-      attribute: `public destroyOne${associationName.pascalCase}: w.HasManyDestroyOneAssociationMixin;`,
+      attribute: `public destroyOne${associationName.pascalCase}: w.HasManyDestroyOneAssociationMixin<M.I${modelName.pascalCase}>;`,
     },
     {
       attribute: `public getOne${associationName.pascalCase}: w.HasManyGetOneAssociationMixin<M.I${modelName.pascalCase}>;`,

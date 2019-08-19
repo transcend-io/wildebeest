@@ -11,11 +11,12 @@
 // external modules
 import * as express from 'express';
 import * as sequelize from 'sequelize';
+import { HookReturn, ModelHooks } from 'sequelize/types/lib/hooks';
 import * as umzug from 'umzug';
 
 // models
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
-import Model from '@wildebeest/classes/WildebeestModel';
+import WildebeestModel from '@wildebeest/classes/WildebeestModel';
 
 // local
 import { IndexType } from './enums';
@@ -84,6 +85,14 @@ export type UnionToIntersection<U> = (U extends any // eslint-disable-line @type
   : never) extends ((k: infer I) => void)
   ? I
   : never;
+
+/**
+ * Soft spread
+ */
+export type Spread<L, R> = Identity<
+  // Properties in L that don't exist in R
+  Pick<L, Exclude<keyof L, keyof R>> & R
+>;
 
 // ///////// //
 // Sequelize //
@@ -334,7 +343,7 @@ export type ConfiguredModelDefinition<
 /**
  * Model map definition from model name to model definition
  */
-export type ModelMap = { [modelName in string]: typeof Model };
+export type ModelMap = { [modelName in string]: typeof WildebeestModel };
 
 // ///// //
 // Umzug //
@@ -445,6 +454,65 @@ export type MigrationTransactionOptions<
   /** Helper functions that run within the migration transaction */
   queryT: QueryHelpers<TModels, TAttributes>;
 } & TransactionOptions;
+
+// ///// //
+// Hooks //
+// ///// //
+
+// /**
+//  * Add TrDb fully typed retroactively to a model
+//  * TODO
+//  */
+// export type WithTrDb<T extends {}> = Merge<
+//   T,
+//   {
+//     /** Ensure db has model map */
+//     db: TrDb;
+//   }
+// >;
+
+/**
+ * Db model hooks
+ */
+export type HookOptions<M extends WildebeestModel<any, any>> = Partial<
+  Spread<
+    ModelHooks<M>,
+    {
+      /** Before row is created */
+      beforeCreate(
+        attributes: M,
+        options: M['hookOptionsT']['create'] & sequelize.CreateOptions,
+      ): HookReturn;
+      /** After row is created */
+      afterCreate(
+        attributes: M,
+        options: M['hookOptionsT']['create'] & sequelize.CreateOptions,
+      ): HookReturn;
+      /** Before row is destroyed */
+      beforeDestroy(
+        instance: M,
+        options: M['hookOptionsT']['destroy'] &
+          sequelize.InstanceDestroyOptions,
+      ): HookReturn;
+      /** After row is destroyed */
+      afterDestroy(
+        instance: M,
+        options: M['hookOptionsT']['destroy'] &
+          sequelize.InstanceDestroyOptions,
+      ): HookReturn;
+      /** Before row is updated */
+      beforeUpdate(
+        instance: M,
+        options: M['hookOptionsT']['update'] & sequelize.InstanceUpdateOptions,
+      ): HookReturn;
+      /** After row is updated */
+      afterUpdate(
+        instance: M,
+        options: M['hookOptionsT']['update'] & sequelize.InstanceUpdateOptions,
+      ): HookReturn;
+    }
+  >
+>;
 
 // /////// //
 // Express //

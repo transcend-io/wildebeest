@@ -3,18 +3,20 @@
  * ## Wildebeest Mixing Type Definitions
  * Type definitions used to define the type for dynamically injected sequelize prototypes
  *
+ * TODO options undefined handling
+ *
  * @module wildebeest/types
  * @see module:migrations
  */
 
 // external modules
 import {
-  BelongsToCreateAssociationMixin,
+  BelongsToCreateAssociationMixinOptions,
   BelongsToGetAssociationMixin,
   BelongsToManyAddAssociationMixin as SequelizeBelongsToManyAddAssociationMixin,
   BelongsToManyAddAssociationsMixin as SequelizeBelongsToManyAddAssociationsMixin,
   BelongsToManyCountAssociationsMixin,
-  BelongsToManyCreateAssociationMixin,
+  BelongsToManyCreateAssociationMixinOptions,
   BelongsToManyGetAssociationsMixin,
   BelongsToManyHasAssociationMixin as SequelizeBelongsToManyHasAssociationMixin,
   BelongsToManyRemoveAssociationMixin,
@@ -22,17 +24,17 @@ import {
   BelongsToManySetAssociationsMixin as SequelizeBelongsToManySetAssociationsMixin,
   BelongsToSetAssociationMixin as SequelizeBelongsToSetAssociationMixin,
   CreateOptions,
-  DestroyOptions,
   FindOptions,
   HasManyAddAssociationMixin as SequelizeHasManyAddAssociationMixin,
   HasManyCountAssociationsMixin,
-  HasManyCreateAssociationMixin,
+  HasManyCreateAssociationMixinOptions,
   HasManyGetAssociationsMixin,
   HasManyHasAssociationMixin as SequelizeHasManyHasAssociationMixin,
-  HasOneCreateAssociationMixin,
+  HasOneCreateAssociationMixinOptions,
   HasOneGetAssociationMixin,
   HasOneSetAssociationMixin as SequelizeHasOneSetAssociationMixin,
-  UpdateOptions,
+  InstanceDestroyOptions,
+  InstanceUpdateOptions,
 } from 'sequelize/types';
 
 // global
@@ -69,9 +71,17 @@ export type IsModel<TM> = TM extends AnyModel ? TM : never;
 
 export {
   BelongsToManyCountAssociationsMixin,
-  BelongsToManyCreateAssociationMixin,
   BelongsToManyGetAssociationsMixin,
 };
+
+/**
+ * BelongsToManyCreateAssociationMixin
+ */
+export type BelongsToManyCreateAssociationMixin<TModel extends AnyModel> = (
+  values?: AttributeInputs,
+  options?: TModel['hookOptionsT']['create'] &
+    BelongsToManyCreateAssociationMixinOptions,
+) => Promise<TModel>;
 
 /**
  * BelongsToManyHasAssociationMixin with primary key set by default
@@ -125,7 +135,16 @@ export type BelongsToManyRemoveAssociationsMixin<
 // belongsTo //
 // ///////// //
 
-export { BelongsToCreateAssociationMixin, BelongsToGetAssociationMixin };
+export { BelongsToGetAssociationMixin };
+
+/**
+ * BelongsToCreateAssociationMixin
+ */
+export type BelongsToCreateAssociationMixin<TModel extends AnyModel> = (
+  values?: AttributeInputs,
+  options?: TModel['hookOptionsT']['create'] &
+    BelongsToCreateAssociationMixinOptions,
+) => Promise<TModel>;
 
 /**
  * BelongsToSetAssociationMixin with primary key set by default
@@ -154,14 +173,23 @@ export type BelongsToGetOrDefaultAssociationMixin<TModel extends AnyModel> = (
  */
 export type BelongsToUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
   input: AttributeInputs,
-  options?: UpdateOptions,
+  options?: TModel['hookOptionsT']['update'] & InstanceUpdateOptions,
 ) => Promise<TModel>;
 
 // ////// //
 // hasOne //
 // ////// //
 
-export { HasOneCreateAssociationMixin, HasOneGetAssociationMixin };
+export { HasOneGetAssociationMixin };
+
+/**
+ * HasOneCreateAssociationMixin
+ */
+export type HasOneCreateAssociationMixin<TModel extends AnyModel> = (
+  values?: AttributeInputs,
+  options?: TModel['hookOptionsT']['create'] &
+    HasOneCreateAssociationMixinOptions,
+) => Promise<TModel>;
 
 /**
  * HasOneSetAssociationMixin with primary key set by default
@@ -190,18 +218,23 @@ export type HasOneGetOrDefaultAssociationMixin<TModel extends AnyModel> = (
  */
 export type HasOneUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
   input: AttributeInputs,
-  options?: UpdateOptions,
+  options?: TModel['hookOptionsT']['update'] & InstanceUpdateOptions,
 ) => Promise<TModel>;
 
 // /////// //
 // hasMany //
 // /////// //
 
-export {
-  HasManyCountAssociationsMixin,
-  HasManyCreateAssociationMixin,
-  HasManyGetAssociationsMixin,
-};
+export { HasManyCountAssociationsMixin, HasManyGetAssociationsMixin };
+
+/**
+ * HasManyCreateAssociationMixin with primary key set by default
+ */
+export type HasManyCreateAssociationMixin<TModel extends AnyModel> = (
+  values?: AttributeInputs,
+  options?: TModel['hookOptionsT']['create'] &
+    HasManyCreateAssociationMixinOptions,
+) => Promise<TModel>;
 
 /**
  * HasManyHasAssociationMixin with primary key set by default
@@ -224,22 +257,22 @@ export type HasManyAddAssociationMixin<
  */
 export type HasManyCreateManyAssociationsMixin<TModel extends AnyModel> = (
   inputs: AttributeInputs[],
-  allOptions?: CreateOptions,
+  allOptions?: TModel['hookOptionsT']['create'] & CreateOptions,
 ) => Promise<TModel[]>;
 
 /**
  * Destroy all child instances with individual hooks
  */
-export type HasManyDestroyAllAssociationMixin = (
-  options?: DestroyOptions,
+export type HasManyDestroyAllAssociationMixin<TModel extends AnyModel> = (
+  options?: TModel['hookOptionsT']['destroy'] & InstanceDestroyOptions,
 ) => Promise<void>;
 
 /**
  * Find a single item and destroy it, if the item does not exist throw and error
  */
-export type HasManyDestroyOneAssociationMixin = (
+export type HasManyDestroyOneAssociationMixin<TModel extends AnyModel> = (
   findOptions: FindOptions,
-  options?: DestroyOptions,
+  options?: TModel['hookOptionsT']['destroy'] & InstanceDestroyOptions,
 ) => Promise<boolean>;
 
 /**
@@ -255,7 +288,7 @@ export type HasManyGetOneAssociationMixin<TModel extends AnyModel> = (
  */
 export type HasManyUpdateAllAssociationsMixin<TModel extends AnyModel> = (
   input: AttributeInputs,
-  options?: UpdateOptions,
+  options?: TModel['hookOptionsT']['update'] & InstanceUpdateOptions,
 ) => Promise<TModel>;
 
 /**
@@ -264,7 +297,7 @@ export type HasManyUpdateAllAssociationsMixin<TModel extends AnyModel> = (
 export type HasManyUpdateOneAssociationMixin<TModel extends AnyModel> = (
   findOptions: FindOptions,
   input: AttributeInputs,
-  options?: UpdateOptions,
+  options?: TModel['hookOptionsT']['update'] & InstanceUpdateOptions,
 ) => Promise<TModel>;
 
 /**
@@ -273,5 +306,5 @@ export type HasManyUpdateOneAssociationMixin<TModel extends AnyModel> = (
 export type HasManyUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
   findOptions: FindOptions,
   input: AttributeInputs,
-  options?: UpdateOptions,
+  options?: TModel['hookOptionsT']['update'] & InstanceUpdateOptions,
 ) => Promise<TModel>;

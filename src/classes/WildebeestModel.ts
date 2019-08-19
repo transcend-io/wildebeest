@@ -1,3 +1,4 @@
+/* eslint-disable-line max-lines */
 /**
  *
  * ## Wildebeest Db Model
@@ -32,6 +33,22 @@ import setAssociations from '@wildebeest/utils/setAssociations';
 
 // mixins
 import mixins, { Prototypes } from '@wildebeest/mixins';
+
+/**
+ * Convert a model to JSON as best we can (overrides sequelize prototype)
+ * TODO make more accurate
+ */
+export type ModelToJson<M extends Model> = Pick<
+  M,
+  {
+    // Exclude functions
+    [Key in keyof M]: M[Key] extends (...args: any[]) => any // eslint-disable-line @typescript-eslint/no-explicit-any
+      ? never // Exclude non-model keys
+      : Key extends 'db' | 'sequelize' | 'wildebeest' | 'isNewRecord'
+      ? never
+      : Key;
+  }[keyof M]
+>;
 
 /**
  * A MigrationLock db model
@@ -329,13 +346,25 @@ export default class WildebeestModel<
     );
   }
 
-  /** Time the API key was created */
+  /**
+   * A type can be provided for the specific hook options outside of the default sequelize ones
+   */
+  public hookOptionsT!: {
+    /** Before and after a row is created */
+    create?: {};
+    /** Before and after a row is updated */
+    update?: {};
+    /** Before an after a row is destroyed */
+    destroy?: {};
+  };
+
+  /** Time the API key was created TODO maybe not here */
   public readonly createdAt!: Date;
 
-  /** Time the API key was updated */
+  /** Time the API key was updated TODO maybe not here */
   public readonly updatedAt!: Date;
 
-  /** Id is required */
+  /** Id is required TODO */
   public readonly id?: TId;
 
   /** The wildebeest configuration */
@@ -343,4 +372,14 @@ export default class WildebeestModel<
 
   /** The wildebeest sequelize database */
   public db!: WildebeestDb<TModels>;
+
+  /**
+   * Override to JSON to be current attributes
+   *
+   * @param this - This model instance
+   * @returns This model as a JSON object, with an override to be typed
+   */
+  public toJSON<M extends Model>(this: M & Model): ModelToJson<M> {
+    return super.toJSON() as ModelToJson<M>;
+  }
 }
