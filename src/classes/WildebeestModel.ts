@@ -53,10 +53,7 @@ export type ModelToJson<M extends Model> = Pick<
 /**
  * A MigrationLock db model
  */
-export default class WildebeestModel<
-  TModels extends ModelMap,
-  TId = string
-> extends Model {
+export default class WildebeestModel<TModels extends ModelMap> extends Model {
   /** These values can be set as defaults for all models that extend this model */
   public static definitionDefaults: Partial<
     ModelDefinition<StringKeys<ModelMap>>
@@ -365,7 +362,7 @@ export default class WildebeestModel<
   public readonly updatedAt!: Date;
 
   /** Id is required TODO */
-  public readonly id?: TId;
+  public readonly id?: unknown;
 
   /** The wildebeest configuration */
   public readonly wildebeest!: Wildebeest<TModels>;

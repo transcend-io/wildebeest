@@ -476,7 +476,7 @@ export type MigrationTransactionOptions<
 /**
  * Db model hooks
  */
-export type HookOptions<M extends WildebeestModel<any, any>> = Partial<
+export type HookOptions<M extends WildebeestModel<ModelMap>> = Partial<
   Spread<
     ModelHooks<M>,
     {

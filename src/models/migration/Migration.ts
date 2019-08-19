@@ -28,7 +28,7 @@ import * as options from './options';
  * A Migration db model
  */
 export default class Migration<TModels extends ModelMap>
-  extends WildebeestModel<TModels, number>
+  extends WildebeestModel<TModels>
   implements ExtractAttributes<typeof attributes> {
   /** The model definition */
   public static definition = {
