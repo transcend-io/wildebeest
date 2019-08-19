@@ -1,5 +1,5 @@
 // global
-import WildebeestDb from '@wildebeest/classes/WildebeestDb';
+import Wildebeest from '@wildebeest/classes/Wildebeest';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
@@ -13,12 +13,12 @@ export type TransactionMigrationDefinition<TModels extends ModelMap> = {
   /** The up migration (there should be no loss of data) */
   up: (
     transactionOptions: MigrationTransactionOptions<TModels>,
-    db: WildebeestDb<TModels>,
+    wildebeest: Wildebeest<TModels>,
   ) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
   /** The down migration to reverse the up migration, with potential loss of data */
   down: (
     transactionOptions: MigrationTransactionOptions<TModels>,
-    db: WildebeestDb<TModels>,
+    wildebeest: Wildebeest<TModels>,
   ) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 };
 
@@ -37,11 +37,11 @@ export default function custom<TModels extends ModelMap>(
   return {
     up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
-        up(transactionOptions, wildebeest.db),
+        up(transactionOptions, wildebeest),
       ),
     down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
-        down(transactionOptions, wildebeest.db),
+        down(transactionOptions, wildebeest),
       ),
   };
 }
