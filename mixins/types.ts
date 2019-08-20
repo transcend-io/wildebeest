@@ -126,7 +126,7 @@ export type GenerateMixinsConfig = {
   determineModelToExtend?: (
     associationsDefinition: AssociationsDefinition,
     config: Required<GenerateMixinsConfig>,
-  ) => Omit<BaseFileInput, 'sections'>;
+  ) => Omit<BaseFileInput, 'sections'> | null;
   /** Helper functions to add to the handlebars template */
   handlebarsHelpers?: { [k in string]: (...args: any[]) => string };
 };

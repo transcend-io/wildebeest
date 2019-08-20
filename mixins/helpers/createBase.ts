@@ -11,6 +11,7 @@ import {
 
 // local
 import associationDefinitionToSections from './associationDefinitionToSections';
+import determineModelToExtend from './determineModelToExtend';
 
 /**
  * Process file
@@ -37,7 +38,8 @@ export default function createBase(
   }
 
   const compiled = createBaseFile({
-    ...config.determineModelToExtend(associationsDefinition, config),
+    ...(config.determineModelToExtend(associationsDefinition, config) ||
+      determineModelToExtend(associationsDefinition, config)),
     sections: allAssociations,
   });
 

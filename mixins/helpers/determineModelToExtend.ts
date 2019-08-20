@@ -20,12 +20,12 @@ export default function determineModelToExtend(
   config: Required<GenerateMixinsConfig>,
 ): Omit<BaseFileInput, 'sections'> {
   // Get te file path with
-  const splt = associationsDefinition.filePath.split('/');
-  if (splt[splt.length - 1] === config.associationFileName) {
-    splt.pop();
+  const split = associationsDefinition.filePath.split('/');
+  if (split[split.length - 1] === config.associationFileName) {
+    split.pop();
   }
 
-  const [modelBaseFolderRaw, container] = splt.slice(-2);
+  const [modelBaseFolderRaw, container] = split.slice(-2);
   const modelBaseFolder = ['src', 'models'].includes(modelBaseFolderRaw)
     ? 'db'
     : modelBaseFolderRaw;
