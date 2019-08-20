@@ -248,7 +248,7 @@ export default class Wildebeest<TModels extends ModelMap> {
   public umzug: Umzug.Umzug;
 
   /** A router containing routes that can be used to run migrations and check the status of synced models */
-  public routes: express.Router;
+  public router: express.Router;
 
   /**
    * Initialize a wildebeest migration runner
@@ -361,7 +361,7 @@ export default class Wildebeest<TModels extends ModelMap> {
     this.initializeModels();
 
     // Construct the router
-    this.routes = createRoutes(this);
+    this.router = createRoutes(this);
   }
 
   /**
