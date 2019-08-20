@@ -109,8 +109,8 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
     values?: object,
     options?: CreateOptions & M['hookOptionsT']['create'],
   ): Bluebird<M> {
-    const create: any = super.create.bind(this);
-    return create(values, options);
+    // @ts-ignore
+    return super.create(values, options);
   }
 
   /**
