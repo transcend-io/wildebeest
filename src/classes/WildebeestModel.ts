@@ -105,7 +105,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
    * Builds a new model instance and calls save on it.
    */
   public static create<M extends WildebeestModel<any>>(
-    this: (new () => M) & typeof WildebeestModel,
+    this: (new () => M) & typeof Model,
     values?: object,
     options?: CreateOptions & M['hookOptionsT']['create'],
   ): Bluebird<M> {
