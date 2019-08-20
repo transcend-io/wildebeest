@@ -87,7 +87,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   public static wildebeest?: Wildebeest<ModelMap>;
 
   /** The wildebeest sequelize database */
-  public static db?: WildebeestDb<ModelMap>;
+  public static db?: WildebeestDb<any>;
 
   /**
    * A decorator that can be used to enforce static type definitions
