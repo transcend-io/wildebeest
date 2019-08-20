@@ -9,7 +9,8 @@
  */
 
 // external modules
-import { Model, ModelOptions, Op } from 'sequelize';
+import * as Bluebird from 'bluebird';
+import { CreateOptions, Model, ModelOptions, Op } from 'sequelize';
 import { ModelHooks } from 'sequelize/types/lib/hooks';
 
 // global
@@ -98,6 +99,18 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
     return <U extends T>(constructor: U) => {
       constructor; /* eslint-disable-line no-unused-expressions */
     };
+  }
+
+  /**
+   * Builds a new model instance and calls save on it.
+   */
+  public static create<M extends WildebeestModel<any>>(
+    this: (new () => M) & typeof WildebeestModel,
+    values?: object,
+    options?: CreateOptions & M['hookOptionsT']['create'],
+  ): Bluebird<M> {
+    const create: any = super.create.bind(this);
+    return create(values, options);
   }
 
   /**
