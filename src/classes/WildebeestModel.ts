@@ -10,7 +10,14 @@
 
 // external modules
 import * as Bluebird from 'bluebird';
-import { CreateOptions, Model, ModelOptions, Op } from 'sequelize';
+import {
+  CreateOptions,
+  InstanceDestroyOptions,
+  InstanceUpdateOptions,
+  Model,
+  ModelOptions,
+  Op,
+} from 'sequelize';
 import { ModelHooks } from 'sequelize/types/lib/hooks';
 
 // global
@@ -412,5 +419,32 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
    */
   public toJSON<M extends Model>(this: M & Model): ModelToJson<M> {
     return super.toJSON() as ModelToJson<M>;
+  }
+
+  /**
+   * Override update to include special options
+   *
+   * @param this - This model instance
+   * @returns This model as a JSON object, with an override to be typed
+   */
+  public update<M extends Model>(
+    this: M & Model,
+    keys: object,
+    options?: InstanceUpdateOptions & this['hookOptionsT']['update'],
+  ): Bluebird<this> {
+    return super.update(keys, options);
+  }
+
+  /**
+   * Override destroy to include special options
+   *
+   * @param this - This model instance
+   * @returns This model as a JSON object, with an override to be typed
+   */
+  public destroy<M extends Model>(
+    this: M & Model,
+    options?: InstanceDestroyOptions & this['hookOptionsT']['destroy'],
+  ): Bluebird<void> {
+    return super.destroy(options);
   }
 }
