@@ -44,7 +44,12 @@ export type ModelToJson<M extends Model> = Pick<
     // Exclude functions
     [Key in keyof M]: M[Key] extends (...args: any[]) => any // eslint-disable-line @typescript-eslint/no-explicit-any
       ? never // Exclude non-model keys
-      : Key extends 'db' | 'sequelize' | 'wildebeest' | 'isNewRecord'
+      : Key extends
+          | 'db'
+          | 'sequelize'
+          | 'wildebeest'
+          | 'isNewRecord'
+          | 'hookOptionsT'
       ? never
       : Key;
   }[keyof M]
