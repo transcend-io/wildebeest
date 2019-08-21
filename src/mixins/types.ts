@@ -80,7 +80,7 @@ export {
  */
 export type BelongsToManyCreateAssociationMixin<TModel extends AnyModel> = (
   values: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'create'>, //  & BelongsToManyCreateAssociationMixinOptions
+  options?: any, // MergedHookOptions<TModel, 'create'>, //  & BelongsToManyCreateAssociationMixinOptions
 ) => Promise<TModel>;
 
 /**
@@ -142,7 +142,7 @@ export { BelongsToGetAssociationMixin };
  */
 export type BelongsToCreateAssociationMixin<TModel extends AnyModel> = (
   values: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'create'>, // & BelongsToCreateAssociationMixinOptions,
+  options?: any, // MergedHookOptions<TModel, 'create'>, // & BelongsToCreateAssociationMixinOptions,
 ) => Promise<TModel>;
 
 /**
@@ -172,7 +172,7 @@ export type BelongsToGetOrDefaultAssociationMixin<TModel extends AnyModel> = (
  */
 export type BelongsToUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
   input: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'create' | 'update'>,
+  options?: any, // MergedHookOptions<TModel, 'create' & 'update'>,
 ) => Promise<TModel>;
 
 // ////// //
@@ -186,7 +186,7 @@ export { HasOneGetAssociationMixin };
  */
 export type HasOneCreateAssociationMixin<TModel extends AnyModel> = (
   values: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'create'>, // & HasOneCreateAssociationMixinOptions,
+  options?: any, // MergedHookOptions<TModel, 'create'>, // & HasOneCreateAssociationMixinOptions,
 ) => Promise<TModel>;
 
 /**
@@ -216,7 +216,7 @@ export type HasOneGetOrDefaultAssociationMixin<TModel extends AnyModel> = (
  */
 export type HasOneUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
   input: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'create' | 'update'>,
+  options?: any, // MergedHookOptions<TModel, 'create' & 'update'>,
 ) => Promise<TModel>;
 
 // /////// //
@@ -230,7 +230,7 @@ export { HasManyCountAssociationsMixin, HasManyGetAssociationsMixin };
  */
 export type HasManyCreateAssociationMixin<TModel extends AnyModel> = (
   values: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'create'>, // & HasManyCreateAssociationMixinOptions,
+  options?: any, // MergedHookOptions<TModel, 'create'>, // & HasManyCreateAssociationMixinOptions,
 ) => Promise<TModel>;
 
 /**
@@ -254,14 +254,14 @@ export type HasManyAddAssociationMixin<
  */
 export type HasManyCreateManyAssociationsMixin<TModel extends AnyModel> = (
   inputs: AttributeInputs[],
-  allOptions?: MergedHookOptions<TModel, 'create'>,
+  allOptions?: any, // MergedHookOptions<TModel, 'create'>,
 ) => Promise<TModel[]>;
 
 /**
  * Destroy all child instances with individual hooks
  */
 export type HasManyDestroyAllAssociationMixin<TModel extends AnyModel> = (
-  options?: MergedHookOptions<TModel, 'destroy'>,
+  options?: any, // MergedHookOptions<TModel, 'destroy'>,
 ) => Promise<void>;
 
 /**
@@ -269,7 +269,7 @@ export type HasManyDestroyAllAssociationMixin<TModel extends AnyModel> = (
  */
 export type HasManyDestroyOneAssociationMixin<TModel extends AnyModel> = (
   findOptions: FindOptions,
-  options?: MergedHookOptions<TModel, 'destroy'>,
+  options?: any, // MergedHookOptions<TModel, 'destroy'>,
 ) => Promise<boolean>;
 
 /**
@@ -285,7 +285,7 @@ export type HasManyGetOneAssociationMixin<TModel extends AnyModel> = (
  */
 export type HasManyUpdateAllAssociationsMixin<TModel extends AnyModel> = (
   input: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'update'>,
+  options?: any, // MergedHookOptions<TModel, 'update'>,
 ) => Promise<TModel>;
 
 /**
@@ -294,7 +294,7 @@ export type HasManyUpdateAllAssociationsMixin<TModel extends AnyModel> = (
 export type HasManyUpdateOneAssociationMixin<TModel extends AnyModel> = (
   findOptions: FindOptions,
   input: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'update'>,
+  options?: any, // MergedHookOptions<TModel, 'update'>,
 ) => Promise<TModel>;
 
 /**
@@ -303,5 +303,5 @@ export type HasManyUpdateOneAssociationMixin<TModel extends AnyModel> = (
 export type HasManyUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
   findOptions: FindOptions,
   input: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'create' | 'update'>,
+  options?: any, // MergedHookOptions<TModel, 'create' & 'update'>,
 ) => Promise<TModel>;
