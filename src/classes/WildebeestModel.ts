@@ -10,14 +10,7 @@
 
 // external modules
 import * as Bluebird from 'bluebird';
-import {
-  CreateOptions,
-  InstanceDestroyOptions,
-  InstanceUpdateOptions,
-  Model,
-  ModelOptions,
-  Op,
-} from 'sequelize';
+import { Model, ModelOptions, Op } from 'sequelize';
 import { ModelHooks } from 'sequelize/types/lib/hooks';
 
 // global
@@ -30,6 +23,8 @@ import {
   ConfiguredModelDefinition,
   HasManyAssociation,
   HasOneAssociation,
+  HookExtraOptions,
+  MergedHookOptions,
   ModelDefinition,
   ModelMap,
   StringKeys,
@@ -113,8 +108,8 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
    */
   public static create<M extends WildebeestModel<any>>(
     this: (new () => M) & typeof Model,
-    values?: object,
-    options?: CreateOptions & M['hookOptionsT']['create'],
+    values: object,
+    options: MergedHookOptions<M, 'create'>,
   ): Bluebird<M> {
     // @ts-ignore
     return super.create(values, options);
@@ -387,14 +382,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   /**
    * A type can be provided for the specific hook options outside of the default sequelize ones
    */
-  public hookOptionsT!: {
-    /** Before and after a row is created */
-    create?: {};
-    /** Before and after a row is updated */
-    update?: {};
-    /** Before an after a row is destroyed */
-    destroy?: {};
-  };
+  public hookOptionsT!: HookExtraOptions;
 
   /** Time the API key was created TODO maybe not here */
   public readonly createdAt!: Date;
@@ -417,7 +405,9 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
    * @param this - This model instance
    * @returns This model as a JSON object, with an override to be typed
    */
-  public toJSON<M extends Model>(this: M & Model): ModelToJson<M> {
+  public toJSON<M extends WildebeestModel<ModelMap>>(
+    this: M & Model,
+  ): ModelToJson<M> {
     return super.toJSON() as ModelToJson<M>;
   }
 
@@ -427,12 +417,10 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
    * @param this - This model instance
    * @returns This model as a JSON object, with an override to be typed
    */
-  public update<M extends Model>(
+  public update<M extends WildebeestModel<ModelMap>>(
     this: M & Model,
     keys: object,
-    options?: this['hookOptionsT']['update'] extends undefined
-      ? InstanceUpdateOptions
-      : (this['hookOptionsT']['update'] & InstanceUpdateOptions),
+    options: MergedHookOptions<M, 'update'>,
   ): Bluebird<this> {
     return super.update(keys, options);
   }
@@ -443,11 +431,9 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
    * @param this - This model instance
    * @returns This model as a JSON object, with an override to be typed
    */
-  public destroy<M extends Model>(
+  public destroy<M extends WildebeestModel<ModelMap>>(
     this: M & Model,
-    options?: this['hookOptionsT']['destroy'] extends undefined
-      ? InstanceDestroyOptions
-      : (this['hookOptionsT']['destroy'] & InstanceDestroyOptions),
+    options: MergedHookOptions<M, 'destroy'>,
   ): Bluebird<void> {
     return super.destroy(options);
   }

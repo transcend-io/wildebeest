@@ -30,7 +30,7 @@ export const hooks: Partial<ModelHooks<Migration<ModelMap>>> = {
    */
   afterCreate: async (migration) => {
     const { batch } = Migration;
-    await migration.update({ batch });
+    await migration.update({ batch }, {});
   },
   /**
    * The pre hook before the model is destroyed.
@@ -47,7 +47,7 @@ export const hooks: Partial<ModelHooks<Migration<ModelMap>>> = {
         migrations.filter(({ name }) => getNumber(name) >= index),
       )
       .then((migrations) =>
-        Promise.all(migrations.map((mig) => mig.destroy())),
+        Promise.all(migrations.map((mig) => mig.destroy({}))),
       );
   },
 };

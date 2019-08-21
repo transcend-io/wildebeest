@@ -9,16 +9,11 @@
 
 // external modules
 import pluralize from 'pluralize';
-import {
-  CreateOptions,
-  DestroyOptions,
-  FindOptions,
-  UpdateOptions,
-} from 'sequelize';
+import { FindOptions } from 'sequelize';
 
 // global
 import { AssociationType } from '@wildebeest/enums';
-import { AttributeInputs } from '@wildebeest/types';
+import { AttributeInputs, MergedHookOptions } from '@wildebeest/types';
 import { pascalCase } from '@wildebeest/utils';
 
 // local
@@ -35,7 +30,7 @@ export type PrototypeFunction = (...args: any[]) => any; // eslint-disable-line 
 export type Prototypes = { [key in string]: PrototypeFunction };
 
 /**
- * We are not going to type the model since the mixins are not applied yet
+ * This instance
  */
 type This = any;
 
@@ -70,7 +65,7 @@ export default (
   function createMany<TInstance extends AnyModel>(
     this: This,
     inputs: AttributeInputs[],
-    allOptions: CreateOptions = {},
+    allOptions: MergedHookOptions<TInstance, 'create'>,
   ): Promise<TInstance[]> {
     return Promise.all(
       inputs.map(({ options, ...item }) =>
@@ -85,8 +80,11 @@ export default (
    * @param options - The options to pass as the second arg
    * @returns The destroy promise
    */
-  function destroyAll(this: This, options?: DestroyOptions): Promise<void[]> {
-    return this[`get${pluralPascalAssociation}`]().then((items: AnyModel[]) =>
+  function destroyAll<TInstance extends AnyModel>(
+    this: This,
+    options: MergedHookOptions<TInstance, 'destroy'>,
+  ): Promise<void[]> {
+    return this[`get${pluralPascalAssociation}`]().then((items: TInstance[]) =>
       Promise.all(items.map((item) => item.destroy(options))),
     );
   }
@@ -98,13 +96,13 @@ export default (
    * @param options - Options included in create
    * @returns True on success
    */
-  function destroyOne(
+  function destroyOne<TInstance extends AnyModel>(
     this: This,
     findOptions: FindOptions,
-    options: DestroyOptions,
+    options: MergedHookOptions<TInstance, 'destroy'>,
   ): Promise<boolean> {
     return this[`getOne${pascalAssociation}`](findOptions)
-      .then((item: AnyModel) => item.destroy(options))
+      .then((item: TInstance) => item.destroy(options))
       .then(() => true);
   }
 
@@ -187,7 +185,7 @@ export default (
   function updateAll<TInstance extends AnyModel>(
     this: This,
     input: TInstance,
-    options: UpdateOptions,
+    options: MergedHookOptions<TInstance, 'update'>,
   ): Promise<TInstance[]> {
     return this[`get${pluralPascalAssociation}`]().then((items: TInstance[]) =>
       Promise.all(items.map((item) => item.update(input, options))),
@@ -206,7 +204,7 @@ export default (
     this: This,
     findOptions: FindOptions,
     input: AttributeInputs,
-    options: UpdateOptions,
+    options: MergedHookOptions<TInstance, 'update'>,
   ): Promise<TInstance> {
     return this[`getOne${pascalAssociation}`](findOptions).then(
       (item: TInstance) => item.update(input, options),
@@ -225,7 +223,7 @@ export default (
     this: This,
     findOptions: FindOptions,
     input: AttributeInputs,
-    options: UpdateOptions,
+    options: MergedHookOptions<TInstance, 'update' & 'create'>,
   ): Promise<TInstance> {
     return this[`get${pluralPascalAssociation}`](findOptions).then(
       async ([item]: TInstance[]) => {
@@ -252,7 +250,7 @@ export default (
   function updateOrCreateOne<TInstance extends AnyModel>(
     this: This,
     input: AttributeInputs,
-    options?: CreateOptions,
+    options: MergedHookOptions<TInstance, 'update' & 'create'>,
   ): Promise<TInstance> {
     return this[`get${pascalAssociation}`]().then((item?: TInstance) => {
       // If no item found, create

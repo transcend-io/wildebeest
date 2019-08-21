@@ -468,18 +468,6 @@ export type MigrationTransactionOptions<
 // Hooks //
 // ///// //
 
-// /**
-//  * Add TrDb fully typed retroactively to a model
-//  * TODO
-//  */
-// export type WithTrDb<T extends {}> = Merge<
-//   T,
-//   {
-//     /** Ensure db has model map */
-//     db: TrDb;
-//   }
-// >;
-
 /**
  * Db model hooks
  */
@@ -490,38 +478,70 @@ export type HookOptions<M extends WildebeestModel<ModelMap>> = Partial<
       /** Before row is created */
       beforeCreate(
         attributes: M,
-        options: M['hookOptionsT']['create'] & sequelize.CreateOptions,
+        options: MergedHookOptions<M, 'create'>,
       ): HookReturn;
       /** After row is created */
       afterCreate(
         attributes: M,
-        options: M['hookOptionsT']['create'] & sequelize.CreateOptions,
+        options: MergedHookOptions<M, 'create'>,
       ): HookReturn;
       /** Before row is destroyed */
       beforeDestroy(
         instance: M,
-        options: M['hookOptionsT']['destroy'] &
-          sequelize.InstanceDestroyOptions,
+        options: MergedHookOptions<M, 'destroy'>,
       ): HookReturn;
       /** After row is destroyed */
       afterDestroy(
         instance: M,
-        options: M['hookOptionsT']['destroy'] &
-          sequelize.InstanceDestroyOptions,
+        options: MergedHookOptions<M, 'destroy'>,
       ): HookReturn;
       /** Before row is updated */
       beforeUpdate(
         instance: M,
-        options: M['hookOptionsT']['update'] & sequelize.InstanceUpdateOptions,
+        options: MergedHookOptions<M, 'update'>,
       ): HookReturn;
       /** After row is updated */
       afterUpdate(
         instance: M,
-        options: M['hookOptionsT']['update'] & sequelize.InstanceUpdateOptions,
+        options: MergedHookOptions<M, 'update'>,
       ): HookReturn;
     }
   >
 >;
+
+/**
+ * Any additional options required or allowed in hooks
+ */
+export type HookExtraOptions = {
+  /** Before and after a row is created */
+  create?: {};
+  /** Before and after a row is updated */
+  update?: {};
+  /** Before an after a row is destroyed */
+  destroy?: {};
+};
+
+/**
+ * The default options for each category of hook
+ */
+export type HookDefaultOptions = {
+  /** Create a new instance */
+  create: sequelize.CreateOptions;
+  /** Update an existing instance */
+  update: sequelize.InstanceUpdateOptions;
+  /** Destroy an instance */
+  destroy: sequelize.DestroyOptions;
+};
+
+/**
+ * Construct the hook options by combining existing with custom
+ */
+export type MergedHookOptions<
+  TModel extends WildebeestModel<ModelMap>,
+  THook extends keyof HookExtraOptions
+> = TModel['hookOptionsT'][THook] extends {} | undefined
+  ? HookDefaultOptions[THook]
+  : TModel['hookOptionsT'][THook] & HookDefaultOptions[THook];
 
 // /////// //
 // Express //
