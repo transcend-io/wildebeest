@@ -530,11 +530,13 @@ export type HookDefaultOptions = {
   /** Update an existing instance */
   update: sequelize.InstanceUpdateOptions;
   /** Destroy an instance */
-  destroy: sequelize.DestroyOptions;
+  destroy: sequelize.InstanceDestroyOptions;
 };
 
 /**
  * Construct the hook options by combining existing with custom
+ *
+ * TODO potentially explore making these a required arg, also explore why this causes memory issues
  */
 export type MergedHookOptions<
   TModel extends WildebeestModel<ModelMap>,
