@@ -539,7 +539,10 @@ export type HookDefaultOptions = {
  * TODO potentially explore making these a required arg, also explore why this causes memory issues
  */
 export type MergedHookOptions<
-  TModel extends WildebeestModel<ModelMap>,
+  TModel extends {
+    /** Must implement options */
+    hookOptionsT: HookExtraOptions;
+  },
   THook extends keyof HookExtraOptions
 > = TModel['hookOptionsT'][THook] extends {} | undefined
   ? HookDefaultOptions[THook]
