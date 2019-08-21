@@ -430,7 +430,9 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   public update<M extends Model>(
     this: M & Model,
     keys: object,
-    options?: InstanceUpdateOptions & this['hookOptionsT']['update'],
+    options?: this['hookOptionsT']['update'] extends undefined
+      ? InstanceUpdateOptions
+      : (this['hookOptionsT']['update'] & InstanceUpdateOptions),
   ): Bluebird<this> {
     return super.update(keys, options);
   }
@@ -443,7 +445,9 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
    */
   public destroy<M extends Model>(
     this: M & Model,
-    options?: InstanceDestroyOptions & this['hookOptionsT']['destroy'],
+    options?: this['hookOptionsT']['destroy'] extends undefined
+      ? InstanceDestroyOptions
+      : (this['hookOptionsT']['destroy'] & InstanceDestroyOptions),
   ): Bluebird<void> {
     return super.destroy(options);
   }
