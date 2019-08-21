@@ -544,7 +544,7 @@ export type MergedHookOptions<
     hookOptionsT: HookExtraOptions;
   },
   THook extends keyof HookExtraOptions
-> = TModel['hookOptionsT'][THook] extends {} | undefined
+> = TModel['hookOptionsT'][THook] extends undefined
   ? HookDefaultOptions[THook]
   : TModel['hookOptionsT'][THook] & HookDefaultOptions[THook];
 
