@@ -405,10 +405,8 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
    * @param this - This model instance
    * @returns This model as a JSON object, with an override to be typed
    */
-  public toJSON<M extends WildebeestModel<ModelMap>>(
-    this: M & Model,
-  ): ModelToJson<M> {
-    return super.toJSON() as ModelToJson<M>;
+  public toJSON(): ModelToJson<this> {
+    return super.toJSON() as ModelToJson<this>;
   }
 
   /**
@@ -417,10 +415,9 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
    * @param this - This model instance
    * @returns This model as a JSON object, with an override to be typed
    */
-  public update<M extends WildebeestModel<ModelMap>>(
-    this: M & Model,
+  public update(
     keys: object,
-    options?: MergedHookOptions<M, 'update'>,
+    options?: MergedHookOptions<this, 'update'>,
   ): Bluebird<this> {
     return super.update(keys, options);
   }
@@ -431,10 +428,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
    * @param this - This model instance
    * @returns This model as a JSON object, with an override to be typed
    */
-  public destroy<M extends WildebeestModel<ModelMap>>(
-    this: M & Model,
-    options?: MergedHookOptions<M, 'destroy'>,
-  ): Bluebird<void> {
+  public destroy(options?: MergedHookOptions<this, 'destroy'>): Bluebird<void> {
     return super.destroy(options);
   }
 }
