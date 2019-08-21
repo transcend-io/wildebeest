@@ -80,8 +80,7 @@ export {
  */
 export type BelongsToManyCreateAssociationMixin<TModel extends AnyModel> = (
   values: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'create'> &
-    BelongsToManyCreateAssociationMixinOptions,
+  options?: MergedHookOptions<TModel, 'create'>, //  & BelongsToManyCreateAssociationMixinOptions
 ) => Promise<TModel>;
 
 /**
@@ -143,8 +142,7 @@ export { BelongsToGetAssociationMixin };
  */
 export type BelongsToCreateAssociationMixin<TModel extends AnyModel> = (
   values: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'create'> &
-    BelongsToCreateAssociationMixinOptions,
+  options?: MergedHookOptions<TModel, 'create'>, // & BelongsToCreateAssociationMixinOptions,
 ) => Promise<TModel>;
 
 /**
@@ -188,8 +186,7 @@ export { HasOneGetAssociationMixin };
  */
 export type HasOneCreateAssociationMixin<TModel extends AnyModel> = (
   values: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'create'> &
-    HasOneCreateAssociationMixinOptions,
+  options?: MergedHookOptions<TModel, 'create'>, // & HasOneCreateAssociationMixinOptions,
 ) => Promise<TModel>;
 
 /**
@@ -233,8 +230,7 @@ export { HasManyCountAssociationsMixin, HasManyGetAssociationsMixin };
  */
 export type HasManyCreateAssociationMixin<TModel extends AnyModel> = (
   values: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'create'> &
-    HasManyCreateAssociationMixinOptions,
+  options?: MergedHookOptions<TModel, 'create'>, // & HasManyCreateAssociationMixinOptions,
 ) => Promise<TModel>;
 
 /**
