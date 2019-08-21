@@ -109,7 +109,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   public static create<M extends WildebeestModel<any>>(
     this: (new () => M) & typeof Model,
     values: object,
-    options: MergedHookOptions<M, 'create'>,
+    options?: MergedHookOptions<M, 'create'>,
   ): Bluebird<M> {
     // @ts-ignore
     return super.create(values, options);
@@ -420,7 +420,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   public update<M extends WildebeestModel<ModelMap>>(
     this: M & Model,
     keys: object,
-    options: MergedHookOptions<M, 'update'>,
+    options?: MergedHookOptions<M, 'update'>,
   ): Bluebird<this> {
     return super.update(keys, options);
   }
@@ -433,7 +433,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
    */
   public destroy<M extends WildebeestModel<ModelMap>>(
     this: M & Model,
-    options: MergedHookOptions<M, 'destroy'>,
+    options?: MergedHookOptions<M, 'destroy'>,
   ): Bluebird<void> {
     return super.destroy(options);
   }

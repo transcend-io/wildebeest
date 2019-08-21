@@ -478,32 +478,32 @@ export type HookOptions<M extends WildebeestModel<ModelMap>> = Partial<
       /** Before row is created */
       beforeCreate(
         attributes: M,
-        options: MergedHookOptions<M, 'create'>,
+        options?: MergedHookOptions<M, 'create'>,
       ): HookReturn;
       /** After row is created */
       afterCreate(
         attributes: M,
-        options: MergedHookOptions<M, 'create'>,
+        options?: MergedHookOptions<M, 'create'>,
       ): HookReturn;
       /** Before row is destroyed */
       beforeDestroy(
         instance: M,
-        options: MergedHookOptions<M, 'destroy'>,
+        options?: MergedHookOptions<M, 'destroy'>,
       ): HookReturn;
       /** After row is destroyed */
       afterDestroy(
         instance: M,
-        options: MergedHookOptions<M, 'destroy'>,
+        options?: MergedHookOptions<M, 'destroy'>,
       ): HookReturn;
       /** Before row is updated */
       beforeUpdate(
         instance: M,
-        options: MergedHookOptions<M, 'update'>,
+        options?: MergedHookOptions<M, 'update'>,
       ): HookReturn;
       /** After row is updated */
       afterUpdate(
         instance: M,
-        options: MergedHookOptions<M, 'update'>,
+        options?: MergedHookOptions<M, 'update'>,
       ): HookReturn;
     }
   >
