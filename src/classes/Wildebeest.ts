@@ -15,7 +15,7 @@ import flatten from 'lodash/flatten';
 import keyBy from 'lodash/keyBy';
 import { join } from 'path';
 import pluralize from 'pluralize';
-import { Options } from 'sequelize';
+import { Options, Transaction } from 'sequelize';
 import Umzug from 'umzug';
 
 // utils
@@ -104,7 +104,7 @@ export type WildebeestOptions<TModels extends ModelMap> = {
   /** Can forcefully unlock the migration lock table (useful in testing or auto-reloading environment) */
   forceUnlock?: boolean;
   /** For throwing errors that should be exposed to a client i.e. "This id does not exist!" */
-  ClientError?: typeof Error;
+  throwClientError?: (err: string) => never;
   /** A function that will convert a model name to a table name, when inferring a table */
   pluralCase?: (word: string) => string;
   /** Expose a route that will allow schemas to be written to file (defaults to NODE_ENV === 'development') */
@@ -200,7 +200,7 @@ export default class Wildebeest<TModels extends ModelMap> {
   public verboseLogger: Logger;
 
   /** For throwing errors that should be exposed to a client i.e. "This id does not exist!" */
-  public ClientError: typeof Error;
+  public throwClientError: (err: string) => never;
 
   // ///////////////// //
   // Controller Routes //
@@ -262,7 +262,9 @@ export default class Wildebeest<TModels extends ModelMap> {
     models,
     bottomTest = 2,
     s3 = new S3(),
-    ClientError = Error,
+    throwClientError = (err: string) => {
+      throw new Error(err);
+    },
     ignoredTableNames = [],
     namingConventions = {},
     logger = new Logger(),
@@ -294,7 +296,7 @@ export default class Wildebeest<TModels extends ModelMap> {
     // Save the loggers
     this.logger = logger;
     this.verboseLogger = verboseLogger;
-    this.ClientError = ClientError;
+    this.throwClientError = throwClientError;
 
     // The naming conventions
     this.namingConventions = {
@@ -609,4 +611,13 @@ export default class Wildebeest<TModels extends ModelMap> {
     // Set their relations once all have been initialized
     apply(this.models, (ModelDef) => ModelDef.createRelations());
   }
+
+  /* eslint-disable class-methods-use-this */
+  /**
+   * Verify that the db is setup and configured for migrations, useful to prevent execution of code until migrations have run
+   */
+  public async isOperable(transaction?: Transaction): Promise<boolean> {
+    return MigrationLock.isOperable(transaction);
+  }
+  /* eslint-enable class-methods-use-this */
 }

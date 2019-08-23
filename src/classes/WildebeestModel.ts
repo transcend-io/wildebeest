@@ -41,7 +41,7 @@ import mixins, { Prototypes } from '@wildebeest/mixins';
  * Convert a model to JSON as best we can (overrides sequelize prototype)
  * TODO make more accurate
  */
-export type ModelToJson<M extends Model> = Pick<
+export type ModelToJson<M extends WildebeestModel<any>> = Pick<
   M,
   {
     // Exclude functions
@@ -84,7 +84,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   /** The configured sequelize model definition */
   public static configuredDefinition?: ConfiguredModelDefinition<
     StringKeys<ModelMap>
-  >; // TODO set this
+  >; // TODO set this and use getters instead
 
   /** The wildebeest configuration is added on the customInit setup */
   public static wildebeest?: Wildebeest<ModelMap>;
@@ -213,12 +213,15 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   /**
    * Get the model definition by merging the default definition and definition
    *
+   * TODO improve return type to use this
+   *
    * @param mergeDefaults - The defaults to merge with the existing defaults
    * @returns The merged default definitions
    */
-  public static mergeDefaultDefinitions(
-    mergeDefaults: Partial<ModelDefinition<StringKeys<ModelMap>>>,
-  ): Partial<ModelDefinition<StringKeys<ModelMap>>> {
+  public static mergeDefaultDefinitions<
+    TNewDefaults extends Partial<ModelDefinition<StringKeys<ModelMap>>>,
+    TPreviousDefaults extends Partial<ModelDefinition<StringKeys<ModelMap>>>
+  >(mergeDefaults: TNewDefaults): Partial<TNewDefaults & TPreviousDefaults> {
     return {
       // Definition overrides defaults
       ...this.definitionDefaults,
@@ -243,7 +246,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
         this.definitionDefaults.options,
         mergeDefaults.options,
       ),
-    };
+    } as any;
   }
 
   /**
@@ -300,7 +303,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
         typeof association === 'string'
           ? associationName
           : association.modelName || associationName,
-        wildebeest.ClientError,
+        wildebeest.throwClientError,
         wildebeest.pluralCase,
       );
 
@@ -399,40 +402,6 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   /** The wildebeest sequelize database */
   public db!: WildebeestDb<TModels>;
 
-  /**
-   * Override to JSON to be current attributes
-   *
-   * @param this - This model instance
-   * @returns This model as a JSON object, with an override to be typed
-   */
-  public toJSON<M extends WildebeestModel<ModelMap>>(this: M): ModelToJson<M> {
-    return super.toJSON() as ModelToJson<M>;
-  }
-
-  /**
-   * Override update to include special options
-   *
-   * @param this - This model instance
-   * @returns This model as a JSON object, with an override to be typed
-   */
-  public update<M extends WildebeestModel<ModelMap>>(
-    this: M,
-    keys: object,
-    options?: MergedHookOptions<M, 'update'>,
-  ): Bluebird<this> {
-    return super.update(keys, options);
-  }
-
-  /**
-   * Override destroy to include special options
-   *
-   * @param this - This model instance
-   * @returns This model as a JSON object, with an override to be typed
-   */
-  public destroy<M extends WildebeestModel<ModelMap>>(
-    this: M,
-    options?: MergedHookOptions<M, 'destroy'>,
-  ): Bluebird<void> {
-    return super.destroy(options);
-  }
+  /** Indicator that the model was created and not updated TODO does sequelize already do this? */
+  public __wasCreated?: true;
 }

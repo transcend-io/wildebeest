@@ -40,7 +40,7 @@ type This = any;
  * @param association - The association to create the hooks for
  * @param type - The type of association to create prototypes for
  * @param model - The name of the underlying model
- * @param Err - The error to throw when no item is found (this can be provided as a specific client error type to modify)
+ * @param throwClientError - The error to throw when no item is found (this can be provided as a specific client error type to modify)
  * @param pluralCase - A function to pluralize words
  * @returns The prototypes
  */
@@ -48,7 +48,7 @@ export default (
   association: string,
   type: AssociationType,
   model: string,
-  Err = Error,
+  throwClientError: (err: string) => never,
   pluralCase: (word: string) => string = pluralize,
 ): Prototypes => {
   // Determine casings to use
@@ -147,7 +147,10 @@ export default (
       ([item]: TInstance[]) => {
         // If no item found, throw an error
         if (!item) {
-          throw new Err(`${pascalAssociation} ${errorMessage}`);
+          throwClientError(`${pascalAssociation} ${errorMessage}`);
+          throw new Error(
+            `DID NOT THROW CLIENT ERROR WHEN NO MODEL FOUND FOR s${pascalAssociation} ${errorMessage}`,
+          );
         }
         return item;
       },
@@ -235,7 +238,10 @@ export default (
           );
           return Object.assign(created, { __wasCreated: true });
         }
-        return item.update(input, options);
+        return item.update(input, options as MergedHookOptions<
+          TInstance,
+          'update'
+        >);
       },
     );
   }
@@ -257,7 +263,10 @@ export default (
       if (!item) {
         return this[`create${pascalAssociation}`](input, options);
       }
-      return item.update(input, options);
+      return item.update(input, options as MergedHookOptions<
+        TInstance,
+        'update'
+      >);
     });
   }
 

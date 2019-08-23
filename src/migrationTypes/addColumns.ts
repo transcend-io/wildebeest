@@ -9,7 +9,7 @@ import { OnDelete } from '@wildebeest/enums';
 import {
   Attributes,
   DefineColumns,
-  ExtractAttributes,
+  // ExtractAttributes,
   MigrationDefinition,
   MigrationTransactionOptions,
   ModelMap,

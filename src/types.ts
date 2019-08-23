@@ -534,15 +534,20 @@ export type HookDefaultOptions = {
 };
 
 /**
+ * Helper type to ensure model extends these options
+ */
+export type HookOptionsExtender = {
+  /** Must implement options */
+  hookOptionsT: HookExtraOptions;
+};
+
+/**
  * Construct the hook options by combining existing with custom
  *
  * TODO potentially explore making these a required arg, also explore why this causes memory issues
  */
 export type MergedHookOptions<
-  TModel extends {
-    /** Must implement options */
-    hookOptionsT: HookExtraOptions;
-  },
+  TModel extends HookOptionsExtender,
   THook extends keyof HookExtraOptions
 > = TModel['hookOptionsT'][THook] extends {}
   ? TModel['hookOptionsT'][THook] & HookDefaultOptions[THook]
