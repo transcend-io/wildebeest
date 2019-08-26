@@ -220,8 +220,11 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
    */
   public static mergeDefaultDefinitions<
     TNewDefaults extends Partial<ModelDefinition<StringKeys<ModelMap>>>,
-    TPreviousDefaults extends Partial<ModelDefinition<StringKeys<ModelMap>>>
-  >(mergeDefaults: TNewDefaults): Partial<TNewDefaults & TPreviousDefaults> {
+    M extends typeof WildebeestModel
+  >(
+    this: M,
+    mergeDefaults: TNewDefaults,
+  ): Partial<TNewDefaults & M['definitionDefaults']> {
     return {
       // Definition overrides defaults
       ...this.definitionDefaults,
