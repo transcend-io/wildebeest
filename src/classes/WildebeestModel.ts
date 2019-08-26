@@ -222,7 +222,6 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
     TNewDefaults extends Partial<ModelDefinition<StringKeys<ModelMap>>>,
     M extends any
   >(
-    this: M,
     mergeDefaults: TNewDefaults,
   ): Partial<TNewDefaults & M['definitionDefaults']> {
     return {
