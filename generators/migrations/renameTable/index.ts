@@ -4,7 +4,6 @@
  * Rename a table
  *
  * @module renameTable
- * @see module:renameTable/prompts
  */
 
 // local

@@ -4,7 +4,6 @@
  * A custom migration
  *
  * @module custom
- * @see module:custom/prompts
  */
 
 // local

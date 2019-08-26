@@ -6,8 +6,6 @@
  * A migrator for table column that is an association
  *
  * @module tableAssociationColumn
- * @see module:tableAssociationColumn/lib
- * @see module:tableAssociationColumn/prompts
  */
 
 // local

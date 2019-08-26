@@ -6,7 +6,6 @@
  * TODO options undefined handling
  *
  * @module wildebeest/types
- * @see module:migrations
  */
 
 // external modules

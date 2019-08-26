@@ -4,7 +4,6 @@
  * Db model options for the migration model.
  *
  * @module migration/options
- * @see module:migration
  */
 
 // external modules

@@ -4,7 +4,6 @@
  * Db model attributes for the migrationLock model.
  *
  * @module migrationLock/attributes
- * @see module:migrationLock
  */
 
 // external modules

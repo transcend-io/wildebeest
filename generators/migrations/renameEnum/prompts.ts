@@ -4,7 +4,6 @@
  * Plop prompt definitions for the rename enum migration.
  *
  * @module renameEnum/prompts
- * @see module:renameEnum
  */
 
 // global

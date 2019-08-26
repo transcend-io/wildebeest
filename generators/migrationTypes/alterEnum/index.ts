@@ -6,7 +6,6 @@
  * Alter an existing enum
  *
  * @module alterEnum
- * @see module:alterEnum/prompts
  */
 
 // local

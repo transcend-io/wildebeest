@@ -4,7 +4,6 @@
  * Plop prompt definitions for the add index migration.
  *
  * @module addIndex/prompts
- * @see module:addIndex
  */
 
 // commons

@@ -4,7 +4,6 @@
  * Plop prompt definitions for the change on delete migration.
  *
  * @module changeOnDelete/prompts
- * @see module:changeOnDelete
  */
 
 // global

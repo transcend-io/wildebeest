@@ -4,7 +4,6 @@
  * Prompts for the bulk insert migration.
  *
  * @module bulkInsert/prompts
- * @see module:bulkInsert
  */
 
 /**

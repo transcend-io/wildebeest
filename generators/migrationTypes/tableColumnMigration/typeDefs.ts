@@ -4,7 +4,6 @@
  * Type definitions for the table column migration migrationType.
  *
  * @module tableColumnMigration/typeDefs
- * @see module:tableColumnMigration
  */
 
 // ///// //

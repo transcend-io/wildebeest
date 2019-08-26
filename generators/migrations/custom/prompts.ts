@@ -4,7 +4,6 @@
  * Prompts for the custom migration.
  *
  * @module custom/prompts
- * @see module:custom
  */
 
 /**

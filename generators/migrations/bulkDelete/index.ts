@@ -4,7 +4,6 @@
  * Bulk delete table rows
  *
  * @module bulkDelete
- * @see module:bulkDelete/prompts
  */
 
 // local

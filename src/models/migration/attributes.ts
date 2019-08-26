@@ -4,7 +4,6 @@
  * Db model attributes for the migration model.
  *
  * @module migration/attributes
- * @see module:migration
  */
 
 // external modules

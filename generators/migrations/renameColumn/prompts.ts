@@ -4,7 +4,6 @@
  * Prompts for the rename column migration.
  *
  * @module renameColumn/prompts
- * @see module:renameColumn
  */
 
 // global

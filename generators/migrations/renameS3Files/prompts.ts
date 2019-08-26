@@ -4,7 +4,6 @@
  * Plop prompt definitions for the rename s3 files migration.
  *
  * @module renameS3Files/prompts
- * @see module:renameS3Files
  */
 
 // global

@@ -6,10 +6,6 @@
  * Migrate a table column
  *
  * @module tableColumnMigration
- * @see module:tableColumnMigration/lib
- * @see module:tableColumnMigration/prompts
- * @see module:tableColumnMigration/regexs
- * @see module:tableColumnMigration/typeDefs
  */
 
 // local

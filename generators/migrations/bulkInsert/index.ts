@@ -4,7 +4,6 @@
  * Run a bulk insert
  *
  * @module bulkInsert
- * @see module:bulkInsert/prompts
  */
 
 // local

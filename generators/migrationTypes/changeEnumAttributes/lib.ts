@@ -4,7 +4,6 @@
  * Helper functions for the change enum attributes migrationType.
  *
  * @module changeEnumAttributes/lib
- * @see module:changeEnumAttributes
  */
 
 // local

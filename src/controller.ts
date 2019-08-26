@@ -4,7 +4,6 @@
  * Callback handlers for migration requests (/migrate).
  *
  * @module migrations/controller
- * @see module:migrations
  */
 
 // external modules

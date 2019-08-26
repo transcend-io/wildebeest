@@ -4,7 +4,6 @@
  * Plop prompt definitions for the change enum attributes migrationType.
  *
  * @module changeEnumAttributes/prompts
- * @see module:changeEnumAttributes
  */
 
 // local

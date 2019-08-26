@@ -4,7 +4,6 @@
  * Change a column definition
  *
  * @module changeColumn
- * @see module:changeColumn/prompts
  */
 
 // global

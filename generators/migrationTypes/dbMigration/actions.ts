@@ -4,7 +4,6 @@
  * Actions for the db migration generatorType.
  *
  * @module dbMigration/actions
- * @see module:dbMigration
  */
 
 /**

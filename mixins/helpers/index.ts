@@ -4,7 +4,6 @@
  * Helper functions for calculating mixins
  *
  * @module mixins/helpers
- * @see module:mixins
  */
 
 // local

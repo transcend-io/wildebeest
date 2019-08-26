@@ -19,7 +19,6 @@
  * - Only supports files that are compiled to .js
  *
  * @module convert_paths
- * @see module:express
  * @author awendland
  */
 

@@ -4,7 +4,6 @@
  * A modified sequelize database class with helper functions useful to wildebeest
  *
  * @module WildebeestDb
- * @see module:wildebeest
  */
 
 // external modules

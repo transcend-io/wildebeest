@@ -4,7 +4,6 @@
  * Constants for generating mixins
  *
  * @module mixins/constants
- * @see module:mixins
  */
 
 // local

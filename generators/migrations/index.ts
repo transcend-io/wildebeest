@@ -4,36 +4,6 @@
  * Migration generators
  *
  * @module migrations
- * @see module:addCascadeWithParent
- * @see module:addColumns
- * @see module:addEnumValues
- * @see module:addIndex
- * @see module:addUniqueConstraintIndex
- * @see module:bulkDelete
- * @see module:bulkInsert
- * @see module:cascadeWithParent
- * @see module:changeColumn
- * @see module:changeEnumColumn
- * @see module:changeOnDelete
- * @see module:createTable
- * @see module:custom
- * @see module:dropTable
- * @see module:makeColumnAllowNull
- * @see module:makeColumnNonNull
- * @see module:makeColumnUnique
- * @see module:removeColumns
- * @see module:removeEnumValues
- * @see module:removeIndex
- * @see module:removeNonNullColumn
- * @see module:removeUniqueConstraintIndex
- * @see module:rename-enum-value
- * @see module:renameColumn
- * @see module:renameConstraint
- * @see module:renameEnum
- * @see module:renameIndex
- * @see module:renameS3Files
- * @see module:renameTable
- * @see module:uuidNonNull
  */
 
 // local

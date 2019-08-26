@@ -4,7 +4,6 @@
  * Regular expressions for the change enum attributes migrationType.
  *
  * @module changeEnumAttributes/regexs
- * @see module:changeEnumAttributes
  */
 
 /**

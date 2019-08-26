@@ -4,15 +4,6 @@
  * Types of migration generators
  *
  * @module migrationTypes
- * @see module:alterEnum
- * @see module:changeEnumAttributes
- * @see module:dbMigration
- * @see module:tableAssociationColumn
- * @see module:tableColumnMigration
- * @see module:tableColumnsMigration
- * @see module:tableMigration
- * @see module:tablesColumnMigration
- * @see module:tablesMigration
  */
 
 // local

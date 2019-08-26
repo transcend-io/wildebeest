@@ -4,7 +4,6 @@
  * Prompts for the change column migration.
  *
  * @module changeColumn/prompts
- * @see module:changeColumn
  */
 
 /**

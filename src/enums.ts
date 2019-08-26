@@ -4,7 +4,6 @@
  * Common enums.
  *
  * @module enums
- * @see module:wildebeest
  */
 
 // global

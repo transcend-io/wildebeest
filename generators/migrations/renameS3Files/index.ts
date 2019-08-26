@@ -4,7 +4,6 @@
  * Change the s3 file naming convention for a table
  *
  * @module renameS3Files
- * @see module:renameS3Files/prompts
  */
 
 // global

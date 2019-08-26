@@ -4,7 +4,6 @@
  * Plop prompt definitions for the rename index migration.
  *
  * @module renameIndex/prompts
- * @see module:renameIndex
  */
 
 // global

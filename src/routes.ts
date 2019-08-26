@@ -4,7 +4,6 @@
  * Routes for running migrations
  *
  * @module wildebeest/routes
- * @see module:migrations
  */
 
 // external modules

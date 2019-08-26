@@ -4,7 +4,6 @@
  * Regular expressions for the table columns migration migrationType
  *
  * @module tableColumnsMigration/regexs
- * @see module:tableColumnsMigration
  */
 
 /**

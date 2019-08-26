@@ -5,7 +5,6 @@
  * A database model defined for the wildebeest db management tooling
  *
  * @module models/Model
- * @see module:models
  */
 
 // external modules

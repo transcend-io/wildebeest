@@ -4,7 +4,6 @@
  * Migrate an enum column
  *
  * @module changeEnumColumn
- * @see module:changeEnumColumn/prompts
  */
 
 // global

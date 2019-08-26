@@ -4,7 +4,6 @@
  * Helper functions for the table columns migration migrationType.
  *
  * @module tableColumnsMigration/lib
- * @see module:tableColumnsMigration
  */
 
 // migrationTypes

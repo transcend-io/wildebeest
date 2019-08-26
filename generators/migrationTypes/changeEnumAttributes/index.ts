@@ -6,9 +6,6 @@
  * Changing attributes of an enum
  *
  * @module changeEnumAttributes
- * @see module:changeEnumAttributes/lib
- * @see module:changeEnumAttributes/prompts
- * @see module:changeEnumAttributes/regexs
  */
 
 // local

@@ -4,7 +4,6 @@
  * Rename a table column constraint
  *
  * @module renameConstraint
- * @see module:renameConstraint/prompts
  */
 
 // external modules

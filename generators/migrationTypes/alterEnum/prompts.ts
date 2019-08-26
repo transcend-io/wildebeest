@@ -4,7 +4,6 @@
  * Plop prompt definitions for the alter enum migrationType.
  *
  * @module alterEnum/prompts
- * @see module:alterEnum
  */
 
 // global

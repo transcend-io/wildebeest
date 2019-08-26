@@ -6,8 +6,6 @@
  * Migrate multiple tables at the same time
  *
  * @module tablesMigration
- * @see module:tablesMigration/prompts
- * @see module:tablesMigration/regexs
  */
 
 // local

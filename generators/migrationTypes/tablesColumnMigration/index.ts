@@ -6,7 +6,6 @@
  * Migrate the same column on multiple tables
  *
  * @module tablesColumnMigration
- * @see module:tablesColumnMigration/prompts
  */
 
 // local

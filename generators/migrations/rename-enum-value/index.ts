@@ -4,7 +4,6 @@
  * Rename an enum value in place
  *
  * @module rename-enum-value
- * @see module:rename-enum-value/prompts
  */
 
 // local

@@ -4,7 +4,6 @@
  * Prompts for the table columns migration migrationType.
  *
  * @module tableColumnsMigration/prompts
- * @see module:tableColumnsMigration
  */
 
 // migrationTypes

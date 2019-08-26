@@ -4,7 +4,6 @@
  * Prompts for the bulk delete migration.
  *
  * @module bulkDelete/prompts
- * @see module:bulkDelete
  */
 
 /**

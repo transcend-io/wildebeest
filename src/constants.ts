@@ -4,7 +4,6 @@
  * Constants for wildebeest
  *
  * @module wildebeest/constants
- * @see module:wildebeest
  */
 
 // external modules

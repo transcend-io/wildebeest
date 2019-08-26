@@ -4,7 +4,6 @@
  * Rename an index
  *
  * @module renameIndex
- * @see module:renameIndex/prompts
  */
 
 // local

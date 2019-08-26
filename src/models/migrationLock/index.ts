@@ -4,7 +4,6 @@
  * A database model for a MigrationLock request.
  *
  * @module migrationLock
- * @see module:migrationLock/attributes
  */
 
 // local

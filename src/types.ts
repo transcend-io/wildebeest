@@ -5,7 +5,6 @@
  * Type definitions
  *
  * @module wildebeest/types
- * @see module:migrations
  */
 
 // external modules

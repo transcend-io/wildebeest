@@ -4,7 +4,6 @@
  * Prompts for the rename constraint migration.
  *
  * @module renameConstraint/prompts
- * @see module:renameConstraint
  */
 
 /**

@@ -4,7 +4,6 @@
  * A database model for a Migration request.
  *
  * @module migration/Migration
- * @see module:migration
  */
 
 // external modules

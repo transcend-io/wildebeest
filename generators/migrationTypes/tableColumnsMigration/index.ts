@@ -6,9 +6,6 @@
  * Create a migration that modifies multiple columns in a table
  *
  * @module tableColumnsMigration
- * @see module:tableColumnsMigration/lib
- * @see module:tableColumnsMigration/prompts
- * @see module:tableColumnsMigration/regexs
  */
 
 // local

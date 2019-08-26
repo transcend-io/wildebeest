@@ -6,7 +6,6 @@
  * A database migration
  *
  * @module dbMigration
- * @see module:dbMigration/actions
  */
 
 // commons

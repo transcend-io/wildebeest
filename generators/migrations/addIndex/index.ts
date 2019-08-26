@@ -4,7 +4,6 @@
  * Add a new index to a table
  *
  * @module addIndex
- * @see module:addIndex/prompts
  */
 
 // global

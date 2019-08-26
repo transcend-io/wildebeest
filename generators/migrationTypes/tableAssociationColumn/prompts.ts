@@ -4,7 +4,6 @@
  * Prompts for the table association column migrationType.
  *
  * @module tableAssociationColumn/prompts
- * @see module:tableAssociationColumn
  */
 
 // local

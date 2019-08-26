@@ -4,7 +4,6 @@
  * Typescript type definitions for mixins
  *
  * @module mixins/types
- * @see module:mixins
  */
 
 // local

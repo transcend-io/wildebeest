@@ -5,7 +5,6 @@
  * An app level logger
  *
  * @module Logger
- * @see module:wildebeest
  */
 
 // external modules

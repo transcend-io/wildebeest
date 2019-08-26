@@ -4,7 +4,6 @@
  * Change the onDelete status of a foreign key constraint
  *
  * @module changeOnDelete
- * @see module:changeOnDelete/prompts
  */
 
 // external modules

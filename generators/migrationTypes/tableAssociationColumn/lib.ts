@@ -4,7 +4,6 @@
  * Helper functions for the table association column migrationType.
  *
  * @module tableAssociationColumn/lib
- * @see module:tableAssociationColumn
  */
 
 // commons

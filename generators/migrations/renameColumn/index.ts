@@ -4,7 +4,6 @@
  * Create a migration definition that renames a column
  *
  * @module renameColumn
- * @see module:renameColumn/prompts
  */
 
 // global

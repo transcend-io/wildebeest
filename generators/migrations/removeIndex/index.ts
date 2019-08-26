@@ -4,7 +4,6 @@
  * Remove an existing index
  *
  * @module removeIndex
- * @see module:removeIndex/prompts
  */
 
 // global

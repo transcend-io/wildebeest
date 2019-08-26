@@ -4,7 +4,6 @@
  * Rename an enum from one value to another
  *
  * @module renameEnum
- * @see module:renameEnum/prompts
  */
 
 // global

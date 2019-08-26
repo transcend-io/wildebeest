@@ -4,7 +4,6 @@
  * Prompts for the change enum column migration.
  *
  * @module changeEnumColumn/prompts
- * @see module:changeEnumColumn
  */
 
 /**

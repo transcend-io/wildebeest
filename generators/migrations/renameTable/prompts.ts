@@ -4,7 +4,6 @@
  * Prompts for the rename table migration.
  *
  * @module renameTable/prompts
- * @see module:renameTable
  */
 
 /**
