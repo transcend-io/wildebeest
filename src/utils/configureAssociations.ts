@@ -1,5 +1,6 @@
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
+import WildebeestModel from '@wildebeest/classes/WildebeestModel';
 import { CASCADE_HOOKS, NON_NULL } from '@wildebeest/constants';
 import {
   AssociationModelName,
@@ -55,6 +56,16 @@ export default function configureAssociations<TModels extends ModelMap>(
 
   const { db } = wildebeest;
 
+  const getModel = (
+    name: Extract<keyof TModels, string>,
+  ): typeof WildebeestModel => {
+    if (db.isDefined(name)) {
+      return db.model(name);
+    }
+    wildebeest.logger.error(`ERROR: model ${name} could not be found`);
+    return undefined as any;
+  };
+
   return {
     // Replace NON_NULL and tableName
     belongsTo: apply(belongsTo, (options, associationName) =>
@@ -64,7 +75,7 @@ export default function configureAssociations<TModels extends ModelMap>(
     ),
     // Through must be provided when defining a belongsToMany association
     belongsToMany: apply(belongsToMany, ({ throughModelName, ...options }) => ({
-      through: db.model(throughModelName),
+      through: getModel(throughModelName),
       ...options,
     })),
     // Replace CASCADE_HOOKS and tableName

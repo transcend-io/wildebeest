@@ -67,7 +67,7 @@ export function createAttributesFromAssociations<TModels extends ModelMap>(
  * @param wildebeest - The wildebeest configuration
  * @param modelName - The name of the model being connected
  * @param model - The model definition
- * @returns The configured seuqlize associations configurations
+ * @returns The configured sequelize associations configurations
  */
 export default function configureModelDefinition<TModels extends ModelMap>(
   wildebeest: Wildebeest<TModels>,
