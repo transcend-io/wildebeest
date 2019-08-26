@@ -72,7 +72,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   > = {};
 
   /** The sequelize model definition */
-  public static definition: ModelDefinition<StringKeys<ModelMap>>;
+  public static definition: ModelDefinition<StringKeys<ModelMap>> = {};
 
   /** The name of the db model, set after initialization */
   public static modelName: string;
