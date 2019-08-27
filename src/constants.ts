@@ -7,7 +7,7 @@
  */
 
 // external modules
-import snakeCase from 'lodash/snakeCase';
+import { snakeCase } from 'change-case';
 import { ModelIndexesOptions } from 'sequelize';
 
 /**
