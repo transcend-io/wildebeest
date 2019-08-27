@@ -83,8 +83,10 @@ export default async function checkIndexes<TModels extends ModelMap>(
   const existingIndexes = await listIndexNames(db, tableName);
 
   // Get the expected indexes
-  let expectedIndexes = indexes.map(({ fields }) =>
-    namingConventions.fieldsConstraint(tableName, fields || []).slice(0, 63),
+  const expectedIndexes = indexes.map(({ fields }) =>
+    namingConventions
+      .fieldsConstraint(tableName, fields || [])
+      .slice(0, MAX_CONSTRAINT_NAME),
   );
   Object.keys(attributes).forEach((columnName) => {
     const column = attributes[columnName] as (
@@ -99,11 +101,6 @@ export default async function checkIndexes<TModels extends ModelMap>(
       );
     }
   });
-
-  // If indexes are too long, shrink them to the max postgres length
-  expectedIndexes = expectedIndexes.map((name) =>
-    name.slice(0, MAX_CONSTRAINT_NAME),
-  );
 
   // Look for missing indexes
   const missingIndexes = difference(expectedIndexes, existingIndexes);
