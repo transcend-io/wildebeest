@@ -374,6 +374,10 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
 
     // Call the sequelize init form the model definition
     this.init(this.configuredDefinition.attributes, {
+      name: {
+        singular: modelName,
+        plural: wildebeest.pluralCase(modelName),
+      },
       ...this.configuredDefinition.options,
       modelName,
       tableName: tableName || this.configuredDefinition.tableName,

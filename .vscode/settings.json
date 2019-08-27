@@ -3,6 +3,7 @@
         "executables",
         "koalaman",
         "mixins",
+        "setuptools",
         "symlinks",
         "unnested"
     ]
