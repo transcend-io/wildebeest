@@ -5,15 +5,14 @@ import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
+import WildebeestDb from '@wildebeest/classes/WildebeestDb';
+import { MAX_CONSTRAINT_NAME } from '@wildebeest/constants';
 import {
   ConfiguredModelDefinition,
   ModelMap,
   StringKeys,
   SyncError,
 } from '@wildebeest/types';
-
-// local
-import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import listIndexNames from '@wildebeest/utils/listIndexNames';
 
 /**
@@ -70,6 +69,7 @@ export default async function checkIndexes<TModels extends ModelMap>(
   {
     options,
     attributes,
+    rawAttributes,
     tableName,
   }: ConfiguredModelDefinition<StringKeys<TModels>>,
 ): Promise<SyncError[]> {
@@ -83,21 +83,27 @@ export default async function checkIndexes<TModels extends ModelMap>(
   const existingIndexes = await listIndexNames(db, tableName);
 
   // Get the expected indexes
-  const expectedIndexes = indexes.map(({ fields }) =>
+  let expectedIndexes = indexes.map(({ fields }) =>
     namingConventions.fieldsConstraint(tableName, fields || []).slice(0, 63),
   );
   Object.keys(attributes).forEach((columnName) => {
     const column = attributes[columnName] as (
       | string
       | ModelAttributeColumnOptions);
+    const rawColumn = rawAttributes[columnName];
     if (typeof column === 'object' && column.primaryKey) {
       expectedIndexes.push(namingConventions.primaryKey(tableName));
-    } else if (typeof column === 'object' && column.unique) {
+    } else if (typeof rawColumn === 'object' && rawColumn.unique) {
       expectedIndexes.push(
         namingConventions.uniqueConstraint(tableName, columnName),
       );
     }
   });
+
+  // If indexes are too long, shrink them to the max postgres length
+  expectedIndexes = expectedIndexes.map((name) =>
+    name.slice(0, MAX_CONSTRAINT_NAME),
+  );
 
   // Look for missing indexes
   const missingIndexes = difference(expectedIndexes, existingIndexes);

@@ -22,18 +22,6 @@ const ATTRIBUTES = createAttributes({
     primaryKey: true,
     type: DataTypes.INTEGER,
   },
-  /** Created at time */
-  createdAt: {
-    allowNull: false,
-    defaultValue: () => new Date(),
-    type: DataTypes.DATE,
-  },
-  /** Updated at time */
-  updatedAt: {
-    allowNull: false,
-    defaultValue: () => new Date(),
-    type: DataTypes.DATE,
-  },
   /** The batch the migration was run in */
   batch: {
     allowNull: true,

@@ -15,6 +15,7 @@ import {
   ONE_MINUTE,
   ONE_SECOND,
 } from '@wildebeest/constants';
+import render from '@wildebeest/views';
 
 // models
 import Migration from '@wildebeest/models/migration/Migration';
@@ -22,8 +23,6 @@ import Migration from '@wildebeest/models/migration/Migration';
 // local
 import { ModelMap, WildebeestResponse } from '@wildebeest/types';
 import writeSchema from './utils/writeSchema';
-
-// TODO res.render needs to be setup
 
 // Handle a migration error
 const handleError = <TModels extends ModelMap>(
@@ -36,13 +35,13 @@ const handleError = <TModels extends ModelMap>(
   res.locals.wildebeest.verboseLogger.log(stack);
 
   // Render error with props
-  res.status(status);
-  return res.render('migrations/views/error', {
-    layout: 'migrations/views/error',
-    message,
-    status,
-    ...props,
-  });
+  res.status(200).send(
+    render('error', {
+      message,
+      status,
+      ...props,
+    }),
+  );
 };
 
 // Handle a migration success
@@ -55,11 +54,12 @@ const handleSuccess = <TModels extends ModelMap>(
   const totalTime = `${timeTaken / ONE_SECOND} seconds`;
 
   // Render success
-  return res.render('migrations/views/success', {
-    layout: 'migrations/views/success',
-    message: `Successfully ${msg} in: ${totalTime}`,
-    ...props,
-  });
+  res.status(200).send(
+    render('success', {
+      message: `Successfully ${msg} in: ${totalTime}`,
+      ...props,
+    }),
+  );
 };
 
 /**
@@ -190,15 +190,16 @@ export async function renderRoutes<TModels extends ModelMap>(
   const nextPage = startIndex + MAX_MIGRATION_DISPLAY;
 
   // Render all of the potential seed routes
-  return res.render('migrations/views', {
-    backPage,
-    hasBackPage: backPage >= 0,
-    hasNextPage: endIndex < wildebeest.reversedMigrations.length,
-    migrations: displayMigrations,
-    nextPage,
-    page,
-    layout: 'migrations/views/index',
-  });
+  res.status(200).send(
+    render('index', {
+      backPage,
+      hasBackPage: backPage >= 0,
+      hasNextPage: endIndex < wildebeest.reversedMigrations.length,
+      migrations: displayMigrations,
+      nextPage,
+      page,
+    }),
+  );
 }
 
 /**
@@ -319,12 +320,13 @@ export async function writeSchemaByName<TModels extends ModelMap>(
 
   try {
     await writeSchema(wildebeest, name);
-    return res.render('migrations/views/success', {
-      layout: 'migrations/views/success',
-      message: `Successfully wrote schema: "${name}"`,
-      ...props,
-    });
+    res.status(200).send(
+      render('success', {
+        message: `Successfully wrote schema: "${name}"`,
+        ...props,
+      }),
+    );
   } catch (err) {
-    return handleError(res, props)(err);
+    handleError(res, props)(err);
   }
 }

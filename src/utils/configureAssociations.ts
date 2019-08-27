@@ -54,13 +54,14 @@ export default function configureAssociations<TModels extends ModelMap>(
   /** The model names in the db */
   type TModelName = StringKeys<TModels>;
 
-  const { db } = wildebeest;
+  const { models } = wildebeest;
 
   const getModel = (
     name: Extract<keyof TModels, string>,
   ): typeof WildebeestModel => {
-    if (db.isDefined(name)) {
-      return db.model(name);
+    const def = models[name];
+    if (def) {
+      return def;
     }
     wildebeest.logger.error(`ERROR: model ${name} could not be found`);
     return undefined as any;
@@ -71,7 +72,11 @@ export default function configureAssociations<TModels extends ModelMap>(
     belongsTo: apply(belongsTo, (options, associationName) =>
       typeof options === 'object'
         ? setAs(options, associationName)
-        : { ...NON_NULL, modelName: associationName as TModelName },
+        : {
+            ...NON_NULL,
+            onDelete: 'CASCADE',
+            modelName: associationName as TModelName,
+          },
     ),
     // Through must be provided when defining a belongsToMany association
     belongsToMany: apply(belongsToMany, ({ throughModelName, ...options }) => ({

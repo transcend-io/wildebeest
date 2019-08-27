@@ -106,7 +106,6 @@ export default function extractAssociationDefinitions(
       anyParent.locals.get(config.associationDefinitionName);
     if (ASS) {
       const details = serializeSymbol(ASS, originalFileName);
-      // console.log(details);
       output.push(details);
     }
   }

@@ -33,6 +33,7 @@ export default class Migration<TModels extends ModelMap>
   public static definition = {
     attributes,
     options,
+    tableName: 'migrations',
   };
 
   /** The current batch number to add */
@@ -134,7 +135,7 @@ export default class Migration<TModels extends ModelMap>
         ) {
           restartFrom =
             wildebeest.lookupMigration[wildebeest.bottomTest].fileName;
-          return this.create({ name: restartFrom }, {});
+          return this.create({ name: restartFrom });
         }
         throw e;
       });

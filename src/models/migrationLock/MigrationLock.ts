@@ -33,6 +33,7 @@ export default class MigrationLock<TModels extends ModelMap>
   /** The model definition */
   public static definition = {
     attributes,
+    tableName: 'migrationLocks',
   };
 
   /**

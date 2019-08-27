@@ -48,12 +48,7 @@ export function createAttributesFromAssociations<TModels extends ModelMap>(
           // Indicate we are dealing with an association
           isAssociation: true,
           // The association options
-          associationOptions:
-            association.foreignKey &&
-            typeof association.foreignKey === 'object' &&
-            association.foreignKey.allowNull === false
-              ? { onDelete: 'CASCADE' }
-              : association,
+          associationOptions: association,
         },
       });
     },
@@ -76,7 +71,7 @@ export default function configureModelDefinition<TModels extends ModelMap>(
     tableName,
     attributes = {},
     associations = {},
-    defaultAttributes = {},
+    defaultAttributes,
     options = {},
     skip = false,
     isJoin = false,
@@ -98,6 +93,7 @@ export default function configureModelDefinition<TModels extends ModelMap>(
   return {
     tableName: tableName || wildebeest.pluralCase(modelName),
     attributes: {
+      ...(defaultAttributes || wildebeest.defaultAttributes),
       ...createAttributesFromAssociations(
         wildebeest,
         configuredAssociations.belongsTo,
@@ -105,7 +101,7 @@ export default function configureModelDefinition<TModels extends ModelMap>(
       ...attributes,
     },
     associations: configuredAssociations,
-    defaultAttributes,
+    rawAttributes: attributes,
     rawAssociations: {
       belongsTo,
       belongsToMany,

@@ -328,7 +328,7 @@ export type ConfiguredModelDefinition<
 > = Required<
   Omit<
     ModelDefinition<TModelNames, TModel>,
-    'dontMatchBelongTo' | 'associations' | 'attributes'
+    'dontMatchBelongTo' | 'associations' | 'attributes' | 'defaultAttributes'
   >
 > & {
   /** The configured model attributes */
@@ -337,6 +337,8 @@ export type ConfiguredModelDefinition<
   associations: ConfiguredAssociations<TModelNames>;
   /** Save the initial associations */
   rawAssociations: Required<Associations<TModelNames>>;
+  /** Save the initial attributes */
+  rawAttributes: Attributes;
 };
 
 /**

@@ -47,8 +47,16 @@ export default function checkBelongsToAssociation<TModels extends ModelMap>(
   const { hasOne = {}, hasMany = {} } = associations;
 
   // Check if there is a hasOne or a hasMany
-  const hasOneAssociation = hasOne[modelName];
-  const hasManyAssociation = hasMany[modelName];
+  const hasOneAssociation =
+    hasOne[modelName] ||
+    Object.values(hasOne).find(
+      (a) => typeof a === 'object' && a.modelName === modelName,
+    );
+  const hasManyAssociation =
+    hasMany[modelName] ||
+    Object.values(hasMany).find(
+      (a) => typeof a === 'object' && a.modelName === modelName,
+    );
 
   // Log errors
   const possibleOpposites = 'hasOne or hasMany';

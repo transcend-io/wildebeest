@@ -29,6 +29,7 @@ import {
   StringKeys,
 } from '@wildebeest/types';
 import apply from '@wildebeest/utils/apply';
+import configureModelDefinition from '@wildebeest/utils/configureModelDefinition';
 import freshIndexes from '@wildebeest/utils/freshIndexes';
 import getKeys from '@wildebeest/utils/getKeys';
 import setAssociations from '@wildebeest/utils/setAssociations';
@@ -76,6 +77,9 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
 
   /** The name of the db model, set after initialization */
   public static modelName: string;
+
+  /** The name of the table, set after initialization */
+  public static tableName: string;
 
   /** Sequelize operators */
   public static Op: typeof Op = Op;
@@ -220,24 +224,25 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
   public static mergeDefaultDefinitions<
     TNewDefaults extends Partial<ModelDefinition<StringKeys<ModelMap>>>,
     M extends any
-  >(
-    mergeDefaults: TNewDefaults,
-  ): Partial<TNewDefaults & M['definitionDefaults']> {
+  >(mergeDefaults: TNewDefaults): TNewDefaults & M['definitionDefaults'] {
     return {
       // Definition overrides defaults
       ...this.definitionDefaults,
       ...mergeDefaults,
       // Attributes are merged
-      attributes: Object.assign(
-        {},
-        this.definitionDefaults.attributes,
-        mergeDefaults.attributes,
-      ),
-      defaultAttributes: Object.assign(
-        {},
-        this.definitionDefaults.defaultAttributes,
-        mergeDefaults.defaultAttributes,
-      ),
+      attributes: {
+        ...this.definitionDefaults.attributes,
+        ...mergeDefaults.attributes,
+      },
+      ...(this.definitionDefaults.defaultAttributes ||
+      mergeDefaults.defaultAttributes
+        ? {
+            defaultAttributes: {
+              ...this.definitionDefaults.defaultAttributes,
+              ...mergeDefaults.defaultAttributes,
+            },
+          }
+        : {}),
       // associations and options are combined individually
       associations: WildebeestModel.mergeAssociations(
         this.definitionDefaults.associations,
@@ -353,18 +358,27 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
       );
     }
 
+    // save definitions
+    this.wildebeest = wildebeest;
+    this.db = wildebeest.db;
+    this.modelName = modelName;
+    this.tableName = tableName;
+
+    // Configure the model definition
     const definition = this.getDefinition();
+    this.configuredDefinition = configureModelDefinition<ModelMap>(
+      wildebeest,
+      modelName,
+      definition,
+    );
 
     // Call the sequelize init form the model definition
-    this.init(definition.attributes || {}, {
-      ...definition.options,
+    this.init(this.configuredDefinition.attributes, {
+      ...this.configuredDefinition.options,
       modelName,
-      tableName: tableName || definition.tableName,
+      tableName: tableName || this.configuredDefinition.tableName,
       sequelize: wildebeest.db,
     });
-
-    // Save the model name
-    this.modelName = modelName;
 
     // Attach wildebeest to the class instance and class itself
     Object.defineProperty(this.prototype, 'wildebeest', {
@@ -373,13 +387,13 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
     Object.defineProperty(this.prototype, 'db', {
       get: () => wildebeest.db,
     });
-    this.wildebeest = wildebeest;
-    this.db = wildebeest.db;
 
     // Define additional mixins
     Object.assign(
       this.prototype,
-      this.createMixinPrototypes(definition.associations || {}),
+      this.createMixinPrototypes(
+        this.configuredDefinition.rawAssociations || {},
+      ),
     );
   }
 

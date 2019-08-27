@@ -11,6 +11,11 @@ import snakeCase from 'lodash/snakeCase';
 import { ModelIndexesOptions } from 'sequelize';
 
 /**
+ * Postgres has a limit on constraint names
+ */
+export const MAX_CONSTRAINT_NAME = 63;
+
+/**
  * One can override the naming conventions for various database values
  */
 export const DEFAULT_NAMING_CONVENTIONS = {
@@ -37,7 +42,7 @@ export const DEFAULT_NAMING_CONVENTIONS = {
   enum: (tableName: string, columnName: string): string =>
     `enum_${tableName}_${columnName}`,
   /**
-   * A unique conostraint across a number of columns
+   * A unique constraint across a number of columns
    */
   fieldsConstraint: (
     tableName: string,

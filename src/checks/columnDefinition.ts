@@ -22,14 +22,18 @@ import checkUniqueConstraint from './uniqueConstraint';
  *
  * @memberof module:checks
  *
- * @param wildebeest - The wildebeest coniguration
+ * @param wildebeest - The wildebeest configuration
  * @param model - The model to check
  * @param name - The name of the column to check
  * @returns Any errors related to the column definition
  */
 export default async function checkColumnDefinition<TModels extends ModelMap>(
   wildebeest: Wildebeest<TModels>,
-  { tableName, attributes }: ConfiguredModelDefinition<StringKeys<TModels>>,
+  {
+    tableName,
+    attributes,
+    rawAttributes,
+  }: ConfiguredModelDefinition<StringKeys<TModels>>,
   name: string,
 ): Promise<SyncError[]> {
   // Keep track of errors
@@ -37,6 +41,7 @@ export default async function checkColumnDefinition<TModels extends ModelMap>(
 
   // Get the column definition
   const definition = attributes[name];
+  const rawDefinition = rawAttributes[name];
   if (!definition) {
     errors.push({
       message: `Missing attribute definition for column "${name}" in table "${tableName}"`,
@@ -60,7 +65,9 @@ export default async function checkColumnDefinition<TModels extends ModelMap>(
       ? []
       : checkAssociationConfig(wildebeest, tableName, name, definition),
     // Ensure the unique constraint is set properly
-    checkUniqueConstraint(wildebeest, tableName, name, definition),
+    rawDefinition
+      ? checkUniqueConstraint(wildebeest, tableName, name, rawDefinition)
+      : [],
     // Ensure allowNull is set properly
     checkAllowNullConstraint(wildebeest.db, tableName, name, definition),
     // Ensure the default value is correct

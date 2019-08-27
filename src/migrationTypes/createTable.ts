@@ -8,12 +8,8 @@ import {
   MigrationTransactionOptions,
   ModelMap,
 } from '@wildebeest/types';
-import {
-  addTableColumnConstraint,
-  dropEnum,
-  getKeys,
-  isEnum,
-} from '@wildebeest/utils';
+import { addTableColumnConstraint, dropEnum, isEnum } from '@wildebeest/utils';
+import { getStringKeys } from '@wildebeest/utils/getKeys';
 import { RawConstraint } from '@wildebeest/utils/indexConstraints';
 
 /**
@@ -117,11 +113,12 @@ export async function dropTable<
   TAttributes extends Attributes,
   TModels extends ModelMap
 >(
-  { db, namingConventions }: Wildebeest<TModels>,
+  wildebeest: Wildebeest<TModels>,
   options: DropTableOptions<TAttributes, TModels>,
   transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
   // Raw query interface
+  const { db, namingConventions } = wildebeest;
   const { queryInterface } = db;
   const { tableName, getColumns = () => ({}) } = options;
 
@@ -129,9 +126,9 @@ export async function dropTable<
   await queryInterface.dropTable(tableName, transactionOptions);
 
   // Find enum columns
-  const columns = getColumns(db);
+  const columns = getColumns(wildebeest.db);
   await Promise.all(
-    getKeys(columns)
+    getStringKeys(columns)
       .filter((columnName) => isEnum(columns[columnName]))
       // Drop the enums
       .map((columnName) =>
@@ -164,31 +161,13 @@ export default function createTable<
     constraints = [],
     noDefaults = false,
   } = options;
-  // Get the default columns for all models (can be skipped with `noDefaults`)
-  const getDefaults = noDefaults
-    ? () => ({})
-    : ({ DataTypes }: WildebeestDb<TModels>) => ({
-        // UUID
-        id: {
-          primaryKey: true,
-          defaultValue: DataTypes.UUIDV4,
-          type: DataTypes.UUID,
-        },
-        // Created at time
-        createdAt: {
-          type: DataTypes.DATE,
-          allowNull: false,
-        },
-        // Updated at time
-        updatedAt: {
-          type: DataTypes.DATE,
-          allowNull: false,
-        },
-      });
 
   // Get default columns combined with provided columns
-  const getAllColumns = (db: WildebeestDb<TModels>): Attributes =>
-    Object.assign(getDefaults(db), getColumns(db));
+  const getAllColumns = (
+    defaultAttributes: Attributes,
+  ): ((db: WildebeestDb<TModels>) => Attributes) => (
+    db: WildebeestDb<TModels>,
+  ): Attributes => ({ ...defaultAttributes, ...getColumns(db) });
 
   return {
     // Create a new table
@@ -196,7 +175,13 @@ export default function createTable<
       withTransaction(async (transactionOptions) =>
         createNewTable(
           wildebeest,
-          { tableName, getColumns: getAllColumns, constraints },
+          {
+            tableName,
+            getColumns: getAllColumns(
+              noDefaults ? {} : wildebeest.defaultAttributes,
+            ),
+            constraints,
+          },
           transactionOptions,
         ),
       ),
@@ -205,7 +190,12 @@ export default function createTable<
       withTransaction((transactionOptions) =>
         dropTable(
           wildebeest,
-          { tableName, getColumns: getAllColumns },
+          {
+            tableName,
+            getColumns: getAllColumns(
+              noDefaults ? {} : wildebeest.defaultAttributes,
+            ),
+          },
           transactionOptions,
         ),
       ),

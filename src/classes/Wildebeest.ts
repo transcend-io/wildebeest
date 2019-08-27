@@ -20,7 +20,6 @@ import Umzug from 'umzug';
 
 // utils
 import apply from '@wildebeest/utils/apply';
-import configureModelDefinition from '@wildebeest/utils/configureModelDefinition';
 import { transactionWrapper } from '@wildebeest/utils/createQueryMaker';
 import createUmzugLogger from '@wildebeest/utils/createUmzugLogger';
 import getBackoffTime from '@wildebeest/utils/getBackoffTime';
@@ -52,14 +51,13 @@ import Logger, { verboseLoggerDefault } from '@wildebeest/Logger';
 import createRoutes from '@wildebeest/routes';
 import {
   Attributes,
-  ConfiguredModelDefinition,
   MigrationConfig,
   ModelDefinition,
   ModelMap,
   StringKeys,
   SyncError,
 } from '@wildebeest/types';
-import getKeys from '@wildebeest/utils/getKeys';
+import { getStringKeys } from '@wildebeest/utils/getKeys';
 
 // local
 import WildebeestDb from './WildebeestDb';
@@ -157,13 +155,6 @@ export default class Wildebeest<TModels extends ModelMap> {
     [modelName in StringKeys<TModels>]: ModelDefinition<StringKeys<TModels>>;
   };
 
-  /** The configured database model definitions */
-  public configuredModels: {
-    [modelName in StringKeys<TModels>]: ConfiguredModelDefinition<
-      StringKeys<TModels>
-    >;
-  };
-
   /** Needed to restore schema dumps using pg_restore and pg_dump */
   public databaseUri: string;
 
@@ -178,6 +169,9 @@ export default class Wildebeest<TModels extends ModelMap> {
 
   /** Can forcefully unlock the migration lock table (useful in testing or auto-reloading environment) */
   public forceUnlock: boolean;
+
+  /** Default attributes to assign to every model */
+  public defaultAttributes: Attributes;
 
   // /////////// //
   // Directories //
@@ -267,6 +261,7 @@ export default class Wildebeest<TModels extends ModelMap> {
     },
     ignoredTableNames = [],
     namingConventions = {},
+    defaultAttributes = {},
     logger = new Logger(),
     verboseLogger = verboseLoggerDefault,
     tableNames = DefaultTableNames,
@@ -284,12 +279,22 @@ export default class Wildebeest<TModels extends ModelMap> {
     this.forceUnlock = forceUnlock;
     this.pluralCase = pluralCase;
     this.allowSchemaWrites = allowSchemaWrites;
-    this.models = models;
-    this.modelDefinitions = (apply(models, (model) =>
+
+    // Set models
+    Migration.definition.tableName = this.tableNames.migration;
+    MigrationLock.definition.tableName = this.tableNames.migrationLock;
+    this.models = {
+      ...models,
+      migration: Migration,
+      migrationLock: MigrationLock,
+    };
+    this.modelDefinitions = (apply(this.models, (model) =>
       model.getDefinition(),
     ) as any) as {
       [modelName in StringKeys<TModels>]: ModelDefinition<StringKeys<TModels>>;
     };
+
+    // misc
     this.errOnSyncFailure = errOnSyncFailure;
     this.bottomTest = bottomTest;
 
@@ -328,9 +333,7 @@ export default class Wildebeest<TModels extends ModelMap> {
     this.s3 = s3;
 
     // Configure the model definitions
-    this.configuredModels = apply(this.modelDefinitions, (model, modelName) =>
-      configureModelDefinition(this, modelName, model),
-    );
+    this.defaultAttributes = defaultAttributes;
 
     // Initialize the umzug instance
     this.umzug = new Umzug({
@@ -341,6 +344,7 @@ export default class Wildebeest<TModels extends ModelMap> {
         modelName: 'migration',
         tableName: this.tableNames.migration,
         columnName: 'name',
+        timestamps: true,
       },
       // Migration logger
       logging: createUmzugLogger(this.logger),
@@ -427,14 +431,18 @@ export default class Wildebeest<TModels extends ModelMap> {
   public async getSyncErrors(): Promise<SyncError[]> {
     const results = await Promise.all([
       // Check that each model is in sync
-      ...getKeys(this.configuredModels).map((modelName) =>
-        checkModel(this, this.configuredModels[modelName], modelName),
+      ...getStringKeys(this.models).map((modelName) =>
+        checkModel(
+          this,
+          this.models[modelName].configuredDefinition,
+          modelName,
+        ),
       ),
       // Check for extra tables
       checkExtraneousTables(
         this.db,
-        Object.values(this.configuredModels)
-          .map(({ tableName }) => tableName)
+        getStringKeys(this.models)
+          .map((modelName) => this.models[modelName].tableName)
           .concat(this.ignoredTableNames),
       ),
     ]);
@@ -570,8 +578,7 @@ export default class Wildebeest<TModels extends ModelMap> {
       // Log the errors
       errors.forEach((error) => this.logger.error(error.message));
 
-      const msg =
-        'The db is out of sync with Sequelize definitions. View output above to see where.';
+      const msg = `The db is out of sync with Sequelize definitions. View output above to see where. (${errors.length})`;
       if (this.errOnSyncFailure) {
         throw new Error(msg);
       } else {
@@ -591,19 +598,6 @@ export default class Wildebeest<TModels extends ModelMap> {
    * Initialize all of the sequelize models
    */
   public initializeModels(): void {
-    // Configure the model definitions TODO remove duplicate config
-    this.configuredModels = apply(this.modelDefinitions, (model, modelName) =>
-      configureModelDefinition(this, modelName, model),
-    );
-
-    // Initialize the migration models
-    Migration.customInit(this, 'migration', this.tableNames.migration);
-    MigrationLock.customInit(
-      this,
-      'migrationLock',
-      this.tableNames.migrationLock,
-    );
-
     // Initialize the remaining models
     apply(this.models, (ModelDef, name) =>
       ModelDef.customInit(

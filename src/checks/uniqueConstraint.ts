@@ -21,7 +21,7 @@ export async function hasUniqueConstraint<TModels extends ModelMap>(
 ): Promise<boolean> {
   const [constraint] = await db.queryInterface.sequelize.query(
     `
-    SELECT constraint_name
+    SELECT constraint_name,table_name
     FROM information_schema.constraint_column_usage
     WHERE table_name = '${tableName}'  and "constraint_name" = '${name}'
   `,
@@ -52,8 +52,7 @@ export default async function checkUniqueConstraint<TModels extends ModelMap>(
   const errors: SyncError[] = [];
 
   // Check if expected to be unique
-  const isUnique =
-    !!definition.unique && definition.unique && !definition.primaryKey;
+  const isUnique = !!definition.unique && !definition.primaryKey;
 
   // The name of the constraint
   const uniqueConstraintName = namingConventions.uniqueConstraint(
@@ -78,6 +77,7 @@ export default async function checkUniqueConstraint<TModels extends ModelMap>(
 
   // Determine if a constraint does not exist when expected
   if (isUnique && !constraintExists) {
+    console.log(definition, name);
     errors.push({
       message: `Missing expected constraint: "${uniqueConstraintName}"`,
       tableName,
