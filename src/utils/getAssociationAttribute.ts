@@ -21,7 +21,7 @@ export default function getAssociationAttribute<TModelName extends string>(
   },
 ): sequelize.ModelAttributeColumnOptions {
   // We do not copy over some values
-  const { primaryKey, allowNull, unique, ...rest } = config; // eslint-disable-line @typescript-eslint/no-unused-vars
+  const { primaryKey, allowNull, unique, defaultValue, ...rest } = config; // eslint-disable-line @typescript-eslint/no-unused-vars,max-len
   return {
     ...rest,
     allowNull: !!(
