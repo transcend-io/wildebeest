@@ -124,10 +124,14 @@ export default class Wildebeest<TModels extends ModelMap> {
   /**
    * Index the migrations and validate that the numbering is correct
    */
-  public static indexMigrations(directory: string): MigrationConfig[] {
+  public static indexMigrations(
+    directory: string,
+    bottom: number,
+  ): MigrationConfig[] {
     // Get and validate the migrations
     const files = getNumberedList(
       readdirSync(directory).filter((fil) => fil.indexOf('.') > 0),
+      bottom,
     );
 
     // Convert to migration configurations
@@ -254,7 +258,7 @@ export default class Wildebeest<TModels extends ModelMap> {
     databaseUri,
     restoreSchemaOnEmpty,
     models,
-    bottomTest = 2,
+    bottomTest = 1,
     s3 = new S3(),
     throwClientError = (err: string) => {
       throw new Error(err);
@@ -311,7 +315,7 @@ export default class Wildebeest<TModels extends ModelMap> {
 
     // Index the migrations
     this.directory = directory;
-    this.migrations = Wildebeest.indexMigrations(directory);
+    this.migrations = Wildebeest.indexMigrations(directory, this.bottomTest);
     this.reversedMigrations = [...this.migrations].reverse();
     this.lookupMigration = keyBy(this.migrations, 'numInt');
 

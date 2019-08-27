@@ -34,23 +34,17 @@ export const parseNumber = (item: string): number => {
  * @param throwError - Throw an error if invalid
  * @returns When throwError is false and there is an error, this will return what index the conflicts exist at
  */
-export function verifyNumberedFiles(
-  files: string[],
-  throwError = true,
-): number {
-  let invalidIndex = -1;
+export function verifyNumberedFiles(files: string[], bottom = 1): number {
+  const invalidIndex = -1;
 
   // Pull off the number
   files
     .map((fil) => fil.split('-')[0])
     // Ensure that the numbers are increasing in order
     .forEach((num, ind) => {
-      if (parseInt(num, 10) !== ind + 1) {
-        if (throwError) {
-          throw new Error(`Migration file naming convention wrong at ${ind}`);
-        } else if (!invalidIndex) {
-          invalidIndex = ind;
-        }
+      if (parseInt(num, 10) !== ind + bottom) {
+        console.log(parseInt(num, 10), ind + 1);
+        throw new Error(`Migration file naming convention wrong at ${ind}`);
       }
     });
 
@@ -68,13 +62,14 @@ export function verifyNumberedFiles(
  */
 export default function getNumberedList(
   listItems: string[],
+  bottom = 1,
   regex = NUMBERED_REGEX,
 ): string[] {
   // Filter by regex
   const migrations = listItems.filter((item) => regex.test(item));
 
   // Verify that they are valid
-  verifyNumberedFiles(migrations);
+  verifyNumberedFiles(migrations, bottom);
 
   return migrations;
 }

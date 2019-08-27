@@ -266,7 +266,7 @@ export default class MigrationLock<TModels extends ModelMap>
     await sleepPromise(ONE_SECOND * 3);
 
     // Then down to bottom
-    await this.downTo(this.wildebeest.bottomTest);
+    await this.downTo(this.wildebeest.bottomTest + 1);
 
     // Sleep for a second
     await sleepPromise(ONE_SECOND * 3);
