@@ -226,7 +226,8 @@ export default (
     this: This,
     findOptions: FindOptions,
     input: AttributeInputs,
-    options?: MergedHookOptions<TInstance, 'create' & 'update'>,
+    options?: MergedHookOptions<TInstance, 'create'> &
+      MergedHookOptions<TInstance, 'update'>,
   ): Promise<TInstance> {
     return this[`get${pluralPascalAssociation}`](findOptions).then(
       async ([item]: TInstance[]) => {
@@ -256,7 +257,8 @@ export default (
   function updateOrCreateOne<TInstance extends AnyModel>(
     this: This,
     input: AttributeInputs,
-    options?: MergedHookOptions<TInstance, 'create' & 'update'>,
+    options?: MergedHookOptions<TInstance, 'create'> &
+      MergedHookOptions<TInstance, 'update'>,
   ): Promise<TInstance> {
     return this[`get${pascalAssociation}`]().then((item?: TInstance) => {
       // If no item found, create

@@ -173,7 +173,8 @@ export type BelongsToGetOrDefaultAssociationMixin<TModel extends AnyModel> = (
  */
 export type BelongsToUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
   input: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'create' & 'update'>,
+  options?: MergedHookOptions<TModel, 'create'> &
+    MergedHookOptions<TModel, 'update'>,
 ) => Promise<TModel>;
 
 // ////// //
@@ -218,7 +219,8 @@ export type HasOneGetOrDefaultAssociationMixin<TModel extends AnyModel> = (
  */
 export type HasOneUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
   input: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'create' & 'update'>,
+  options?: MergedHookOptions<TModel, 'create'> &
+    MergedHookOptions<TModel, 'update'>,
 ) => Promise<TModel>;
 
 // /////// //
@@ -306,5 +308,6 @@ export type HasManyUpdateOneAssociationMixin<TModel extends AnyModel> = (
 export type HasManyUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
   findOptions: FindOptions,
   input: AttributeInputs,
-  options?: MergedHookOptions<TModel, 'create' & 'update'>,
+  options?: MergedHookOptions<TModel, 'create'> &
+    MergedHookOptions<TModel, 'update'>,
 ) => Promise<TModel>;
