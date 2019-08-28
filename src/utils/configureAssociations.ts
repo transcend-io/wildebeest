@@ -25,11 +25,12 @@ export function setAs<
 >(
   { modelName, ...options }: TOpts,
   name: string,
+  caseTransform = (x: string): string => x,
 ): Requirize<TOpts, 'modelName'> {
   return {
     ...options,
     modelName: modelName || (name as TModelName),
-    as: modelName ? name : undefined,
+    as: modelName ? caseTransform(name) : undefined,
   };
 }
 
@@ -86,7 +87,7 @@ export default function configureAssociations<TModels extends ModelMap>(
     // Replace CASCADE_HOOKS and tableName
     hasMany: apply(hasMany, (options, associationName) =>
       typeof options === 'object'
-        ? setAs(options, associationName)
+        ? setAs(options, associationName, wildebeest.pluralCase)
         : { ...CASCADE_HOOKS, modelName: associationName as TModelName },
     ),
     // Replace CASCADE_HOOKS and tableName

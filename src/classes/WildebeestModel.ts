@@ -139,16 +139,16 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
       // Set the hook when it does not exist
       if (!copy[name]) {
         copy[name] = hook;
+      } else {
+        // Merge the hooks
+        const oldHook = copy[name];
+        copy[name] = async (...args: any[]) => {
+          // Call the old hook
+          await Promise.resolve(oldHook(...args));
+          // Call the new hook
+          await Promise.resolve(hook(...args));
+        };
       }
-
-      // Merge the hooks
-      const oldHook = copy[name];
-      copy[name] = async (...args: any[]) => {
-        // Call the old hook
-        await Promise.resolve(oldHook(...args));
-        // Call the new hook
-        await Promise.resolve(hook(...args));
-      };
     });
 
     return copy;

@@ -119,4 +119,5 @@ export const LOG_SKIPS = [
   'File:  does not match pattern:',
   'File: does not match pattern:',
   'File: index.js does not match pattern:',
+  '.map does not match pattern:',
 ];
