@@ -6,5 +6,6 @@
         "setuptools",
         "symlinks",
         "unnested"
-    ]
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib"
 }
