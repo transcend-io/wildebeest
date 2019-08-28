@@ -408,7 +408,7 @@ export default class Wildebeest<TModels extends ModelMap> {
     const hasMigrations = await Migration.count().then((cnt) => cnt > 0);
     if (!hasMigrations) {
       await Migration.execute({
-        migrations: [this.lookupMigration[1].fileName],
+        migrations: [this.lookupMigration[this.bottomTest].fileName],
         method: 'up',
       });
     }
