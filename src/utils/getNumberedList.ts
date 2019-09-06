@@ -44,7 +44,9 @@ export function verifyNumberedFiles(files: string[], bottom = 1): number {
     .forEach((num, ind) => {
       if (parseInt(num, 10) !== ind + bottom) {
         console.log(parseInt(num, 10), ind + 1);
-        throw new Error(`Migration file naming convention wrong at ${ind}`);
+        throw new Error(
+          `Migration file naming convention wrong at ${ind + bottom}`,
+        );
       }
     });
 
