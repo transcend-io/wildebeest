@@ -62,7 +62,7 @@ export default function createQueryMaker(
         ...transactionOptions,
       })
       .then((results) => {
-        const casted = results as T;
+        const casted = (results as any) as T;
         return casted;
       });
 }
