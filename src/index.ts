@@ -31,6 +31,7 @@ export const {
   createAssociationApply,
   createAssociationApplyValue,
   createAttributes,
+  escapeJson,
 } = utils;
 export {
   DataTypes,
