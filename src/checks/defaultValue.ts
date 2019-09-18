@@ -59,7 +59,10 @@ export default async function DefaultValue<TModels extends ModelMap>(
     expectedDefault = `'${expectedDefault}'::${enumName}`;
     // If a string and not an enum
   } else if (typeof expectedDefault === 'string') {
-    expectedDefault = `'${expectedDefault}'::character varying`;
+    expectedDefault =
+      definition.type.constructor.name === 'TEXT'
+        ? `'${expectedDefault}'::text`
+        : `'${expectedDefault}'::character varying`;
     // If an object in jsonb, stringify
   } else if (
     typeof expectedDefault === 'object' &&
