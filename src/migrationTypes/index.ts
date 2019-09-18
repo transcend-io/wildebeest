@@ -16,6 +16,7 @@ export {
 } from './addUniqueConstraintIndex';
 export { default as cascadeWithParent } from './cascadeWithParent';
 export { default as changeColumn } from './changeColumn';
+export { default as changeColumnDefault } from './changeColumnDefault';
 export { default as changeEnumColumn } from './changeEnumColumn';
 export { default as changeOnDelete } from './changeOnDelete';
 export { default as custom } from './custom';
