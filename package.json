@@ -41,14 +41,17 @@
     "build:watch": "tsc --watch"
   },
   "moose": "fish",
-  "peerDependencies": {},
+  "peerDependencies": {
+    "sequelize": "^5.18.4"
+  },
   "dependencies": {
+    "@transcend-io/wildebeest": "^2.4.4",
     "aws-sdk": "^2.533.0",
     "change-case": "^3.1.0",
     "express": "^4.17.1",
+    "global": "^4.4.0",
     "lodash": "^4.17.15",
     "pluralize": "^8.0.0",
-    "sequelize": "^5.18.4",
     "umzug": "^2.2.0"
   },
   "devDependencies": {
