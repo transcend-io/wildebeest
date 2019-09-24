@@ -26,6 +26,7 @@ export { default as dropTable } from './dropTable';
 export { default as init } from './init';
 export { default as makeColumnAllowNull } from './makeColumnAllowNull';
 export { default as makeColumnNonNull } from './makeColumnNonNull';
+export { default as makeColumnNotUnique } from './makeColumnNotUnique';
 export { default as makeColumnUnique } from './makeColumnUnique';
 export { default as removeColumns } from './removeColumns';
 export { default as removeEnumValues } from './removeEnumValues';
