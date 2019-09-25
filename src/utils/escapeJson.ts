@@ -5,8 +5,8 @@
  *
  * @param obj - The object to check
  */
-export default function escapeJson(obj: {}): string {
+export default function escapeJson<T extends {}>(obj: T[] | T): string {
   return `cast('${JSON.stringify(obj)
     .split("'")
-    .join("' || CHR(39) || '")}}' as json)`;
+    .join("' || CHR(39) || '")}' as json)`;
 }
