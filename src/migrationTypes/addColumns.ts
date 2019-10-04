@@ -295,7 +295,10 @@ export async function addTableColumns<
   TModels extends ModelMap
 >(
   wildebeest: Wildebeest<TModels>,
-  options: AddTableColumnsOptions<TAttributes, TModels>,
+  options: Omit<AddTableColumnsOptions<TAttributes, TModels>, 'tableName'> & {
+    /** Single table only */
+    tableName: string;
+  },
   transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
 ): Promise<void> {
   const { queryT } = transactionOptions;
@@ -379,7 +382,10 @@ export async function removeTableColumns<
   TModels extends ModelMap
 >(
   wildebeest: Wildebeest<TModels>,
-  options: AddTableColumnsOptions<TAttributes, TModels>,
+  options: Omit<AddTableColumnsOptions<TAttributes, TModels>, 'tableName'> & {
+    /** Single table only */
+    tableName: string;
+  },
   transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
 ): Promise<void> {
   const { queryT } = transactionOptions;
