@@ -34,7 +34,7 @@ export type AddTableColumnsOptions<
   TModels extends ModelMap
 > = {
   /** The name of the table */
-  tableName: string;
+  tableName: string | string[];
   /** Function that returns column definition where key is column name and value is column definition */
   getColumns: DefineColumns<TModels, TAttributes>;
   /** The foreign key constraints. When a string, it refers to the name of the column and table is calculated by pascalCase(removeId(columnName)) */
