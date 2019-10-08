@@ -41,12 +41,12 @@
     "build:watch": "tsc --watch"
   },
   "dependencies": {
-    "aws-sdk": "^2.544.0",
+    "aws-sdk": "^2.545.0",
     "change-case": "^3.1.0",
     "express": "^4.17.1",
     "lodash": "^4.17.15",
     "pluralize": "^8.0.0",
-    "sequelize": "^5.19.0",
+    "sequelize": "^5.19.4",
     "umzug": "^2.2.0"
   },
   "devDependencies": {
