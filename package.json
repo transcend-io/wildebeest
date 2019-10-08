@@ -42,13 +42,12 @@
   },
   "moose": "fish",
   "peerDependencies": {
-    "sequelize": "^5.18.4"
+    "sequelize": "^5.19.0"
   },
   "dependencies": {
     "aws-sdk": "^2.544.0",
     "change-case": "^3.1.0",
     "express": "^4.17.1",
-    "global": "^4.4.0",
     "lodash": "^4.17.15",
     "pluralize": "^8.0.0",
     "umzug": "^2.2.0"
