@@ -20,6 +20,11 @@ import { pascalCase } from '@wildebeest/utils';
 import { AnyModel } from './types';
 
 /**
+ * True if NODE_ENV=test
+ */
+export const { LOG_WHERE_ERR_VERBOSELY = false } = process.env;
+
+/**
  * A db model prototype function. This is a function made available to a row on the db table
  */
 export type PrototypeFunction = (...args: any[]) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -147,7 +152,12 @@ export default (
       ([item]: TInstance[]) => {
         // If no item found, throw an error
         if (!item) {
-          throwClientError(`${pascalAssociation} ${errorMessage}`);
+          const contents = !LOG_WHERE_ERR_VERBOSELY
+            ? ''
+            : `where: ${JSON.stringify(
+                findOptions ? findOptions.where || {} : {},
+              )}`;
+          throwClientError(`${pascalAssociation} ${errorMessage}${contents}`);
           throw new Error(
             `DID NOT THROW CLIENT ERROR WHEN NO MODEL FOUND FOR s${pascalAssociation} ${errorMessage}`,
           );
