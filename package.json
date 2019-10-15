@@ -1,6 +1,6 @@
 {
   "name": "@transcend-io/wildebeest",
-  "version": "2.4.11",
+  "version": "2.4.12",
   "description": "Type-safe sequelize with a simplified migration framework",
   "main": "build/src/index.js",
   "homepage": "https://github.com/transcend-io/wildebeest#readme",

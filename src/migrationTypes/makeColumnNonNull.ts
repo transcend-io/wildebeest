@@ -77,6 +77,23 @@ export default function makeColumnNonNull<
               );
             },
           );
+
+          // TODO temp workaround since above does not work????
+          const stillNulls = await queryT.select(
+            `SELECT * FROM "${tableName}" WHERE "${columnName}" IS NULL`,
+          );
+          await stillNulls.map(async (row) =>
+            queryT.raw(
+              `
+            UPDATE "${tableName}"
+            SET "${columnName}"='${await Promise.resolve(
+                getRowDefault(row, transactionOptions, wildebeest.db),
+              )}'
+            WHERE "id"='${row.id}';
+          `,
+            ),
+          );
+          // TODO
         }
 
         // Drop null rows
