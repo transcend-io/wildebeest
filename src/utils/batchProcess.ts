@@ -84,7 +84,7 @@ export default async function batchProcess<
     processed += rows.length;
 
     // Update
-    offset += 1000;
+    offset += limit;
     remaining = rows.length === limit;
 
     // Log when the processing takes a long time
