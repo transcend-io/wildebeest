@@ -28,18 +28,29 @@ export type DropTableOptions<
 /**
  * Options for creating a new table
  */
-export type CreateTableOptions<
+export type CreateTablesOptions<
   TAttributes extends Attributes,
   TModels extends ModelMap
 > = {
-  /** The name of the table to create */
-  tableName: string;
+  /** The name(s) of the table to create */
+  tableName: string | string[];
   /** A function that returns the column definitions for the new table */
   getColumns: DefineColumns<TModels, TAttributes>;
   /** The columns that should get cascade constraints */
   constraints?: RawConstraint[];
   /** When true, the columns id, createdAt, and updatedAt will not be added in addition to columns from `getColumns` */
   noDefaults?: boolean;
+};
+
+/**
+ * Options for creating a new table
+ */
+export type CreateTableOptions<
+  TAttributes extends Attributes,
+  TModels extends ModelMap
+> = Omit<CreateTablesOptions<TAttributes, TModels>, 'tableName'> & {
+  /** The name of the table to create */
+  tableName: string;
 };
 
 /**
@@ -153,7 +164,7 @@ export default function createTable<
   TAttributes extends Attributes,
   TModels extends ModelMap
 >(
-  options: CreateTableOptions<TAttributes, TModels>,
+  options: CreateTablesOptions<TAttributes, TModels>,
 ): MigrationDefinition<TModels> {
   const {
     tableName,
@@ -169,34 +180,44 @@ export default function createTable<
     db: WildebeestDb<TModels>,
   ): Attributes => ({ ...defaultAttributes, ...getColumns(db) });
 
+  const tableList = Array.isArray(tableName) ? tableName : [tableName];
+
   return {
     // Create a new table
     up: async (wildebeest, withTransaction) =>
       withTransaction(async (transactionOptions) =>
-        createNewTable(
-          wildebeest,
-          {
-            tableName,
-            getColumns: getAllColumns(
-              noDefaults ? {} : wildebeest.defaultAttributes,
+        Promise.all(
+          tableList.map((table) =>
+            createNewTable(
+              wildebeest,
+              {
+                tableName: table,
+                getColumns: getAllColumns(
+                  noDefaults ? {} : wildebeest.defaultAttributes,
+                ),
+                constraints,
+              },
+              transactionOptions,
             ),
-            constraints,
-          },
-          transactionOptions,
+          ),
         ),
       ),
     // Drop the table
     down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
-        dropTable(
-          wildebeest,
-          {
-            tableName,
-            getColumns: getAllColumns(
-              noDefaults ? {} : wildebeest.defaultAttributes,
+        Promise.all(
+          tableList.map((table) =>
+            dropTable(
+              wildebeest,
+              {
+                tableName: table,
+                getColumns: getAllColumns(
+                  noDefaults ? {} : wildebeest.defaultAttributes,
+                ),
+              },
+              transactionOptions,
             ),
-          },
-          transactionOptions,
+          ),
         ),
       ),
   };
