@@ -52,7 +52,7 @@ export default async function batchProcess<
     where = '',
     attributes = '*',
     limit = 1000,
-    orderBy = '"createdAt" ASC',
+    orderBy = 'id',
   } = whereOptions;
   let offset = 0;
   let remaining = true;
