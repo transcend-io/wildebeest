@@ -52,7 +52,7 @@ export default async function batchProcess<
     where = '',
     attributes = '*',
     limit = 1000,
-    orderBy = '"createdAt" ASC',
+    orderBy = 'id',
   } = whereOptions;
   let offset = 0;
   let remaining = true;
@@ -84,7 +84,7 @@ export default async function batchProcess<
     processed += rows.length;
 
     // Update
-    offset += 1000;
+    offset += limit;
     remaining = rows.length === limit;
 
     // Log when the processing takes a long time
