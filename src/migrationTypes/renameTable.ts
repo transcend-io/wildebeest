@@ -1,13 +1,11 @@
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
-import { IndexType } from '@wildebeest/enums';
 import {
-  IndexConfig,
   MigrationDefinition,
   MigrationTransactionOptions,
   ModelMap,
 } from '@wildebeest/types';
-import { listConstraintNames } from '@wildebeest/utils';
+import { listConstraintNames, listIndexNames } from '@wildebeest/utils';
 
 // local
 import { changeConstraintName } from './renameConstraint';
@@ -21,8 +19,6 @@ export type RenameTableOptions = {
   oldName: string;
   /** The new name of the table */
   newName: string;
-  /** The constraints to rename */
-  constraints?: string[];
   /** Rename all constraints as well */
   renameConstraints?: boolean;
   /** Drop the rows before altering the table */
@@ -38,17 +34,11 @@ export type RenameTableOptions = {
  * @returns The rename table promise
  */
 export async function changeTableName<TModels extends ModelMap>(
-  { db, namingConventions }: Wildebeest<TModels>,
+  { db }: Wildebeest<TModels>,
   options: RenameTableOptions,
   transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
-  const {
-    oldName,
-    newName,
-    constraints = [],
-    renameConstraints = false,
-    drop = false,
-  } = options;
+  const { oldName, newName, renameConstraints = false, drop = false } = options;
   const { queryT } = transactionOptions;
   // Raw query interface
   const { queryInterface } = db;
@@ -58,48 +48,31 @@ export async function changeTableName<TModels extends ModelMap>(
     await queryT.delete(oldName, {});
   }
 
-  // Generate the default index name for a table/column pair
-  const defaultColumnIndex = (
-    tableName: string,
-    columnName: string,
-  ): IndexConfig => {
-    // Determine the default name
-    const name = namingConventions.columnIndex(tableName, columnName);
-
-    // Determine the configuration
-    return columnName === 'id'
-      ? { type: IndexType.PrimaryKey, name }
-      : { type: IndexType.Unique, name };
-  };
-
   // Rename the table
   await queryInterface.renameTable(oldName, newName, transactionOptions);
 
-  // Rename the specified constraints
-  await Promise.all(
-    constraints.map((columnName) => {
-      // Create the index configuration
-      const oldConfig = defaultColumnIndex(oldName, columnName);
-      const newConfig = defaultColumnIndex(newName, columnName);
-
-      // Remove the old constraint and add new
-      return changeConstraintName(
-        {
-          newName: newConfig.name,
-          oldName: oldConfig.name,
-          tableName: newName,
-        },
-        transactionOptions,
-      );
-    }),
-  );
-
   // Rename all constraints that have the table name in the constraint name
   if (renameConstraints) {
-    //  Determine the indexes
-    const indexes = await listConstraintNames(db, newName, transactionOptions);
+    const constraints = await listConstraintNames(
+      db,
+      newName,
+      transactionOptions,
+    );
+    await Promise.all(
+      constraints.map((constraintNAme) =>
+        changeConstraintName(
+          {
+            oldName: constraintNAme,
+            newName: constraintNAme.replace(`${oldName}_`, `${newName}_`),
+            tableName: newName,
+          },
+          transactionOptions,
+        ),
+      ),
+    );
 
-    // Find and update the index names that contain the old name
+    //  Determine the indexes
+    const indexes = await listIndexNames(db, newName, transactionOptions);
     await Promise.all(
       indexes
         .filter((indexName) => indexName.startsWith(`${oldName}_`))
