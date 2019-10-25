@@ -1,9 +1,12 @@
 {
     "cSpell.words": [
+        "connamespace",
+        "conrelid",
         "executables",
         "jsonb",
         "koalaman",
         "mixins",
+        "nspname",
         "setuptools",
         "symlinks",
         "unnested"

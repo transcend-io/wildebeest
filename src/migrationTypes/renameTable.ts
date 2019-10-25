@@ -7,7 +7,7 @@ import {
   MigrationTransactionOptions,
   ModelMap,
 } from '@wildebeest/types';
-import { listIndexNames } from '@wildebeest/utils';
+import { listConstraintNames } from '@wildebeest/utils';
 
 // local
 import { changeConstraintName } from './renameConstraint';
@@ -97,7 +97,7 @@ export async function changeTableName<TModels extends ModelMap>(
   // Rename all constraints that have the table name in the constraint name
   if (renameConstraints) {
     //  Determine the indexes
-    const indexes = await listIndexNames(db, newName, transactionOptions);
+    const indexes = await listConstraintNames(db, newName, transactionOptions);
 
     // Find and update the index names that contain the old name
     await Promise.all(

@@ -49,6 +49,7 @@ export { default as inferTableReference } from './inferTableReference';
 export { default as invert } from './invert';
 export { default as isEnum } from './isEnum';
 export { default as listColumns } from './listColumns';
+export { default as listConstraintNames } from './listConstraintNames';
 export { default as listEnumAttributes } from './listEnumAttributes';
 export { default as listIndexNames } from './listIndexNames';
 export { default as logSection } from './logSection';
