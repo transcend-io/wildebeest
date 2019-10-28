@@ -43,7 +43,7 @@ export default async function batchProcess<
   { db, logger }: Wildebeest<TModels>,
   tableName: string,
   whereOptions: WhereOptions = {},
-  processRow: (row: T) => void,
+  processRow: (row: T) => void | Promise<void>,
   transactionOptions?: MigrationTransactionOptions<TModels, TAttributes>,
   logThreshold: number = ONE_MINUTE / 3,
 ): Promise<number> {
