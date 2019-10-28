@@ -3,15 +3,23 @@ import { S3 } from 'aws-sdk';
 
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
-import WildebeestDb from '@wildebeest/classes/WildebeestDb';
-import { Attributes, MigrationDefinition, ModelMap } from '@wildebeest/types';
+import {
+  Attributes,
+  MigrationDefinition,
+  MigrationTransactionOptions,
+  ModelMap,
+} from '@wildebeest/types';
 import batchProcess from '@wildebeest/utils/batchProcess';
 import renameS3File from '@wildebeest/utils/renameS3File';
 
 /**
  * Options for creating a migration that will rename s3 files
  */
-export type RenameS3FileOptions<T, TModels extends ModelMap> = {
+export type RenameS3FileOptions<
+  T,
+  TModels extends ModelMap,
+  TAttributes extends Attributes
+> = {
   /** The name of the file table to rename files for */
   tableName: string;
   /** The name of the bucket to rename files in */
@@ -19,9 +27,15 @@ export type RenameS3FileOptions<T, TModels extends ModelMap> = {
   /** The attributes to get from the db */
   attributes?: string;
   /** Function to get the old file key */
-  getOldKey: (file: T, db: WildebeestDb<TModels>) => string;
+  getOldKey: (
+    file: T,
+    transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
+  ) => string;
   /** Function to get the new file key */
-  getNewKey: (file: T, db: WildebeestDb<TModels>) => string;
+  getNewKey: (
+    file: T,
+    transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
+  ) => string;
   /** When true, remove files that did not have an associated s3 file */
   remove?: boolean;
   /** Provide a connection to s3, else the default will be used */
@@ -41,11 +55,16 @@ export type File = {
 /**
  * Change the name of a file on s3
  */
-async function moveFile<T, TModels extends ModelMap>(
+async function moveFile<
+  T,
+  TModels extends ModelMap,
+  TAttributes extends Attributes
+>(
   wildebeest: Wildebeest<TModels>,
   s3: S3,
   file: T & File,
-  options: RenameS3FileOptions<T, TModels>,
+  options: RenameS3FileOptions<T, TModels, TAttributes>,
+  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
 ): Promise<{
   /** Number of renamed */
   renamed?: number;
@@ -55,8 +74,8 @@ async function moveFile<T, TModels extends ModelMap>(
   const { remove, Bucket, tableName, getOldKey, getNewKey } = options;
 
   // Get the old key and the new key
-  const oldKey = await Promise.resolve(getOldKey(file, wildebeest.db));
-  const newKey = await Promise.resolve(getNewKey(file, wildebeest.db));
+  const oldKey = await Promise.resolve(getOldKey(file, transactionOptions));
+  const newKey = await Promise.resolve(getNewKey(file, transactionOptions));
 
   try {
     // Check that the file exists
@@ -93,7 +112,8 @@ async function renameFiles<
   TAttributes extends Attributes
 >(
   wildebeest: Wildebeest<TModels>,
-  options: RenameS3FileOptions<T, TModels>,
+  options: RenameS3FileOptions<T, TModels, TAttributes>,
+  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
 ): Promise<void> {
   const { tableName, s3, attributes = '' } = options;
 
@@ -114,12 +134,11 @@ async function renameFiles<
     tableName,
     { attributes: useAttributes },
     async (file) => {
-      const { errors = 0, renamed = 0 } = await moveFile<T & File, TModels>(
-        wildebeest,
-        s3 || wildebeest.s3,
-        file,
-        options,
-      );
+      const { errors = 0, renamed = 0 } = await moveFile<
+        T & File,
+        TModels,
+        TAttributes
+      >(wildebeest, s3 || wildebeest.s3, file, options, transactionOptions);
       renameCount += renamed;
       errorCount += errors;
     },
@@ -141,22 +160,38 @@ async function renameFiles<
  * @param options - The options for renaming s3 files belong to a table
  * @returns The rename s3 files migrator
  */
-export default function renameS3Files<T, TModels extends ModelMap>(
-  options: RenameS3FileOptions<T, TModels>,
+export default function renameS3Files<
+  T,
+  TModels extends ModelMap,
+  TAttributes extends Attributes
+>(
+  options: RenameS3FileOptions<T, TModels, TAttributes>,
 ): MigrationDefinition<TModels> {
   const { getOldKey, getNewKey, ...rest } = options;
   return {
-    up: (wildebeest) =>
-      renameFiles(wildebeest, {
-        getOldKey,
-        getNewKey,
-        ...rest,
-      }),
-    down: (wildebeest) =>
-      renameFiles(wildebeest, {
-        getNewKey: getOldKey,
-        getOldKey: getNewKey,
-        ...rest,
-      }),
+    up: async (wildebeest, withTransaction) =>
+      withTransaction((transactionOptions) =>
+        renameFiles(
+          wildebeest,
+          {
+            getOldKey,
+            getNewKey,
+            ...rest,
+          },
+          transactionOptions,
+        ),
+      ),
+    down: async (wildebeest, withTransaction) =>
+      withTransaction((transactionOptions) =>
+        renameFiles(
+          wildebeest,
+          {
+            getNewKey: getOldKey,
+            getOldKey: getNewKey,
+            ...rest,
+          },
+          transactionOptions,
+        ),
+      ),
   };
 }
