@@ -435,7 +435,7 @@ export type QueryHelpers<
   batchProcess: <T extends {}>(
     tableName: string,
     whereOptions: WhereOptions,
-    processRow: (row: T) => void | Promise<void>,
+    processRow: (row: T) => void,
   ) => Promise<number>;
   /** Batch update a table */
   batchUpdate: (
