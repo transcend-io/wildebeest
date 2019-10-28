@@ -30,12 +30,12 @@ export type RenameS3FileOptions<
   getOldKey: (
     file: T,
     transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
-  ) => string;
+  ) => string | Promise<string>;
   /** Function to get the new file key */
   getNewKey: (
     file: T,
     transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
-  ) => string;
+  ) => string | Promise<string>;
   /** When true, remove files that did not have an associated s3 file */
   remove?: boolean;
   /** Provide a connection to s3, else the default will be used */
