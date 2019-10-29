@@ -38,9 +38,9 @@ export async function changeConstraintName<TModels extends ModelMap>(
   // Rename the constraint
   await queryT.raw(
     `
-    ALTER TABLE "${tableName}" RENAME CONSTRAINT "${oldName}" TO "${newName}" ${
+    ALTER TABLE ${
       skipIfNotExists ? 'IF EXISTS' : ''
-    };
+    } "${tableName}" RENAME CONSTRAINT "${oldName}" TO "${newName}";
   `,
   );
 }
