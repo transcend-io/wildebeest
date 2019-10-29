@@ -65,8 +65,10 @@ export async function changeTableName<TModels extends ModelMap>(
             oldName: constraintNAme,
             newName: constraintNAme.replace(`${oldName}_`, `${newName}_`),
             tableName: newName,
+            skipIfExists: true,
           },
           transactionOptions,
+          db,
         ),
       ),
     );
