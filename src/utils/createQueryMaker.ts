@@ -112,7 +112,13 @@ export function transactionWrapper<
             queryT: qT,
             ...tOpt,
           }),
-        batchUpdate: (tableName, getRowDefaults, columnDefinitions, options) =>
+        batchUpdate: (
+          tableName,
+          getRowDefaults,
+          columnDefinitions,
+          options,
+          batchProcessOptions,
+        ) =>
           updateRows(
             wildebeest,
             tableName,
@@ -120,6 +126,7 @@ export function transactionWrapper<
             columnDefinitions,
             options,
             { queryT: qT, ...tOpt },
+            batchProcessOptions,
           ),
       };
       return runInTransaction({ queryT: qT, ...tOpt });

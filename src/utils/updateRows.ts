@@ -13,7 +13,7 @@ import {
 import getKeys from '@wildebeest/utils/getKeys';
 
 // local
-import batchProcess from './batchProcess';
+import batchProcess, { WhereOptions } from './batchProcess';
 
 /**
  * Take the attribute definitions and extract out the typings that should be assigned to the db model
@@ -88,6 +88,10 @@ export default async function updateRows<
   columnDefinitions: TAttributes,
   options: UpdateRowOptions = {},
   transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
+  batchProcessOptions: WhereOptions = {
+    attributes: '*',
+    orderBy: options.idName || 'id',
+  },
 ): Promise<number> {
   const { queryT } = transactionOptions;
   const { onNullValue, idName = 'id' } = options;
@@ -96,7 +100,7 @@ export default async function updateRows<
   return batchProcess<T, TModels, TAttributes>(
     wildebeest,
     tableName,
-    { attributes: '*' },
+    batchProcessOptions,
     async (row) => {
       // Get the default values to update in the table
       const defaultValues: any = await getRowDefaults(

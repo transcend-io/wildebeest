@@ -443,6 +443,7 @@ export type QueryHelpers<
     getRowDefaults: RowUpdater<TModels, TAttributes>,
     columnDefinitions: TAttributes,
     options: UpdateRowOptions,
+    batchProcessOptions?: WhereOptions,
   ) => Promise<number>;
 };
 
