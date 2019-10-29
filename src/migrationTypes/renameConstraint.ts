@@ -15,6 +15,8 @@ export type RenameConstraintOptions = {
   oldName: string;
   /** The new name of the constraint */
   newName: string;
+  /** If the oldName does not exist, simply skip this transformation (for backwards compatibility of migrations) */
+  skipIfNotExists?: boolean;
 };
 
 /**
@@ -31,12 +33,14 @@ export async function changeConstraintName<TModels extends ModelMap>(
 ): Promise<void> {
   // Raw query interface
   const { queryT } = transactionOptions;
-  const { tableName, oldName, newName } = options;
+  const { tableName, oldName, newName, skipIfNotExists } = options;
 
   // Rename the constraint
   await queryT.raw(
     `
-    ALTER TABLE "${tableName}" RENAME CONSTRAINT "${oldName}" TO "${newName}";
+    ALTER TABLE "${tableName}" RENAME CONSTRAINT "${oldName}" TO "${newName}" ${
+      skipIfNotExists ? 'IF EXISTS' : ''
+    };
   `,
   );
 }
