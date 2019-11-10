@@ -77,7 +77,6 @@ export default async function checkUniqueConstraint<TModels extends ModelMap>(
 
   // Determine if a constraint does not exist when expected
   if (isUnique && !constraintExists) {
-    console.log(definition, name);
     errors.push({
       message: `Missing expected constraint: "${uniqueConstraintName}"`,
       tableName,
