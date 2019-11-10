@@ -16,7 +16,7 @@
       "@mixins*": ["./mixins*"]
     },
     "outDir": "./build",
-    "types": ["node", "mocha", "chai"],
+    "types": ["node", "mocha"],
     "strict": true
   },
   "include": [
@@ -24,10 +24,5 @@
     "mixins/**/*"
     // "generators/**/*" TODO
   ],
-  "exclude": [
-    "node_modules",
-    "build",
-    "docs",
-    "Internal-Documentation"
-  ]
+  "exclude": ["node_modules", "build", "docs", "Internal-Documentation"]
 }
