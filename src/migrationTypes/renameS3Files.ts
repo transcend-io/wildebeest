@@ -26,6 +26,8 @@ export type RenameS3FileOptions<
   Bucket: string;
   /** The attributes to get from the db */
   attributes?: string;
+  /** Throw an error if a key cannot be found */
+  throwOnFailure?: boolean;
   /** Function to get the old file key */
   getOldKey: (
     file: T,
@@ -115,7 +117,7 @@ async function renameFiles<
   options: RenameS3FileOptions<T, TModels, TAttributes>,
   transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
 ): Promise<void> {
-  const { tableName, s3, attributes = '' } = options;
+  const { tableName, s3, attributes = '', throwOnFailure = false } = options;
 
   // Hold the counts
   let renameCount = 0;
@@ -150,6 +152,9 @@ async function renameFiles<
   }
   if (errorCount > 0) {
     wildebeest.logger.error(`Failed to find "${errorCount}" s3 files`);
+    if (throwOnFailure) {
+      throw new Error(`Failed to find "${errorCount}" s3 files`);
+    }
   }
 }
 /**

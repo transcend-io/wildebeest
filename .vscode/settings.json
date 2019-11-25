@@ -5,6 +5,7 @@
         "executables",
         "jsonb",
         "koalaman",
+        "mimetype",
         "mixins",
         "nspname",
         "setuptools",
