@@ -7,9 +7,12 @@
         "koalaman",
         "mimetype",
         "mixins",
+        "nobuild",
         "nspname",
         "setuptools",
         "symlinks",
+        "types",
+        "umzug",
         "unnested"
     ],
     "typescript.tsdk": "node_modules/typescript/lib"
