@@ -1,17 +1,12 @@
-/**
- *
- * ## Add Index Migration Generator
- * Add a new index to a table
- *
- * @module addIndex
- */
-
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
-// local
-import * as prompts from './prompts';
+// commons
+import { IndexMethod } from '@wildebeest/types';
 
+/**
+ * Add a new index to a table
+ */
 export default {
   configure: ({ columns, modelContainer, model }) => ({
     name: `add-index-${columns.map(({ columnName }) => columnName).join('-')}`,
@@ -21,6 +16,13 @@ export default {
     )} fields: ${columns.map(({ columnName }) => columnName).join(', ')}.`,
   }),
   description: 'Add a new index to a table',
-  prompts,
+  prompts: {
+    method: {
+      default: IndexMethod.BTree,
+      message: 'What method of index?',
+      source: () => Object.values(IndexMethod),
+      type: 'autocomplete',
+    },
+  },
   type: 'tableColumnsMigration',
 };

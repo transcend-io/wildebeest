@@ -1,14 +1,9 @@
-/**
- *
- * ## Add Columns Migration Generator
- * Add columns to a table
- *
- * @module addColumns
- */
-
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
+/**
+ * Add columns to a table
+ */
 export default {
   configure: ({ modelTableName, columns, modelContainer, model }) => ({
     name: `add-columns-${modelTableName}-${columns

@@ -58,8 +58,6 @@ export async function hasIndex<TModels extends ModelMap>(
 /**
  * Check that db model indexes are setup properly
  *
- * @memberof module:checks
- *
  * @param wildebeest - The wildebeest configuration
  * @param model - The database model definition to verify
  * @returns Any errors related to db indexes
@@ -89,9 +87,9 @@ export default async function checkIndexes<TModels extends ModelMap>(
       .slice(0, MAX_CONSTRAINT_NAME),
   );
   Object.keys(attributes).forEach((columnName) => {
-    const column = attributes[columnName] as (
+    const column = attributes[columnName] as
       | string
-      | ModelAttributeColumnOptions);
+      | ModelAttributeColumnOptions;
     const rawColumn = rawAttributes[columnName];
     if (typeof column === 'object' && column.primaryKey) {
       expectedIndexes.push(namingConventions.primaryKey(tableName));

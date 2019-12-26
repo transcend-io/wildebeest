@@ -1,9 +1,5 @@
 /**
- *
- * ## Wildebeest Db
  * A modified sequelize database class with helper functions useful to wildebeest
- *
- * @module WildebeestDb
  */
 
 // external modules

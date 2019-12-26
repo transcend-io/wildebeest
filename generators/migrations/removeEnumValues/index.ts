@@ -1,11 +1,6 @@
 /**
- *
- * ## Remove Enum Values Migration Generator
  * Remove values from an existing enum
- *
- * @module removeEnumValues
  */
-
 export default {
   configure: ({ enumName, attributes }) => ({
     name: `remove-enum-values-from-${enumName}`,

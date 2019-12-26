@@ -1,12 +1,4 @@
 /**
- *
- * ## TableColumnsMigration Regexs
- * Regular expressions for the table columns migration migrationType
- *
- * @module tableColumnsMigration/regexs
- */
-
-/**
  * Detect if an attribute definition has a validator
  */
 export const ATTRIBUTE_VALIDATOR_REGEX = /validate: ([A-Z_].+?),/;

@@ -1,14 +1,9 @@
-/**
- *
- * ## Drop Table Migration Generator
- * Drop one of the tables
- *
- * @module dropTable
- */
-
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
+/**
+ * Drop one of the tables
+ */
 export default {
   configure: ({ modelTableName, modelContainer, model }) => ({
     name: `drop-table-${modelTableName}`,

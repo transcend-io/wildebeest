@@ -1,9 +1,5 @@
 /**
- *
- * ## Sync Checks
  * Different tests that can be performed to check if sequelize definitions are in sync with the postgres db.
- *
- * @module checks
  */
 
 // local

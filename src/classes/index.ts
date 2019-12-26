@@ -1,9 +1,5 @@
 /**
- *
- * ## Wildebeest Class Definitions
  * Class definitions for wildebeest
- *
- * @module classes
  */
 
 // local

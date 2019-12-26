@@ -43,8 +43,6 @@ export async function changeDefaultValue<TModels extends ModelMap>(
 /**
  * Change default of column
  *
- * @memberof module:migrationTypes
- *
  * @param options - Options for changing the default
  * @returns The migrator
  */

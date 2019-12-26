@@ -119,8 +119,6 @@ export async function removeValuesFromEnum<TModels extends ModelMap>(
 /**
  * Add values to an existing enum
  *
- * @memberof module:migrationTypes
- *
  * @param options - Options for adding attributes from the enum
  * @returns The add enum values migrator
  */

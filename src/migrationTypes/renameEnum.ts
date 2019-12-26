@@ -41,8 +41,6 @@ export async function changeEnumName<TModels extends ModelMap>(
 /**
  * Rename an enum definition
  *
- * @memberof module:migrationTypes
- *
  * @param options - The change enum options
  * @returns The rename enum migrator
  */

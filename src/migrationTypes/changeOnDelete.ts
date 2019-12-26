@@ -67,8 +67,6 @@ export async function changeConstraintOnDelete<TModels extends ModelMap>(
 /**
  * Change the onDelete status for a column
  *
- * @memberof module:migrationTypes
- *
  * @param options - The change on delete options
  * @returns he change on delete migrator
  */

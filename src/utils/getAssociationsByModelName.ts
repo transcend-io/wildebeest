@@ -18,8 +18,6 @@ export type AssociationWithoutBelongsToMany<TModelNames extends string> =
 /**
  * Get the association definitions for a given model name
  *
- * @memberof module:utils
- *
  * @param modelName - The name of the model to check for
  * @param associations - The association lookup to check for model name in
  * @returns The keys of the object preserving type

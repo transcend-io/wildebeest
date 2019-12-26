@@ -1,11 +1,7 @@
 /**
- *
- * ## Wildebeest Mixing Type Definitions
  * Type definitions used to define the type for dynamically injected sequelize prototypes
  *
  * TODO options undefined handling
- *
- * @module wildebeest/types
  */
 
 // external modules

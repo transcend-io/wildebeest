@@ -1,14 +1,9 @@
-/**
- *
- * ## Remove Unique Constraint Index Migration Generator
- * Remove a unique constrain across multiple columns on up, and add it back on down
- *
- * @module removeUniqueConstraintIndex
- */
-
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
+/**
+ * Remove a unique constrain across multiple columns on up, and add it back on down
+ */
 export default {
   configure: ({ columns, modelContainer, model }) => ({
     name: `remove-unique-constraint-index-${columns

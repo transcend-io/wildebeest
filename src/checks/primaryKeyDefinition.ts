@@ -58,8 +58,6 @@ export async function getTablePrimaryKey<TModels extends ModelMap>(
 /**
  * Ensure that a primary key constraint is setup properly
  *
- * @memberof module:checks
- *
  * @param db - The db to check against
  * @param tableName - The name of the table
  * @param name - The name of the expected primary key

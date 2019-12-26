@@ -1,11 +1,3 @@
-/**
- *
- * ## Migration Types
- * Types of migration generators
- *
- * @module migrationTypes
- */
-
 // local
 import alterEnum from './alterEnum';
 import changeEnumAttributes from './changeEnumAttributes';
@@ -17,6 +9,9 @@ import tableMigration from './tableMigration';
 import tablesColumnMigration from './tablesColumnMigration';
 import tablesMigration from './tablesMigration';
 
+/**
+ * Types of migration generators
+ */
 export default {
   alterEnum,
   changeEnumAttributes,

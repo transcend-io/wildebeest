@@ -1,11 +1,6 @@
 /**
- *
- * ## Add Enum Values Migration Generator
  * Add values to an existing enum
- *
- * @module addEnumValues
  */
-
 export default {
   configure: ({ attributes, enumName }) => ({
     name: `add-enum-values-to-${enumName}`,

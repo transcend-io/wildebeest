@@ -418,8 +418,6 @@ export async function removeTableColumns<
 /**
  * Create a migration that adds multiple columns on upn and removes them on down
  *
- * @memberof module:migrationTypes
- *
  * @param options - Options for adding new columns to a table
  * @returns The add columns migrator
  */

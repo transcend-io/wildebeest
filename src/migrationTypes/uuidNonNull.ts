@@ -19,8 +19,6 @@ export type UUIDNonNullOptions = {
 /**
  * Make a uuid column non null
  *
- * @memberof module:migrationTypes
- *
  * @param options - Options for making the uuid column non-null
  * @returns The uuid non null migrator
  */

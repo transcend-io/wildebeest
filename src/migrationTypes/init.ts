@@ -15,8 +15,6 @@ export type InitMigrationOptions = {
 /**
  * The initial migration to begin all migrations
  *
- * @memberof module:migrationTypes
- *
  * @param options - Init migration options
  * @returns The init migrator
  */

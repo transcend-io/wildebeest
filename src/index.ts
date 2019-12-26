@@ -1,9 +1,5 @@
 /**
- *
- * ## DB Migrations
  * Migration files for migrating the db using Sequelize and Umzug
- *
- * @module wildebeest
  */
 
 // external modules

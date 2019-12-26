@@ -1,14 +1,9 @@
-/**
- *
- * ## Make Column Allow Null Migration Generator
- * Make a column allow null values
- *
- * @module makeColumnAllowNull
- */
-
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
+/**
+ * Make a column allow null values
+ */
 export default {
   configure: ({ modelTableName, columnName, modelContainer, model }) => ({
     name: `make-column-allow-null-${modelTableName}-${columnName}`,

@@ -8,8 +8,6 @@ import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
 /**
  * Check if a postgres column allows null values
  *
- * @memberof module:utils
- *
  * @param db - The db instance to use
  * @param tableName - The name of the table to check
  * @param columnName - The name of the column

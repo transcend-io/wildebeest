@@ -1,11 +1,3 @@
-/**
- *
- * ## TableColumnsMigration Lib
- * Helper functions for the table columns migration migrationType.
- *
- * @module tableColumnsMigration/lib
- */
-
 // migrationTypes
 import { SEQUELIZE_ENUM_NAME_REGEX } from '../changeEnumAttributes/regexs';
 

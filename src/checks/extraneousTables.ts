@@ -21,8 +21,6 @@ export type TableDefinition = {
 /**
  * Ensure the default value of a sequelize definition matches the default value in postgres
  *
- * @memberof module:checks
- *
  * @param wildebeest - The wildebeest db to operate on
  * @param tableNames - The tables names that should exist
  * @returns Any errors related to extra tables.

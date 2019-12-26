@@ -12,8 +12,6 @@ import isEnum from '@wildebeest/utils/isEnum';
 /**
  * Ensure the default value of a sequelize definition matches the default value in postgres
  *
- * @memberof module:checks
- *
  * @param model - The model to check
  * @param name - The name of the column
  * @param definition - The attribute definition

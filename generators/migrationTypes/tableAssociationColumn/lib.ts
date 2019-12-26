@@ -1,11 +1,3 @@
-/**
- *
- * ## TableAssociationColumn Lib
- * Helper functions for the table association column migrationType.
- *
- * @module tableAssociationColumn/lib
- */
-
 // commons
 import listAssociations from '@commons/utils/listAssociations';
 

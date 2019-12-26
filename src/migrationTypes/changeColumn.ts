@@ -128,8 +128,6 @@ export async function changeColumnDefinition<TModels extends ModelMap>(
 /**
  * Change the definition of a column
  *
- * @memberof module:migrationTypes
- *
  * @param options - Options for changing a column in a table(s)
  * @returns The change column migrator
  */

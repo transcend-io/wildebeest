@@ -11,8 +11,6 @@ import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 /**
  * Check that the allowNull constraint is setup properly on the column
  *
- * @memberof module:checks
- *
  * @param name - The name of the attribute
  * @param definition - The attribute definition
  * @returns Any errors with the allow null constraint

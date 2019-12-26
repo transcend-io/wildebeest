@@ -1,14 +1,9 @@
-/**
- *
- * ## Remove Non Null Column Migration Generator
- * Remove a column that is not allowed to be null, and when down is run, allow the column to be null
- *
- * @module removeNonNullColumn
- */
-
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
+/**
+ * Remove a column that is not allowed to be null, and when down is run, allow the column to be null
+ */
 export default {
   configure: ({ modelTableName, columnName, modelContainer, model }) => ({
     name: `remove-non-null-column-${modelTableName}-${columnName}`,

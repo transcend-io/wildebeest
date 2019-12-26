@@ -1,14 +1,9 @@
+// global
+import { NOT_EMPTY_REGEX } from '@generators/regexs';
+
 /**
- *
- * ## Rename Enum Value Migration Generator
  * Rename an enum value in place
- *
- * @module rename-enum-value
  */
-
-// local
-import * as prompts from './prompts';
-
 export default {
   configure: ({ enumName, oldValue, newValue }) => ({
     name: `rename-enum-${enumName}-value-${oldValue}-to-${newValue}`,
@@ -16,5 +11,18 @@ export default {
   }),
   description: 'Rename an enum value in place',
   type: 'alterEnum',
-  prompts,
+  prompts: {
+    oldValue: {
+      message: 'What is the old value?',
+      type: 'input',
+      validate: (value) =>
+        NOT_EMPTY_REGEX.test(value) ? true : 'oldValue is required',
+    },
+    newValue: {
+      message: 'What is the new value?',
+      type: 'input',
+      validate: (value) =>
+        NOT_EMPTY_REGEX.test(value) ? true : 'newValue is required',
+    },
+  },
 };

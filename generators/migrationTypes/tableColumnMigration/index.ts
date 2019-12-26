@@ -1,17 +1,21 @@
+// local
+import { listAllAttributes } from './lib';
+
 /**
- *
- * ## TableColumnMigration Migration Type
  * A higher order generator that creates a Table column migration migrator.
  *
  * Migrate a table column
- *
- * @module tableColumnMigration
  */
-
-// local
-import * as prompts from './prompts';
-
 export default {
   parentType: 'tableMigration',
-  prompts,
+  prompts: {
+    columnName: (repo, { columnSuggestOnly = true }) => ({
+      message: `What column should be modified? ${
+        columnSuggestOnly ? '(suggestOnly)' : ''
+      }`,
+      source: ({ modelPath }) => listAllAttributes(repo, modelPath),
+      suggestOnly: columnSuggestOnly,
+      type: 'autocomplete',
+    }),
+  },
 };

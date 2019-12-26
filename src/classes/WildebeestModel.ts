@@ -1,11 +1,4 @@
 /* eslint-disable-line max-lines */
-/**
- *
- * ## Wildebeest Db Model
- * A database model defined for the wildebeest db management tooling
- *
- * @module models/Model
- */
 
 // external modules
 import * as Bluebird from 'bluebird';

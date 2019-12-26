@@ -1,10 +1,6 @@
 /* eslint-disable max-lines */
 /**
- *
- * ## Wildebeest Class Definition
  * The main migration runner and checking class definition
- *
- * @module Wildebeest
  */
 
 // external modules

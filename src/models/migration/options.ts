@@ -1,11 +1,3 @@
-/**
- *
- * ## Migration Options
- * Db model options for the migration model.
- *
- * @module migration/options
- */
-
 // external modules
 import { ModelHooks } from 'sequelize/types/lib/hooks';
 

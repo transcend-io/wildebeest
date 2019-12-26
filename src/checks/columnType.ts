@@ -52,8 +52,6 @@ export async function getColumnType<TModels extends ModelMap>(
 /**
  * Check that the type of a column matches postgres
  *
- * @memberof module:checks
- *
  * @param db - The db to test on
  * @param tableName - The name of the table to operate on
  * @param name - The name of the column

@@ -1,9 +1,5 @@
 /**
- *
- * ## MigrationLock Model
  * A database model for a MigrationLock request.
- *
- * @module migrationLock
  */
 
 // local

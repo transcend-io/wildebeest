@@ -18,7 +18,6 @@
  *   - The `tsconfig.compilerOptions.paths` value MUST be of length 1 and end with 'src/*'.
  * - Only supports files that are compiled to .js
  *
- * @module convert_paths
  * @author awendland
  */
 

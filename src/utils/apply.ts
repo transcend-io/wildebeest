@@ -20,8 +20,6 @@ export type ApplyFunc<
  *
  * This allows one to define an object keys in an enum and then the resulting map should keep the same typing
  *
- * @memberof module:utils
- *
  * @param obj - The object to apply the function to
  * @param applyFunc - The function to apply
  * @returns The updated object

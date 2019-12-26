@@ -1,9 +1,5 @@
 /**
- *
- * ## Seed Type Definitions
  * Typescript type definitions for mixins
- *
- * @module mixins/types
  */
 
 // local

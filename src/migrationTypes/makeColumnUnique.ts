@@ -23,8 +23,6 @@ export type MakeColumnUniqueOptions = {
 /**
  * Make a column unique
  *
- * @memberof module:migrationTypes
- *
  * @param options - Options for making the table column unique
  * @returns The make column unique migrator
  */

@@ -20,8 +20,6 @@ import checkUniqueConstraint from './uniqueConstraint';
 /**
  * Check that a db model column definition defined by sequelize is matching the postgres db
  *
- * @memberof module:checks
- *
  * @param wildebeest - The wildebeest configuration
  * @param model - The model to check
  * @param name - The name of the column to check

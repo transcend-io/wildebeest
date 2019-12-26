@@ -8,8 +8,6 @@ import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
 /**
  * Get the default value that the column takes on
  *
- * @memberof module:utils
- *
  * @param db - The db to check
  * @param tableName - The name of the table to check
  * @param columnName - The name of the column

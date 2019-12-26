@@ -1,11 +1,3 @@
-/**
- *
- * ## Migrate Kinds
- * Create a db migration
- *
- * @module migrate
- */
-
 // external modules
 import difference from 'lodash/difference';
 import kebabCase from 'lodash/kebabCase';
@@ -14,7 +6,9 @@ import kebabCase from 'lodash/kebabCase';
 import logger from '@generators/logger';
 import convertToPlop from '@generators/utils/convertToPlop';
 
-// Get the generators
+/**
+ * Create a db migration
+ */
 export default {
   description: 'Run a db migration',
   getGenerators: (

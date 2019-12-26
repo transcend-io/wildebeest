@@ -34,8 +34,6 @@ export async function hasConstraint<TModels extends ModelMap>(
 /**
  * Ensure the constraint between the table column associations is valid
  *
- * @memberof module:checks
- *
  * @param wilebeest - The wildebeest configuration
  * @param tableName - The name of the table to check
  * @param name - The name of the column

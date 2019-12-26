@@ -39,8 +39,6 @@ export type MakeColumnNonNullOptions<
 /**
  * Make a column non null
  *
- * @memberof module:migrationTypes
- *
  * @param options - The table column identifiers
  * @returns The make column non null migrator
  */

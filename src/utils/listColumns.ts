@@ -18,8 +18,6 @@ export type ListedColumn = {
 /**
  * List the columns that the table currently has
  *
- * @memberof module:utils
- *
  * @returns The current table columns
  */
 export default function listColumns<TModels extends ModelMap>(

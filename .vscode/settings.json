@@ -1,19 +1,21 @@
 {
-    "cSpell.words": [
-        "connamespace",
-        "conrelid",
-        "executables",
-        "jsonb",
-        "koalaman",
-        "mimetype",
-        "mixins",
-        "nobuild",
-        "nspname",
-        "setuptools",
-        "symlinks",
-        "types",
-        "umzug",
-        "unnested"
-    ],
-    "typescript.tsdk": "node_modules/typescript/lib"
+  "cSpell.words": [
+    "connamespace",
+    "conrelid",
+    "executables",
+    "jsonb",
+    "koalaman",
+    "mimetype",
+    "mixins",
+    "nobuild",
+    "nspname",
+    "postgres",
+    "setuptools",
+    "symlinks",
+    "types",
+    "umzug",
+    "unnested"
+  ],
+  "[handlebars]": { "editor.formatOnSave": false },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

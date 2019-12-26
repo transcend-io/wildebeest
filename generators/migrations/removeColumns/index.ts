@@ -1,14 +1,9 @@
-/**
- *
- * ## Remove Columns Migration Generator
- * Remove multiple columns on up, and add them back on down
- *
- * @module removeColumns
- */
-
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
+/**
+ * Remove multiple columns on up, and add them back on down
+ */
 export default {
   configure: ({ modelTableName, columns, modelContainer, model }) => ({
     name: `remove-columns-${modelTableName}-${columns

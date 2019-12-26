@@ -25,8 +25,6 @@ export type TransactionMigrationDefinition<TModels extends ModelMap> = {
 /**
  * A helper to wrap a custom migration in a transaction
  *
- * @memberof module:migrationTypes
- *
  * @param options - The custom options
  * @returns The custom migrator
  */

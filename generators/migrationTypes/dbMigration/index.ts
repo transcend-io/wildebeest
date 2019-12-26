@@ -1,19 +1,14 @@
-/**
- *
- * ## DbMigration Generator Type
- * A higher order generator that creates a Db migration
- *
- * A database migration
- *
- * @module dbMigration
- */
-
 // commons
 import getNextNumber from '@wildebeest/utils/getNextNumber';
 
 // local
 import actions from './actions';
 
+/**
+ * A higher order generator that creates a Db migration
+ *
+ * A database migration
+ */
 export default {
   actions,
   configure: ({ location, generatorName }, repo) => ({

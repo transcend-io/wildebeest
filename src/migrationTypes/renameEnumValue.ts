@@ -71,8 +71,6 @@ export async function renameValueOfEnum<TModels extends ModelMap>(
 /**
  * Rename an existing enum value
  *
- * @memberof module:migrationTypes
- *
  * @param options - The rename enum value options
  * @returns The rename enum value migrator
  */

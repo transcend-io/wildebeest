@@ -1,11 +1,3 @@
-/**
- *
- * ## Wildebeest Enums
- * Common enums.
- *
- * @module enums
- */
-
 // global
 import mkEnum from '@wildebeest/utils/mkEnum';
 
@@ -76,4 +68,4 @@ export const OnDelete = mkEnum({
 /**
  * Overload with type of on delete
  */
-export type OnDelete = (typeof OnDelete)[keyof typeof OnDelete];
+export type OnDelete = typeof OnDelete[keyof typeof OnDelete];

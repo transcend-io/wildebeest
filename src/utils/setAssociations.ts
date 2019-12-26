@@ -8,8 +8,6 @@ import apply from './apply';
 /**
  * Setup the associations for a db model, saving the association to the class definition of the model
  *
- * @memberof module:utils
- *
  * TODO Do not set names of model associations dynamically
  *
  * @param Model - The model to set the associations for

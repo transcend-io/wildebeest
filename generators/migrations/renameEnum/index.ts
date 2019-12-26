@@ -1,17 +1,10 @@
-/**
- *
- * ## Rename Enum Migration Generator
- * Rename an enum from one value to another
- *
- * @module renameEnum
- */
-
 // global
 import linkToClass from '@generators/utils/linkToClass';
+import { NOT_EMPTY_REGEX } from '@generators/regexs';
 
-// local
-import * as prompts from './prompts';
-
+/**
+ * Rename an enum from one value to another
+ */
 export default {
   configure: ({
     oldName,
@@ -32,6 +25,13 @@ export default {
     };
   },
   description: 'Rename an enum from one value to another',
-  prompts,
+  prompts: {
+    oldName: {
+      message: 'What was the old enum name?',
+      type: 'input',
+      validate: (value) =>
+        NOT_EMPTY_REGEX.test(value) ? true : 'oldName is required',
+    },
+  },
   type: 'tableColumnMigration',
 };

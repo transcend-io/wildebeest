@@ -1,8 +1,6 @@
 /**
  * Sleep in a promise
  *
- * @memberof module:utils
- *
  * @param sleepTime - The time to sleep
  * @returns Resolves promise
  */

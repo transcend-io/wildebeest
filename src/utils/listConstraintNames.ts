@@ -16,8 +16,6 @@ export type PgConstraint = {
 /**
  * List constraints related to a table
  *
- * @memberof module:utils
- *
  * @param db - The db instance to check
  * @param tableName - The table to list constraints for
  * @returns The names of the constraints
