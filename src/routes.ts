@@ -1,9 +1,5 @@
 /**
- *
- * ## Wildebeest Routes
  * Routes for running migrations
- *
- * @module wildebeest/routes
  */
 
 // external modules

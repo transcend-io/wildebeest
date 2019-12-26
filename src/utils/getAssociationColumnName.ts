@@ -4,8 +4,6 @@ import { Association } from '@wildebeest/types';
 /**
  * Get the name of the column for a belongsTo association
  *
- * @memberof module:utils
- *
  * @param association - The association config
  * @param name - The name of the association
  * @returns The name of the column

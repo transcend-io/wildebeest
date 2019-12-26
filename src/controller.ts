@@ -1,11 +1,3 @@
-/**
- *
- * ## Migrations Controller
- * Callback handlers for migration requests (/migrate).
- *
- * @module migrations/controller
- */
-
 // external modules
 import * as express from 'express';
 
@@ -179,9 +171,7 @@ export async function renderRoutes<TModels extends ModelMap>(
   // Get the migrations to display on the page
   const displayMigrations = wildebeest.reversedMigrations
     .slice(startIndex, endIndex)
-    .map((migration) =>
-      Object.assign({}, migration, { isRun: checkIsRun(migration.num) }),
-    );
+    .map((migration) => ({ ...migration, isRun: checkIsRun(migration.num) }));
 
   // Back page
   const backPage = startIndex - MAX_MIGRATION_DISPLAY;
@@ -236,7 +226,10 @@ export async function sync<TModels extends ModelMap>(
             props,
             'checked that the db is in sync with the Sequelize definitions :) Ran',
           )(runTime)
-        : handleError(res, props)(
+        : handleError(
+            res,
+            props,
+          )(
             new Error(
               'The db is out of sync with the Sequelize definitions! Check terminal output for potential errors.',
             ),

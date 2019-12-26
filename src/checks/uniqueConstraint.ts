@@ -35,8 +35,6 @@ export async function hasUniqueConstraint<TModels extends ModelMap>(
 /**
  * Ensure a unique constraint is set properly
  *
- * @memberof module:checks
- *
  * @param model - The db model to check
  * @param name - The name of the attribute
  * @param definition - The attribute definition

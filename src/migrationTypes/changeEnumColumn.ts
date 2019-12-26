@@ -32,8 +32,6 @@ export type ChangeEnumColumnOptions = {
 /**
  * Change a column that is an enum to a new enum value
  *
- * @memberof module:migrationTypes
- *
  * @param options - Options for changing a column thats an enum
  * @returns The change enum column migrator
  */

@@ -155,8 +155,6 @@ export async function dropTable<
 /**
  * Create a migration definition that adds a new table on up, and removes the table on down
  *
- * @memberof module:migrationTypes
- *
  * @param options - Options for creating a new table
  * @returns The create table migrator
  */

@@ -18,8 +18,6 @@ import checkIndexes from './indexes';
 /**
  * Check that a db model definition in Sequelize is in sync with the actual database definition
  *
- * @memberof module:checks
- *
  * @param wildebeest - The wildebeest configuration
  * @param model - The database model definition to verify
  * @param modelName - The name of the model

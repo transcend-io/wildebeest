@@ -1,9 +1,5 @@
 /**
- *
- * ## Migration Model
  * A database model for a Migration request.
- *
- * @module migration
  */
 
 // local

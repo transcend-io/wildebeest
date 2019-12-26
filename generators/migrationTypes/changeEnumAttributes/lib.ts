@@ -1,11 +1,3 @@
-/**
- *
- * ## ChangeEnumAttributes Lib
- * Helper functions for the change enum attributes migrationType.
- *
- * @module changeEnumAttributes/lib
- */
-
 // local
 import { ENUM_ATTRIBUTE_REGEX } from './regexs';
 

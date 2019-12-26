@@ -1,11 +1,3 @@
-/**
- *
- * ## Migration Attributes
- * Db model attributes for the migration model.
- *
- * @module migration/attributes
- */
-
 // external modules
 import { DataTypes } from 'sequelize';
 

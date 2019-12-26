@@ -2,8 +2,6 @@
  * Invert an object so that the values look up the keys.
  * If the object has an array as the value, each item in the array will be inverted.
  *
- * @memberof module:utils
- *
  * @param obj - The object to invert
  * @returns The inverted object
  */

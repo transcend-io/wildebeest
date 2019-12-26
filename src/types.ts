@@ -1,12 +1,4 @@
 /* eslint-disable max-lines */
-/**
- *
- * ## Wildebeest Type Definitions
- * Type definitions
- *
- * @module wildebeest/types
- */
-
 // external modules
 import * as express from 'express';
 import * as sequelize from 'sequelize';
@@ -80,8 +72,8 @@ export type SubNotType<Base, Condition> = Pick<
  * Convert unions to intersection
  */
 export type UnionToIntersection<U> = (U extends any // eslint-disable-line @typescript-eslint/no-explicit-any
-  ? (k: U) => void
-  : never) extends ((k: infer I) => void)
+? (k: U) => void
+: never) extends (k: infer I) => void
   ? I
   : never;
 
@@ -134,11 +126,11 @@ export type AttributeToType<
   : TAttribute['type'] extends typeof sequelize.DataTypes.STRING
   ? string
   : TAttribute['type'] extends sequelize.DataTypeAbstract
-  ? (TAttribute['defaultValue'] extends boolean
-      ? boolean
-      : TAttribute['defaultValue'] extends typeof sequelize.UUIDV4
-      ? string // TODO ID<>
-      : unknown)
+  ? TAttribute['defaultValue'] extends boolean
+    ? boolean
+    : TAttribute['defaultValue'] extends typeof sequelize.UUIDV4
+    ? string // TODO ID<>
+    : unknown
   : unknown;
 
 /**

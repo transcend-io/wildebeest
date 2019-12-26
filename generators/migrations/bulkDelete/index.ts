@@ -1,20 +1,18 @@
 /**
- *
- * ## Bulk Delete Generator
  * Bulk delete table rows
- *
- * @module bulkDelete
  */
-
-// local
-import * as prompts from './prompts';
-
 export default {
   configure: ({ modelTableName, modelContainer, nameExt }) => ({
     name: `bulk-delete-${modelTableName}${nameExt ? `-${nameExt}` : ''}`,
     comment: `Bulk delete from table [${modelTableName}]{@link module:${modelContainer}}`,
   }),
   description: 'Bulk delete table rows',
-  prompts,
+  prompts: {
+    nameExt: {
+      message:
+        'Name the migration (will be appended after "bulk-delete-{{ modelTableName }}-"',
+      type: 'name',
+    },
+  },
   type: 'tableMigration',
 };

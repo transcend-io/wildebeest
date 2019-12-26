@@ -7,8 +7,6 @@ import createTable from './createTable';
 /**
  * Remove a table from the db and all associated parts
  *
- * @memberof module:migrationTypes
- *
  * @param options - Options for dropping a table
  * @returns The drop table migrator
  */

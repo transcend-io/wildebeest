@@ -1,14 +1,9 @@
-/**
- *
- * ## Make Column Unique Migration Generator
- * Make a table column unique
- *
- * @module makeColumnUnique
- */
-
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
+/**
+ * Make a table column unique
+ */
 export default {
   configure: ({ modelTableName, columnName, modelContainer, model }) => ({
     name: `make-column-unique-${modelTableName}-${columnName}`,

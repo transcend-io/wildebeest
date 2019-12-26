@@ -23,8 +23,6 @@ export type CascadeWithParentOptions = {
 /**
  * Update a column to have an on delete cascade when it's parent is cascaded
  *
- * @memberof module:migrationTypes
- *
  * @param options - The add cascade with parent migrator options
  * @returns The cascade with parent migrator
  */

@@ -160,8 +160,6 @@ async function renameFiles<
 /**
  * When the naming convention of files stored on s3 is changed, this migration type will rename the s3 files from one convention to the other,
  *
- * @memberof module:migrationTypes
- *
  * @param options - The options for renaming s3 files belong to a table
  * @returns The rename s3 files migrator
  */

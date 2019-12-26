@@ -4,8 +4,6 @@ import * as sequelize from 'sequelize';
 /**
  * Check if an attribute is an enum
  *
- * @memberof module:utils
- *
  * @param column - The column definition to check
  * @returns True if the column is an enum definition
  */

@@ -1,11 +1,3 @@
-/**
- *
- * ## Mixins Constants
- * Constants for generating mixins
- *
- * @module mixins/constants
- */
-
 // local
 import { AssociationMixins } from './types';
 

@@ -11,8 +11,6 @@ import { parseNumber } from './getNumberedList';
  * getNextNumber(['0001-my-first.ts', '0002-my-second.ts']);
  * ```
  *
- * @memberof module:utils
- *
  * @param items - The list of numbered items
  * @returns The next number in line as a string
  */

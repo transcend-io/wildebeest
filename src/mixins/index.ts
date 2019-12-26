@@ -1,10 +1,6 @@
 /* tslint:disable completed-docs */
 /**
- *
- * ## Mixins
  * Mixin prototypes to attach to each model instance in addition to the sequelize mixins
- *
- * @module mixins
  */
 
 // external modules
@@ -40,7 +36,7 @@ export type Prototypes = { [key in string]: PrototypeFunction };
 type This = any;
 
 /**
- * Get the first item matching options and throws error if no matches
+ * Mixin prototypes to attach to each model instance in addition to the sequelize mixins
  *
  * @param association - The association to create the hooks for
  * @param type - The type of association to create prototypes for
@@ -219,9 +215,9 @@ export default (
     input: AttributeInputs,
     options?: MergedHookOptions<TInstance, 'update'>,
   ): Promise<TInstance> {
-    return this[`getOne${pascalAssociation}`](findOptions).then(
-      (item: TInstance) => item.update(input, options),
-    );
+    return this[`getOne${pascalAssociation}`](
+      findOptions,
+    ).then((item: TInstance) => item.update(input, options));
   }
 
   /**
@@ -249,10 +245,10 @@ export default (
           );
           return Object.assign(created, { __wasCreated: true });
         }
-        return item.update(input, options as MergedHookOptions<
-          TInstance,
-          'update'
-        >);
+        return item.update(
+          input,
+          options as MergedHookOptions<TInstance, 'update'>,
+        );
       },
     );
   }
@@ -275,10 +271,10 @@ export default (
       if (!item) {
         return this[`create${pascalAssociation}`](input, options);
       }
-      return item.update(input, options as MergedHookOptions<
-        TInstance,
-        'update'
-      >);
+      return item.update(
+        input,
+        options as MergedHookOptions<TInstance, 'update'>,
+      );
     });
   }
 

@@ -20,8 +20,6 @@ import checkMatchingBelongsTo from './matchingBelongsTo';
 /**
  * Check if the model associations are synced
  *
- * @memberof module:checks
- *
  * @param wildebeest - The wildebeest configuration
  * @param model - The model to check the associations for
  * @param modelName - The name of the model

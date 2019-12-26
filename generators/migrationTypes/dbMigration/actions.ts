@@ -1,12 +1,4 @@
 /**
- *
- * ## DbMigration Actions
- * Actions for the db migration generatorType.
- *
- * @module dbMigration/actions
- */
-
-/**
  * Add a new migration file
  *
  * @param data - The prompt answers

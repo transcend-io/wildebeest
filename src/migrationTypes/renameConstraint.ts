@@ -63,8 +63,6 @@ export async function changeConstraintName<TModels extends ModelMap>(
 /**
  * Change the name of a constraint
  *
- * @memberof module:migrationTypes
- *
  * @param options - Options for renaming a constraint
  * @returns The rename constraint migrator
  */

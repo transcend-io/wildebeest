@@ -1,17 +1,10 @@
-/**
- *
- * ## Rename Column Migration Generator
- * Create a migration definition that renames a column
- *
- * @module renameColumn
- */
-
 // global
+import { NOT_EMPTY_REGEX } from '@generators/regexs';
 import linkToClass from '@generators/utils/linkToClass';
 
-// local
-import * as prompts from './prompts';
-
+/**
+ * Create a migration definition that renames a column
+ */
 export default {
   configure: ({ modelTableName, newName, oldName, modelContainer, model }) => ({
     name: `rename-column-${modelTableName}-to-${newName}`,
@@ -21,6 +14,19 @@ export default {
     )}`,
   }),
   description: 'Create a migration definition that renames a column',
-  prompts,
+  prompts: {
+    oldName: {
+      message: 'What was the old column name?',
+      type: 'input',
+      validate: (value) =>
+        NOT_EMPTY_REGEX.test(value) ? true : 'oldName is required',
+    },
+    newName: {
+      message: 'What is the new column name?',
+      type: 'input',
+      validate: (value) =>
+        NOT_EMPTY_REGEX.test(value) ? true : 'newName is required',
+    },
+  },
   type: 'tableMigration',
 };

@@ -1,11 +1,3 @@
-/**
- *
- * ## Migrations
- * Migration generators
- *
- * @module migrations
- */
-
 // local
 import addCascadeWithParent from './addCascadeWithParent';
 import addColumns from './addColumns';
@@ -38,6 +30,9 @@ import renameS3Files from './renameS3Files';
 import renameTable from './renameTable';
 import uuidNonNull from './uuidNonNull';
 
+/**
+ * Migration generators
+ */
 export default {
   addCascadeWithParent,
   addColumns,

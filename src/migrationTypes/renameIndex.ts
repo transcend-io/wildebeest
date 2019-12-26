@@ -32,8 +32,6 @@ export async function renameTableIndex<TModels extends ModelMap>(
 /**
  * Rename an index
  *
- * @memberof module:migrationTypes
- *
  * @param options - Rename index options
  * @returns The rename index migrator
  */

@@ -24,8 +24,6 @@ export type AddUniqueIndexOptions = {
 /**
  * Add a unique constrain across multiple columns on up, and remove the constraint on down
  *
- * @memberof module:migrationTypes
- *
  * @param options - Options for making a unique constraint across multiple columns
  * @returns The add unique constraint index migrator migrator
  */

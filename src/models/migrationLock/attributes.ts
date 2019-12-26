@@ -1,11 +1,3 @@
-/**
- *
- * ## MigrationLock Attributes
- * Db model attributes for the migrationLock model.
- *
- * @module migrationLock/attributes
- */
-
 // external modules
 import { DataTypes } from 'sequelize';
 

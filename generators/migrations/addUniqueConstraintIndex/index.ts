@@ -1,14 +1,9 @@
-/**
- *
- * ## Add Unique Constraint Index Migration Generator
- * Add a unique constrain across multiple columns on up, and remove the constraint on down
- *
- * @module addUniqueConstraintIndex
- */
-
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
+/**
+ * Add a unique constrain across multiple columns on up, and remove the constraint on down
+ */
 export default {
   configure: ({ columns, modelContainer, model }) => ({
     name: `add-unique-constraint-index-${columns

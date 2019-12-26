@@ -62,8 +62,6 @@ export async function hasEnum<TModels extends ModelMap>(
 /**
  * Check that an enum in the database matches an enum attribute column
  *
- * @memberof module:checks
- *
  * @param wildebeest - The wildebeest config
  * @param tableName - The name of the table to check
  * @param name - The name of the attribute

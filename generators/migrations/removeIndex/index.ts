@@ -1,17 +1,11 @@
-/**
- *
- * ## Remove Index Migration Generator
- * Remove an existing index
- *
- * @module removeIndex
- */
-
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
-// local
-import * as prompts from './prompts';
+import { method } from '../addIndex/prompts';
 
+/**
+ * Remove an existing index
+ */
 export default {
   configure: ({ columns, modelContainer, model }) => ({
     name: `remove-index-${columns
@@ -23,6 +17,6 @@ export default {
     )} fields: ${columns.map(({ columnName }) => columnName).join(', ')}.`, // eslint-disable-line max-len
   }),
   description: 'Remove an existing index',
-  prompts,
+  prompts: { method },
   type: 'tableColumnsMigration',
 };

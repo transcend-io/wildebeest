@@ -1,9 +1,5 @@
 /**
- *
- * ## Uuid Non Null Migration Generator
  * Make a uuid column non null
- *
- * @module uuidNonNull
  */
 
 // global

@@ -39,8 +39,6 @@ export type WithTransaction<
 /**
  * Create a query make from sequelize query interface
  *
- * @memberof module:utils
- *
  * @param queryInterface - The interface to query with
  * @param transactionOptions - The transaction
  * @param type - The query type

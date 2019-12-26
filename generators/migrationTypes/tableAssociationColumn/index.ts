@@ -1,17 +1,22 @@
+// local
+import { getAssociations } from './lib';
+
 /**
- *
- * ## TableAssociationColumn Migration Type
  * A higher order generator that creates a Table association column migrator.
  *
  * A migrator for table column that is an association
- *
- * @module tableAssociationColumn
  */
-
-// local
-import * as prompts from './prompts';
-
 export default {
   parentType: 'tableMigration',
-  prompts,
+  prompts: {
+    columnName: (repo) => ({
+      message: 'What column should be modified? (suggestOnly)',
+      source: ({ modelPath }) =>
+        getAssociations(modelPath, repo)
+          .filter(({ associationType }) => associationType === 'belongsTo')
+          .map(({ name }) => `${name}Id`),
+      suggestOnly: true,
+      type: 'autocomplete',
+    }),
+  },
 };

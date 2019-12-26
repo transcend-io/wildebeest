@@ -1,14 +1,9 @@
-/**
- *
- * ## Add Cascade With Parent Migration Generator
- * Migrate a column so that it cascades with its parent
- *
- * @module addCascadeWithParent
- */
-
 // global
 import linkToClass from '@generators/utils/linkToClass';
 
+/**
+ * Migrate a column so that it cascades with its parent
+ */
 export default {
   configure: ({ modelTableName, modelContainer, columnName, model }) => ({
     name: `add-cascade-with-parent-${modelTableName}-${columnName}`,

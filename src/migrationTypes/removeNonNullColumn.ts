@@ -28,8 +28,6 @@ export type RemoveNonNullColumnOptions<TModels extends ModelMap> = {
 /**
  * Remove a column that is not allowed to be null, and when down is run, allow the column to be null
  *
- * @memberof module:migrationTypes
- *
  * @param options - The options for removing the non null column
  * @returns The remove non null column migrator
  */

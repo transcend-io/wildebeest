@@ -94,8 +94,6 @@ export async function changeTableName<TModels extends ModelMap>(
 /**
  * Create a migrator that will rename a table and all associated indices
  *
- * @memberof module:migrationTypes
- *
  * @param options - The options for renaming a table
  * @returns The rename table migrator
  */

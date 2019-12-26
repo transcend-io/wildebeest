@@ -1,11 +1,3 @@
-/**
- *
- * ## Wildebeest Constants
- * Constants for wildebeest
- *
- * @module wildebeest/constants
- */
-
 // external modules
 import { snakeCase } from 'change-case';
 import { ModelIndexesOptions } from 'sequelize';

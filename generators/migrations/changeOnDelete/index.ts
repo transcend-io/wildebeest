@@ -1,20 +1,13 @@
-/**
- *
- * ## Change On Delete Migration Generator
- * Change the onDelete status of a foreign key constraint
- *
- * @module changeOnDelete
- */
-
 // external modules
 import kebabCase from 'lodash/kebabCase';
 
 // global
 import linkToClass from '@generators/utils/linkToClass';
+import { OnDelete } from '@wildebeest/types';
 
-// local
-import * as prompts from './prompts';
-
+/**
+ * Change the onDelete status of a foreign key constraint
+ */
 export default {
   configure: ({
     modelTableName,
@@ -34,6 +27,18 @@ export default {
     )} from ${oldOnDelete} to ${newOnDelete}`,
   }),
   description: 'Change the onDelete status of a foreign key constraint',
-  prompts,
+  prompts: {
+    oldOnDelete: {
+      message: 'What was the old onDelete value?',
+      source: () => Object.values(OnDelete),
+      type: 'autocomplete',
+    },
+    newOnDelete: {
+      message: 'What is the new onDelete value?',
+      source: ({ oldOnDelete }) =>
+        Object.values(OnDelete).filter((val) => val !== oldOnDelete),
+      type: 'autocomplete',
+    },
+  },
   type: 'tableColumnMigration',
 };

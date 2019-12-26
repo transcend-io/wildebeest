@@ -1,15 +1,15 @@
 /**
- *
- * ## Table Migration Generator
  * Create a migration that modifies a single table
- *
- * @module tableMigration
  */
-
-// local
-import * as prompts from './prompts';
-
 export default {
   parentType: 'dbMigration',
-  prompts,
+  prompts: {
+    modelPath: (repo, { suggestOnly }) => ({
+      message: `What db model are you migrating?${
+        suggestOnly ? ' (suggestOnly)' : ''
+      }`,
+      suggestOnly,
+      type: 'modelPath',
+    }),
+  },
 };

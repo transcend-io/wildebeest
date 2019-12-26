@@ -7,8 +7,6 @@ import { Association } from '@wildebeest/types';
 /**
  * Get the attribute definition for an association column
  *
- * @memberof module:utils
- *
  * @param association - The association config
  * @param config - The attribute config of the column to join on
  * @returns The association attribute definition

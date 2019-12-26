@@ -1,8 +1,6 @@
 /**
  * Escape JSON that may have single quotes in it before inserting into SQL statement
  *
- * @memberof module:utils
- *
  * @param obj - The object to check
  */
 export default function escapeJson<T extends {}>(obj: T[] | T): string {

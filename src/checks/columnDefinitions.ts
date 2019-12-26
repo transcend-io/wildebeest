@@ -21,8 +21,6 @@ import checkColumnDefinition from './columnDefinition';
 /**
  * Check that all db model attributes defined by sequelize match the ones in postgres
  *
- * @memberof module:checks
- *
  * @param wildebeest - The wildebeest configuration
  * @param model - The db model to check against
  * @returns Any errors related to all column definitions in the table

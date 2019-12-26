@@ -1,12 +1,4 @@
 /**
- *
- * ## ChangeEnumAttributes Regexs
- * Regular expressions for the change enum attributes migrationType.
- *
- * @module changeEnumAttributes/regexs
- */
-
-/**
  * Get the attributes of an enum
  */
 export const ENUM_ATTRIBUTE_REGEX = /([a-zA-Z0-9]*)(:| =) '([a-zA-Z0-9]*)',/g;

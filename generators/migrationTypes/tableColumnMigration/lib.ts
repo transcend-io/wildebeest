@@ -1,11 +1,3 @@
-/**
- *
- * ## TableColumnMigration Lib
- * Helper functions for the table column migration migrationType.
- *
- * @module tableColumnMigration/lib
- */
-
 // external modules
 import flatten from 'lodash/flatten';
 

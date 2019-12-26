@@ -1,11 +1,3 @@
-/**
- *
- * ## TableColumnMigration TypeDefs
- * Type definitions for the table column migration migrationType.
- *
- * @module tableColumnMigration/typeDefs
- */
-
 // ///// //
 // Types //
 // ///// //

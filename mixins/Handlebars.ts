@@ -1,9 +1,5 @@
 /**
- *
- * ## Handlebars
  * Creates the handlebars instance
- *
- * @module Handlebars
  */
 
 // external modules

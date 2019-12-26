@@ -1,12 +1,4 @@
 /**
- *
- * ## TableColumnMigration Regexs
- * Regular expressions for the table column migration migrationType
- *
- * @module tableColumnMigration/regexs
- */
-
-/**
  * Pull out the name of the extends
  */
 export const CLASS_EXTENDS_REGEX = /extends ((?!Model).+?) {/;

@@ -65,8 +65,6 @@ export async function renameColumnAndConstraints<TModels extends ModelMap>(
 /**
  * Create a migration definition that renames a column
  *
- * @memberof module:migrationTypes
- *
  * @param options - Options for renaming a table column
  * @returns The rename column migrator migrator
  */

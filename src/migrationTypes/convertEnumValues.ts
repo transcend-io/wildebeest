@@ -100,8 +100,6 @@ export async function renameManyEnumValues<TModels extends ModelMap>(
 /**
  * A helper to batch convert enum values
  *
- * @memberof module:migrationTypes
- *
  * @param options - The convertEnumValues options
  * @returns The custom migrator
  */

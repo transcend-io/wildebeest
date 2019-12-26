@@ -57,8 +57,6 @@ export function verifyNumberedFiles(files: string[], bottom = 1): number {
 /**
  * Given a list of potential numbered files or folders (i.e. migrations), filter for those that follow the number pattern
  *
- * @memberof module:utils
- *
  * @param listItems - The raw list items to filter
  * @returns The numbered items in order
  */
