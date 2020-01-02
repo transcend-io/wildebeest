@@ -1,0 +1,21 @@
+
+/**
+ * {{{ comment }}}
+ *
+{{#if params}}
+{{> functionParamsComment }}
+
+{{/if}}
+ * @returns The {{ lowerCase (sentenceCase name) }} migrator
+ */
+{{{ defaultExportType }}} function custom(
+  {{> functionParams }},
+): MigrationDefinition {
+  const { up, down } = options;
+  return {
+    up: async (db, withTransaction) =>
+      withTransaction((transactionOptions) => TODO),
+    down: async (db, withTransaction) =>
+      withTransaction((transactionOptions) => TODO),
+  };
+}

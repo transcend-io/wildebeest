@@ -1,0 +1,18 @@
+{{> generatorImports }}
+
+/**
+ * A higher order generator that creates a {{ sentenceCase container }} migrator.
+ *
+ * {{{ comment }}}
+ */
+export default {
+{{#if wantActions}}
+  actions,
+{{/if}}
+{{#if generatorType}}
+  parentType: '{{ generatorType }}',
+{{/if}}
+{{#if wantPrompts}}
+  prompts,
+{{/if}}
+};

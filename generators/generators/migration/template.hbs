@@ -1,0 +1,17 @@
+{{> generatorImports }}
+
+/**
+ * {{{ comment }}}
+ */
+export default {
+  configure: () => ({
+    name: `{{ paramCase container }}-${{ curly true }}{{{ nameExt }}}{{ curly false }}`,
+  }),
+  description: '{{{ comment }}}',
+{{#if wantPrompts}}
+  prompts,
+{{/if}}
+{{#if generatorType}}
+  type: '{{ generatorType }}',
+{{/if}}
+};
