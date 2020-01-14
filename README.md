@@ -94,10 +94,11 @@ NOTE: these migration types are not completely wrapped in transactions yet. If y
 you may want to perform a hard wipe on the DB or manually edit DB schema to fix the lost state.
 
 A nice property of using this sync testing framework in combination with these `migration-types` is that the sync test wil provide a
-list of migrations that need to be run, these migrations almost always will map to a migration type,
-and then the [generators](https://github.com/transcend-io/wildebeest/tree/master/generators) can be used to quickly create migrations.
-The generators will fill out the majority of the migration-type configuration from the existing code.
-In the example case above, everything is generated except for the property `getRowDefaults`, which you would be prompted to define.
+list of migrations that need to be run. These migrations almost always will map to a migration type.
+
+The [generators](https://github.com/transcend-io/wildebeest/tree/master/generators) can be used to quickly create migrations.
+Generators will fill out the majority of the `migration-type` configuration from the existing code.
+In the example above, everything is generated except for the property `getRowDefaults`, which you would be prompted to define.
 
 The flow for creating a migration is as follows:
 
