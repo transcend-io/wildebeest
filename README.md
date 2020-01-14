@@ -17,7 +17,7 @@
 
 When using Sequelize as your ORM, you still need to write some database migrations manually. For example, when adding a new column that is non-null, one often needs to calculate the initial value based on existing database rows.
 
-Keeping the Postgres schema in sync with the Sequelize schema defined in code is painful. The schema is Postgres should be thought of as the "base true", but it comes at the cost of being able to dynamically define the schema in code. One must repeatedly compare the code against the remote database's state.
+Keeping the Postgres schema in sync with the Sequelize schema defined in code is painful. The schema in Postgres should be thought of as the "base truth", but it comes at the cost of being able to dynamically define the schema in code. One must repeatedly compare the code against the remote database's state.
 
 To simplify this process, we have a database Model class that wraps all database tables we define. This Model class has a method, `checkIfSynced`, that will compare the code definition of that Sequelize model to the existing schema in Postgres. It will log anywhere it finds these definitions to be out of sync.
 
