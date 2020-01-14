@@ -138,14 +138,14 @@ and only once it is pushed to master is when that migration is supposed to stay 
 
 1. The migrations can be documented in a feature.
 2. Each PR should only have a single migration. This will still mean that the migrations are re-numbered, but one should
-     only have to change the number for a single migration folder, not a set of 10 or 20 migration files.
+     only need to change the number for a single migration folder, not a set of 10 or 20 migration files.
 
 Until this new framework is in place, the current process for re-ordering migrations is as follows:
 
 1. Rebase your branch to master: `git fetch && git rebase -i origin/master`
 2. Open `src/migrations/migrations` and find where numbers start to overlap. The server will not start if the ordering is off.
-3. Move all of the migrations on the branch you are working on to the end of the migration chain. You can use the command `npm run refactor reorder-migrations`.
-4. You will need to do a wipe on your local db and re-run the migrations, you can do this on the `localhost/migrate`.
+3. Move all of the migrations from the branch you are working onto the end of the migration chain. You can use the command `npm run refactor reorder-migrations`.
+4. Wipe your local db and re-run the migrations. You can do this on the `localhost/migrate`
    page or with the command `npm run server:dev:clean && npm run server:dev:uplogs`
 
 Note: Only will work when RUN apk add --no-cache postgresql-client=10.5-r0 is not commented out in app.Dockerfile
