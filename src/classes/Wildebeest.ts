@@ -397,7 +397,7 @@ export default class Wildebeest<TModels extends ModelMap> {
 
     // If the table does not exist yet, restore the genesis migration and indicate the first migration ocurred
     if (!exists) {
-      restoreFromDump(this, this.restoreSchemaOnEmpty);
+      await restoreFromDump(this, this.restoreSchemaOnEmpty);
     }
 
     // Run the first migration if it has not been run yet
@@ -418,6 +418,21 @@ export default class Wildebeest<TModels extends ModelMap> {
   public async migrate(): Promise<void> {
     // Ensure the migrations table it setup
     await this.setup();
+
+    // Check if we need to migrate by comparing last migration
+    // This is significantly faster on server start time than trying to acquire and run with lock
+    const last = this.migrations.pop();
+    if (last) {
+      const { name } = await this.models.migration.findOne({
+        order: [['createdAt', 'DESC']],
+        limit: 1,
+      });
+
+      if (name === last.fileName) {
+        this.logger.info('Skipping migrate because db is fully migrated');
+        return;
+      }
+    }
 
     // Run the new migrations if auto migrate is on
     await this.runWithLock((lock) => lock.migrate());
