@@ -46,7 +46,9 @@ export default async function getForeignKeyConfig<TModels extends ModelMap>(
   name: string,
   transactionOptions?: MigrationTransactionOptions<TModels, Attributes>,
 ): Promise<ForeignKeyConstraintConfig> {
-  const [config] = await db.queryInterface.sequelize.query(
+  const [config] = await db.queryInterface.sequelize.query<
+    ForeignKeyConstraintConfig
+  >(
     `
       SELECT
         tc.constraint_name,

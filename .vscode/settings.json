@@ -1,14 +1,19 @@
 {
   "cSpell.words": [
+    "camelcase",
+    "conname",
     "connamespace",
     "conrelid",
+    "constraintdef",
     "executables",
+    "get",
     "jsonb",
     "koalaman",
     "mimetype",
     "mixins",
     "nobuild",
     "nspname",
+    "pg",
     "postgres",
     "setuptools",
     "symlinks",
@@ -17,5 +22,15 @@
     "unnested"
   ],
   "[handlebars]": { "editor.formatOnSave": false },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "editor.formatOnSave": true,
   "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -33,7 +33,9 @@ export async function getTablePrimaryKey<TModels extends ModelMap>(
   db: WildebeestDb<TModels>,
   tableName: string,
 ): Promise<PrimaryKeyConfig> {
-  const [primaryKey] = await db.queryInterface.sequelize.query(
+  const [primaryKey] = await db.queryInterface.sequelize.query<
+    PrimaryKeyConfig
+  >(
     `
     SELECT tc.table_schema, tc.table_name, kc.column_name,tc.constraint_name
     FROM
