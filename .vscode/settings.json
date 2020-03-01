@@ -5,6 +5,7 @@
     "connamespace",
     "conrelid",
     "constraintdef",
+    "esnext",
     "executables",
     "get",
     "jsonb",
