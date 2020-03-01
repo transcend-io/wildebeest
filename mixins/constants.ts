@@ -40,7 +40,7 @@ export const SEQUELIZE_MIXINS: AssociationMixins = {
   ],
   belongsTo: ({ modelName, associationName, primaryKeyName }) => [
     {
-      attribute: `public ${primaryKeyName}: M.I${modelName.pascalCase}['${
+      attribute: `public ${primaryKeyName}!: M.I${modelName.pascalCase}['${
         primaryKeyName === `${associationName.plain}Id` ? 'id' : primaryKeyName
       }'];`,
     },
