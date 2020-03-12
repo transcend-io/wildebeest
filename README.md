@@ -12,6 +12,8 @@
 <br />
 
 ## Overview
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ftranscend-io%2Fwildebeest.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ftranscend-io%2Fwildebeest?ref=badge_shield)
+
 
 (This repo and its docs are a work in progress)
 
@@ -149,3 +151,7 @@ Until this new framework is in place, the current process for re-ordering migrat
    page or with the command `npm run server:dev:clean && npm run server:dev:uplogs`
 
 Note: Only will work when RUN apk add --no-cache postgresql-client=10.5-r0 is not commented out in app.Dockerfile
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ftranscend-io%2Fwildebeest.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ftranscend-io%2Fwildebeest?ref=badge_large)
