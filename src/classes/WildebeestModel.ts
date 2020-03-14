@@ -107,6 +107,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
     values: object,
     options?: MergedHookOptions<M, 'create'>,
   ): Bluebird<M> {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     return super.create(values, options);
   }

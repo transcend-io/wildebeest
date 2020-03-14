@@ -11,14 +11,14 @@ git:
   depth: 2
 
 # Node version
-node_js:
-  "10.15.0"
+node_js: '10.15.0'
 
 before_install:
   # Dynamically create an `.npmrc` file
   - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > "$HOME/.npmrc"
-  # Ensure that npm version is 6.4.1
-  - if [[ `npm -v` != 6.4.1 ]]; then npm i -g npm@6.4.1; fi
+  # Ensure that npm version is 6.13.4
+  - if [[ `npm -v` != 6.13.4 ]]; then npm i -g npm@6.13.4; fi
+  - npm install -g yarn@1.22.4
   # Install pre-commit (locking pyyaml to a specific version b/c of compilation issues)
   - pip3 install setuptools
   - pip3 install --user 'pyyaml>=3.12' pre-commit pathlib2
@@ -26,7 +26,7 @@ before_install:
 
 # Install top level dependencies
 install:
-  - npm i
+  - yarn
 
 # the following line is needed to enable the TravisCI build conditions
 conditions: v1
@@ -58,8 +58,8 @@ jobs:
       script: skip
       deploy:
         - provider: npm
-          email: "$NPM_EMAIL"
-          api_key: "$NPM_TOKEN"
+          email: '$NPM_EMAIL'
+          api_key: '$NPM_TOKEN'
           skip_cleanup: true
           on:
             branch: master
@@ -69,7 +69,6 @@ cache:
     # Cache pip activities to speed up pre-commit installation
     - $HOME/.cache/pip
     - $HOME/.cache/pip3
-    # Cache pre-commit repos so that the pre-commit setup is faster
     - $HOME/.cache/pre-commit
     # Cache npm as specified by https://docs.npmjs.com/cli/ci#example
     # - This will wipe node_modules (to ensure a valid build), so caching can't
@@ -84,5 +83,5 @@ before_cache:
 addons:
   apt:
     packages:
-      - "python3"
-      - "python3-pip" # pip isn't installed by default with the python3 installation
+      - 'python3'
+      - 'python3-pip' # pip isn't installed by default with the python3 installation

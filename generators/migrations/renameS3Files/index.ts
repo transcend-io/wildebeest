@@ -1,11 +1,7 @@
 // global
-import linkToClass from '@generators/utils/linkToClass';
-import { NOT_EMPTY_REGEX } from '@generators/regexs';
+import { NOT_EMPTY_REGEX } from '@generators/regexes';
 
-// local
-import * as prompts from './prompts';
-
-const getAttributes = (attributes) =>
+const getAttributes = (attributes): string[] =>
   attributes
     .split(',')
     .map((attr) => attr.trim())
@@ -20,12 +16,9 @@ const getAttributes = (attributes) =>
  */
 
 export default {
-  configure: ({ modelTableName, nameExt, modelContainer, model }) => ({
+  configure: ({ modelTableName, nameExt, model }) => ({
     name: `rename-s3-files-${modelTableName}-${nameExt}`,
-    comment: `Change the naming convention of s3 files in ${linkToClass(
-      modelContainer,
-      model,
-    )}`,
+    comment: `Change the naming convention of s3 files in ${model}`,
   }),
   description: 'Change the s3 file naming convention for a table',
   prompts: {

@@ -12,8 +12,8 @@
 <br />
 
 ## Overview
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ftranscend-io%2Fwildebeest.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ftranscend-io%2Fwildebeest?ref=badge_shield)
 
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ftranscend-io%2Fwildebeest.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ftranscend-io%2Fwildebeest?ref=badge_shield)
 
 (This repo and its docs are a work in progress)
 
@@ -47,32 +47,35 @@ Take this example of an `addColumns` migration:
 
 ```ts
 export default addColumns({
-   tableName: 'requests',
-   getColumns: ({ DataTypes }) => ({
-     // The subject class of the request
-     subjectName: {
-       type: DataTypes.STRING,
-       allowNull: false,
-       defaultValue: 'customer',
-     },
-     // The id to the subject
-     subjectId: {
-       allowNull: true,
-       defaultValue: DataTypes.UUIDV4,
-       type: DataTypes.UUID,
+  tableName: 'requests',
+  getColumns: ({ DataTypes }) => ({
+    // The subject class of the request
+    subjectName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'customer',
     },
-   }),
-   getRowDefaults: ({ organizationId }, db, { queryT }) => queryT.select(
-     `SELECT FROM "requestSettingses" WHERE "organizationId"='${organizationId}'`
-   )
-     .then(([{ id }]) => queryT.select(
-      `SELECT id,"requestSettingsId","type","name" FROM "subjects" WHERE "requestSettingsId"='${id}' AND "type"='customer'`
-     ))
-     .then((subjects) => subjects.length > 0
-       ? ({ subjectId: subjects[0].id })
-       : ({})
-     ),
-   constraints: ['subjectId'],
+    // The id to the subject
+    subjectId: {
+      allowNull: true,
+      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.UUID,
+    },
+  }),
+  getRowDefaults: ({ organizationId }, db, { queryT }) =>
+    queryT
+      .select(
+        `SELECT FROM "requestSettingses" WHERE "organizationId"='${organizationId}'`,
+      )
+      .then(([{ id }]) =>
+        queryT.select(
+          `SELECT id,"requestSettingsId","type","name" FROM "subjects" WHERE "requestSettingsId"='${id}' AND "type"='customer'`,
+        ),
+      )
+      .then((subjects) =>
+        subjects.length > 0 ? { subjectId: subjects[0].id } : {},
+      ),
+  constraints: ['subjectId'],
 });
 ```
 
@@ -105,14 +108,14 @@ In the example above, everything is generated except for the property `getRowDef
 The flow for creating a migration is as follows:
 
 1. Write code that changes the structure of the db. This may be adding a db column in `attributes.js`,
-     adding a new association in `associations.js`, defining a new table, or defining a new database index in `options.js`.
+   adding a new association in `associations.js`, defining a new table, or defining a new database index in `options.js`.
 2. Run `npm run generate:migrate` to list the migration types that are available. You can add an alias to your `~/.bash_profile`
-     to shorten this command: `alias mig="npm run generate:migrate $1"`
+   to shorten this command: `alias mig="npm run generate:migrate $1"`
 3. Select the `migration-type` you want to run (the manual up/down migration is called `custom`).
 4. Follow the generator prompt and fill in the missing pieces
 5. If the migration can be completely generated from the command line, the server should detect changes and restart,
-     running the migration immediately. If the migration still requires some input from the developer (i.e. a `custom` migration),
-     the migration will throw an error on start and the server will crash. You should write the migration and re-start the server.
+   running the migration immediately. If the migration still requires some input from the developer (i.e. a `custom` migration),
+   the migration will throw an error on start and the server will crash. You should write the migration and re-start the server.
 
 The motivation for this framework is to reduce the burden of writing migrations. The developer should focus on writing code, not migrations.
 Code will verify the state of the database, and the process of translating the code into migrations is made as automatic as possible.
@@ -140,7 +143,7 @@ and only once it is pushed to master is when that migration is supposed to stay 
 
 1. The migrations can be documented in a feature.
 2. Each PR should only have a single migration. This will still mean that the migrations are re-numbered, but one should
-     only need to change the number for a single migration folder, not a set of 10 or 20 migration files.
+   only need to change the number for a single migration folder, not a set of 10 or 20 migration files.
 
 Until this new framework is in place, the current process for re-ordering migrations is as follows:
 
@@ -152,6 +155,6 @@ Until this new framework is in place, the current process for re-ordering migrat
 
 Note: Only will work when RUN apk add --no-cache postgresql-client=10.5-r0 is not commented out in app.Dockerfile
 
-
 ## License
+
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ftranscend-io%2Fwildebeest.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ftranscend-io%2Fwildebeest?ref=badge_large)

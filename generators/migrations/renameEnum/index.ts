@@ -1,27 +1,16 @@
 // global
-import linkToClass from '@generators/utils/linkToClass';
-import { NOT_EMPTY_REGEX } from '@generators/regexs';
+import { NOT_EMPTY_REGEX } from '@generators/regexes';
 
 /**
  * Rename an enum from one value to another
  */
 export default {
-  configure: ({
-    oldName,
-    columnName,
-    modelTableName,
-    model,
-    modelContainer,
-  }) => {
+  configure: ({ oldName, columnName, modelTableName, model }) => {
     const newName = `enum_${modelTableName}_${columnName}`;
     return {
       name: `rename-${oldName}-to-${newName}`,
       newName,
-      comment: `Rename the enum definition for ${linkToClass(
-        modelContainer,
-        model,
-        columnName,
-      )} to ${newName}`,
+      comment: `Rename the enum definition for ${model}.${columnName} to ${newName}`,
     };
   },
   description: 'Rename an enum from one value to another',

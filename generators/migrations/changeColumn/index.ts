@@ -1,22 +1,10 @@
-// global
-import linkToClass from '@generators/utils/linkToClass';
-
 /**
  * Change a column definition
  */
 export default {
-  configure: ({
-    columnName,
-    // tables,
-    modelContainer,
-    model,
-  }) => ({
+  configure: ({ columnName, model }) => ({
     name: `change-column-${columnName}`,
-    comment: `Change column "${columnName}" on table ${linkToClass(
-      modelContainer,
-      model,
-    )}`,
-    // comment: `Change column ${columnName} on tables ${tables.map(({ modelContainer, model }) => linkToClass(modelContainer, model)).join(', ')}`, // eslint-disable-line max-len
+    comment: `Change column "${columnName}" on table ${model}`,
   }),
   description: 'Change a column definition',
   prompts: {

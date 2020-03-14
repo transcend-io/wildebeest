@@ -1,5 +1,5 @@
 // global
-import { NOT_EMPTY_REGEX } from '@generators/regexs';
+import { NOT_EMPTY_REGEX } from '@generators/regexes';
 
 /**
  * Rename an index

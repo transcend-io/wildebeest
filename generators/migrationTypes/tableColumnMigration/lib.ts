@@ -4,12 +4,28 @@ import flatten from 'lodash/flatten';
 // migrationTypes
 import { getAssociations } from '../tableAssociationColumn/lib';
 
-// local
-const {
-  CLASS_IMPORT_REGEX,
-  CLASS_EXTENDS_REGEX,
-  CLASS_TYPE_REGEX,
-} = require('./regexs');
+/**
+ * Determine the location of the class import
+ *
+ * @param type - The class type
+ * @returns The regex
+ */
+export const CLASS_IMPORT_REGEX = (type: string): RegExp =>
+  new RegExp(`const ${type} = require\\('(.+?)'\\);`);
+
+/**
+ * Determine the class type
+ *
+ * @param exportType - The way the definition is exported
+ * @returns The regex
+ */
+export const CLASS_TYPE_REGEX = (exportType: string): RegExp =>
+  new RegExp(`${exportType.replace('.', '\\.')}type = '(.+?)';`);
+
+/**
+ * Pull out the name of the extends
+ */
+export const CLASS_EXTENDS_REGEX = /extends ((?!Model).+?) {/;
 
 /**
  * Get the parent directory from modelPath
