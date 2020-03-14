@@ -42,7 +42,7 @@ export default class MigrationLock<TModels extends ModelMap>
   public static async acquireLock(): Promise<MigrationLock<ModelMap> | null> {
     // If there is no lock table yet, return a new empty class
     const lockSetup = await this.isSetup();
-    const ThisModel = this;
+    const ThisModel = this as any;
     if (!lockSetup) {
       return new ThisModel();
     }

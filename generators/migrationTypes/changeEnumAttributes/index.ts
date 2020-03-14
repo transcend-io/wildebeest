@@ -1,8 +1,8 @@
 // local
 import { listEnumAttributes } from './lib';
-import { SEQUELIZE_ENUM_NAME_REGEX } from './regexs';
 
 // migrationTypes
+import { SEQUELIZE_ENUM_NAME_REGEX } from '@generators//migrationTypes/tableColumnsMigration/lib';
 import { listAllAttributeConfigs } from '../tableColumnMigration/lib';
 
 let columnName;

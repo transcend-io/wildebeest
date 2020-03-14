@@ -11,7 +11,7 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@generators/*": ["@transcend-io/generators/src/*"],
+      "@generators/*": ["./generators*"],
       "@wildebeest*": ["./src*"],
       "@mixins*": ["./mixins*"]
     },

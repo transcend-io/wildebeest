@@ -1,17 +1,13 @@
 // global
 import { NOT_EMPTY_REGEX } from '@generators/regexs';
-import linkToClass from '@generators/utils/linkToClass';
 
 /**
  * Create a migration definition that renames a column
  */
 export default {
-  configure: ({ modelTableName, newName, oldName, modelContainer, model }) => ({
+  configure: ({ modelTableName, newName, oldName, model }) => ({
     name: `rename-column-${modelTableName}-to-${newName}`,
-    comment: `Rename the column ${oldName} to ${newName} on table ${linkToClass(
-      modelContainer,
-      model,
-    )}`,
+    comment: `Rename the column ${oldName} to ${newName} on table ${model}`,
   }),
   description: 'Create a migration definition that renames a column',
   prompts: {

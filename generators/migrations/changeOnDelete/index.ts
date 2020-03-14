@@ -2,7 +2,6 @@
 import kebabCase from 'lodash/kebabCase';
 
 // global
-import linkToClass from '@generators/utils/linkToClass';
 import { OnDelete } from '@wildebeest/types';
 
 /**
@@ -11,7 +10,6 @@ import { OnDelete } from '@wildebeest/types';
 export default {
   configure: ({
     modelTableName,
-    modelContainer,
     model,
     columnName,
     newOnDelete,
@@ -20,11 +18,7 @@ export default {
     name: `change-on-delete-${modelTableName}-${columnName}-to-${kebabCase(
       newOnDelete,
     )}`,
-    comment: `Change the foreign key constraint for column ${linkToClass(
-      modelContainer,
-      model,
-      columnName,
-    )} from ${oldOnDelete} to ${newOnDelete}`,
+    comment: `Change the foreign key constraint for column ${model}.${columnName} from ${oldOnDelete} to ${newOnDelete}`,
   }),
   description: 'Change the onDelete status of a foreign key constraint',
   prompts: {

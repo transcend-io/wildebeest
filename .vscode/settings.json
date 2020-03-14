@@ -13,10 +13,15 @@
     "mimetype",
     "mixins",
     "nobuild",
+    "npmjs",
+    "npmrc",
     "nspname",
+    "pathlib",
     "pg",
     "postgres",
+    "pyyaml",
     "setuptools",
+    "shellcheck",
     "symlinks",
     "types",
     "umzug",
@@ -31,6 +36,9 @@
   ],
   "editor.codeActionsOnSave": {
     "source.fixAll": true
+  },
+  "files.exclude": {
+    "**/node_modules": true
   },
   "editor.formatOnSave": true,
   "typescript.tsdk": "node_modules/typescript/lib"

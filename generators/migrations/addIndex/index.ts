@@ -1,6 +1,3 @@
-// global
-import linkToClass from '@generators/utils/linkToClass';
-
 // commons
 import { IndexMethod } from '@wildebeest/types';
 
@@ -8,12 +5,11 @@ import { IndexMethod } from '@wildebeest/types';
  * Add a new index to a table
  */
 export default {
-  configure: ({ columns, modelContainer, model }) => ({
+  configure: ({ columns, model }) => ({
     name: `add-index-${columns.map(({ columnName }) => columnName).join('-')}`,
-    comment: `Add index on ${linkToClass(
-      modelContainer,
-      model,
-    )} fields: ${columns.map(({ columnName }) => columnName).join(', ')}.`,
+    comment: `Add index on ${model} fields: ${columns
+      .map(({ columnName }) => columnName)
+      .join(', ')}.`,
   }),
   description: 'Add a new index to a table',
   prompts: {

@@ -21,7 +21,7 @@ export default {
           )
           .map(
             ({ columnName }) =>
-              `enum_${cases.pluralCase(
+              `enum_${pluralCase(
                 ModelPath.getModelName(repo, modelPath),
               )}_${columnName}`,
           ),

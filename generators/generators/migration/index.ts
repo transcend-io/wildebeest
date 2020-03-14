@@ -1,10 +1,10 @@
-// commons
-import cases from '@commons/cases';
+// external modules
+import { paramCase } from 'change-case';
 
 // global
 import migrationTypes from '@generators/migrationTypes';
 
-const DEFAULT_TEMPLATE = (generatorName) => `{{> dbMigrationHeader }}
+const DEFAULT_TEMPLATE = (generatorName): string => `{{> dbMigrationHeader }}
 // migrationTypes
 import ${generatorName} from '@bk/migrations/migrationTypes/${generatorName}';${'\n'}
 ${`${'module.'}${'exports'}`} = ${generatorName}({
@@ -34,7 +34,7 @@ export default {
     },
     nameExt: {
       message: ({ container }) =>
-        `What should be appended to "${cases.paramCase(
+        `What should be appended to "${paramCase(
           container,
         )}" to create the name of the migration?`,
       type: 'input',

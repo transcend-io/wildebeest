@@ -1,5 +1,7 @@
-// local
-import { ENUM_ATTRIBUTE_REGEX } from './regexs';
+/**
+ * Get the attributes of an enum
+ */
+export const ENUM_ATTRIBUTE_REGEX = /([a-zA-Z0-9]*)(:| =) '([a-zA-Z0-9]*)',/g;
 
 /**
  * List the attributes of an enum from the content definition
