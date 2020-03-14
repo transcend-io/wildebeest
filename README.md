@@ -8,12 +8,11 @@
   <i>Coming soon. This repo is currently a work in progress.</i>
   <br /><br />
   <img href="https://travis-ci.com/transcend-io/wildebeest.svg?branch=master" alt="Travis (.com)" src="https://travis-ci.com/transcend-io/wildebeest.svg">
+  <img href="https://app.fossa.io/projects/git%2Bgithub.com%2Ftranscend-io%2Fwildebeest?ref=badge_shield" alt="FOSSA Status" src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Ftranscend-io%2Fwildebeest.svg?type=shield">
 </p>
 <br />
 
 ## Overview
-
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ftranscend-io%2Fwildebeest.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ftranscend-io%2Fwildebeest?ref=badge_shield)
 
 (This repo and its docs are a work in progress)
 
