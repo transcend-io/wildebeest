@@ -14,30 +14,72 @@ export type ChangeColumnDefaultOptions = {
   /** The name of the column to change */
   columnName: string;
   /** The old default value */
-  oldDefault: string;
+  oldDefault: string | null;
   /** The new default value */
-  newDefault: string;
+  newDefault: string | null;
 };
 
 /**
- * Add a new version of the api
+ * Set the default value for a given column
  *
  * @param tableName - The table to change default for
  * @param columnName - The column to change default for
  * @param defaultValue - The default value to change to
  * @param transactionOptions - The transaction options
- * @param db - The database to operate on
  */
-export async function changeDefaultValue<TModels extends ModelMap>(
+export async function setColumnDefault<TModels extends ModelMap>(
   tableName: string,
   columnName: string,
   defaultValue: string,
   transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
-  // Add the enum values to the column
   await transactionOptions.queryT.raw(
     `ALTER TABLE "${tableName}" ALTER "${columnName}" SET DEFAULT '${defaultValue}';`,
   );
+}
+
+/**
+ * Drops the default value for a given column
+ *
+ * @param tableName - The table to change default for
+ * @param columnName - The column to change default for
+ * @param defaultValue - The default value to change to
+ * @param transactionOptions - The transaction options
+ */
+export async function dropColumnDefault<TModels extends ModelMap>(
+  tableName: string,
+  columnName: string,
+  transactionOptions: MigrationTransactionOptions<TModels>,
+): Promise<void> {
+  await transactionOptions.queryT.raw(
+    `ALTER TABLE "${tableName}" ALTER "${columnName}" DROP DEFAULT;`,
+  );
+}
+
+/**
+ * Changes or drops the default value for a given column
+ *
+ * @param tableName - The table to change default for
+ * @param columnName - The column to change default for
+ * @param defaultValue - The default value to change to
+ * @param transactionOptions - The transaction options
+ */
+export async function changeDefaultValue<TModels extends ModelMap>(
+  tableName: string,
+  columnName: string,
+  defaultValue: string | null,
+  transactionOptions: MigrationTransactionOptions<TModels>,
+): Promise<void> {
+  if (defaultValue === null) {
+    await dropColumnDefault(tableName, columnName, transactionOptions);
+  } else {
+    await setColumnDefault(
+      tableName,
+      columnName,
+      defaultValue,
+      transactionOptions,
+    );
+  }
 }
 
 /**
@@ -51,7 +93,7 @@ export default function newApiVersion<TModels extends ModelMap>(
 ): MigrationDefinition<TModels> {
   const { tableName, columnName, oldDefault, newDefault } = options;
   return {
-    // Add the unique index
+    // Change or drop the default value
     up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeDefaultValue(
@@ -61,7 +103,7 @@ export default function newApiVersion<TModels extends ModelMap>(
           transactionOptions,
         ),
       ),
-    // Remove the index
+    // Change or add back the default value
     down: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeDefaultValue(
