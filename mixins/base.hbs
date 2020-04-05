@@ -19,8 +19,8 @@ import * as M from '{{ modelDefinitionsPath }}';
 {{#ifEqual modelBaseFolder "db"}}
 import {{ ModelBaseName }} from '@bk/{{ modelBaseFolder }}/{{ ModelBaseName }}';
 {{/ifEqual}}
-
 {{#ifNotEqual modelBaseFolder "db"}}
+
 // {{ modelBaseFolder }}
 import {{ ModelBaseName }} from '@bk/{{ modelBaseFolder }}/{{ ModelBaseName }}';
 {{/ifNotEqual}}
