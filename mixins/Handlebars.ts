@@ -20,4 +20,13 @@ Handlebars.registerHelper('ifNotEqual', function ifNotEqual(
   return arg1 !== arg2 ? options.fn(this) : options.inverse(this);
 });
 
+Handlebars.registerHelper('ifEqual', function ifNotEqual(
+  this: any,
+  arg1: string,
+  arg2: string,
+  options: Handlebars.HelperOptions,
+) {
+  return arg1 === arg2 ? options.fn(this) : options.inverse(this);
+});
+
 export default Handlebars;
