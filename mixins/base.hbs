@@ -20,8 +20,10 @@ import * as M from '{{ modelDefinitionsPath }}';
 import {{ ModelBaseName }} from '@bk/{{ modelBaseFolder }}/{{ ModelBaseName }}';
 {{/ifEqual}}
 
+{{#ifNotEqual modelBaseFolder "db"}}
 // {{ modelBaseFolder }}
 import {{ ModelBaseName }} from '@bk/{{ modelBaseFolder }}/{{ ModelBaseName }}';
+{{/ifNotEqual}}
 
 /**
  * This is the base class definition with all mixins applied from associations on the {{ pascalCase container }}
