@@ -16,6 +16,11 @@ import * as w from '@transcend-io/wildebeest';
 
 // db
 import * as M from '{{ modelDefinitionsPath }}';
+{{#ifEqual modelBaseFolder "db"}}
+import {{ ModelBaseName }} from '@bk/{{ modelBaseFolder }}/{{ ModelBaseName }}';
+{{/ifEqual}}
+
+// {{ modelBaseFolder }}	
 import {{ ModelBaseName }} from '@bk/{{ modelBaseFolder }}/{{ ModelBaseName }}';
 
 /**
