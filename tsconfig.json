@@ -21,7 +21,8 @@
   },
   "include": [
     "src/**/*",
-    "mixins/**/*"
+    "mixins/**/*",
+    "scripts/**/*"
     // "generators/**/*" TODO
   ],
   "exclude": ["node_modules", "build", "docs", "Internal-Documentation"]
