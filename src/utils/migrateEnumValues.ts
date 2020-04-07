@@ -45,10 +45,7 @@ export default async function migrateEnumValues<TModels extends ModelMap>(
   // Determine the new default value (it is either the existing defaultValue or the converted default value)
   const calculatedDefaultValue =
     defaultValue && defaultValue.includes('::')
-      ? defaultValue
-          .split('::')[0]
-          .split("'")
-          .join('')
+      ? defaultValue.split('::')[0].split("'").join('')
       : '';
 
   // Check if the default value needs to be converted

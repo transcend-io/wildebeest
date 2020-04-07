@@ -51,10 +51,7 @@ function replaceDefinitionWithRegex(
     const enumConfig = repo.getConfigForImport(path, name);
 
     // Get the replacement definition
-    let replaceDefinition = enumConfig.content
-      .split('=')
-      .pop()
-      .trim();
+    let replaceDefinition = enumConfig.content.split('=').pop().trim();
     if (replaceDefinition.endsWith(';')) {
       replaceDefinition = replaceDefinition.slice(
         0,
@@ -97,10 +94,7 @@ export const getAttributeFileDefinition = function getAttributeFileDefinition(
 
   // Pull out the part of the file related to the attribute
   const useContent = attr
-    ? content
-        .split('\n')
-        .slice(attr.startLine, content.length)
-        .join('\n')
+    ? content.split('\n').slice(attr.startLine, content.length).join('\n')
     : content;
 
   // Pull out the comment and definition

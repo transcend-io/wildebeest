@@ -51,8 +51,10 @@ export default function makeColumnUnique<TModels extends ModelMap>(
     down: async ({ db, namingConventions }, withTransaction) =>
       withTransaction((transactionOptions) =>
         db.queryInterface.sequelize.query(
-          `ALTER TABLE "${tableName}" DROP CONSTRAINT IF EXISTS "${constraintName ||
-            namingConventions.uniqueConstraint(tableName, columnName)}";`,
+          `ALTER TABLE "${tableName}" DROP CONSTRAINT IF EXISTS "${
+            constraintName ||
+            namingConventions.uniqueConstraint(tableName, columnName)
+          }";`,
           transactionOptions,
         ),
       ),

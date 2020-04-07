@@ -92,8 +92,9 @@ export default async function batchProcess<
     if (interimTime > innerLogThreshold) {
       innerLogThreshold += logThreshold;
       logger.info(
-        `[${tableName} batchProcess - loop]: Processed "${processed}" rows in "${interimTime /
-          ONE_SECOND}" seconds`,
+        `[${tableName} batchProcess - loop]: Processed "${processed}" rows in "${
+          interimTime / ONE_SECOND
+        }" seconds`,
       );
     }
   } /* eslint-enable no-await-in-loop */
@@ -104,8 +105,9 @@ export default async function batchProcess<
   // Log when the processing takes a long time
   if (totalTime > logThreshold) {
     logger.info(
-      `[${tableName} batchProcess]: Processed "${processed}" rows in "${totalTime /
-        ONE_SECOND}" seconds`,
+      `[${tableName} batchProcess]: Processed "${processed}" rows in "${
+        totalTime / ONE_SECOND
+      }" seconds`,
     );
   }
 

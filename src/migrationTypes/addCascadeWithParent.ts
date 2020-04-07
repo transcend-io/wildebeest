@@ -65,11 +65,13 @@ export default function addCascadeWithParent<TModels extends ModelMap>(
     down: async (wildebeest, withTransaction) =>
       withTransaction(({ queryT }) =>
         queryT.raw(
-          `ALTER TABLE "${tableName}" DROP CONSTRAINT IF EXISTS "${constraintName ||
+          `ALTER TABLE "${tableName}" DROP CONSTRAINT IF EXISTS "${
+            constraintName ||
             wildebeest.namingConventions.foreignKeyConstraint(
               tableName,
               columnName,
-            )}";`,
+            )
+          }";`,
         ),
       ),
   };
