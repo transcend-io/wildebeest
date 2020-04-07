@@ -2,7 +2,7 @@
  * Creates the handlebars instance
  */
 
-// external modules
+// external
 import Handlebars from 'handlebars';
 
 // helpers

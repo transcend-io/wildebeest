@@ -1,4 +1,4 @@
-// external modules
+// external
 import { S3 } from 'aws-sdk';
 
 // global

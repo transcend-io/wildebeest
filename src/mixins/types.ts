@@ -4,7 +4,7 @@
  * TODO options undefined handling
  */
 
-// external modules
+// external
 import {
   BelongsToCreateAssociationMixinOptions,
   BelongsToGetAssociationMixin,

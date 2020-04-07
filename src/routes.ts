@@ -2,7 +2,7 @@
  * Routes for running migrations
  */
 
-// external modules
+// external
 import express from 'express';
 
 // local

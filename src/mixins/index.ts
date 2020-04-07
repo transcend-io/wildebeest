@@ -3,7 +3,7 @@
  * Mixin prototypes to attach to each model instance in addition to the sequelize mixins
  */
 
-// external modules
+// external
 import pluralize from 'pluralize';
 import { FindOptions } from 'sequelize';
 

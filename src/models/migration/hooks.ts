@@ -1,11 +1,9 @@
-// external modules
-import { ModelHooks } from 'sequelize/types/lib/hooks';
-
 // global
 import { ModelMap } from '@wildebeest/types';
+import createHooks from '@wildebeest/utils/createHooks';
 
 // local
-import Migration from './Migration';
+import type Migration from './Migration';
 
 const getNumber = (name: string): number =>
   parseInt(name.match(/^\d+/) as any, 10);
@@ -13,14 +11,14 @@ const getNumber = (name: string): number =>
 /**
  * The default model hooks
  */
-export const hooks: Partial<ModelHooks<Migration<ModelMap>>> = {
+export default createHooks<Migration<ModelMap>>({
   /**
    * Updates the batch number of a new migration
    *
    * @param migration - The newly created migration
    */
   afterCreate: async (migration) => {
-    const { batch } = Migration;
+    const { batch } = migration.constructor as typeof Migration;
     await migration.update({ batch });
   },
   /**
@@ -33,7 +31,8 @@ export const hooks: Partial<ModelHooks<Migration<ModelMap>>> = {
   beforeDestroy: async (migration) => {
     const index = getNumber(migration.name);
 
-    await Migration.findAll()
+    await (migration.constructor as typeof Migration)
+      .findAll()
       .then((migrations) =>
         migrations.filter(({ name }) => getNumber(name) >= index),
       )
@@ -41,4 +40,4 @@ export const hooks: Partial<ModelHooks<Migration<ModelMap>>> = {
         Promise.all(migrations.map((mig) => mig.destroy())),
       );
   },
-};
+});

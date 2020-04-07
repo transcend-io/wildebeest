@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-// external modules
+// external
 import * as express from 'express';
 import * as sequelize from 'sequelize';
 import { HookReturn, ModelHooks } from 'sequelize/types/lib/hooks';

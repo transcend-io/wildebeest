@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-// external modules
+// external
 import difference from 'lodash/difference';
 import { DataType, ModelAttributeColumnOptions, WhereOptions } from 'sequelize';
 

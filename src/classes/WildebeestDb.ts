@@ -2,7 +2,7 @@
  * A modified sequelize database class with helper functions useful to wildebeest
  */
 
-// external modules
+// external
 import {
   DataTypes,
   Options,

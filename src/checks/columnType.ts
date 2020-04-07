@@ -1,4 +1,4 @@
-// external modules
+// external
 import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
 // global

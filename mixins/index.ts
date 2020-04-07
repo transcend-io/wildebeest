@@ -4,7 +4,7 @@
 import './convert_paths';
 
 /* tslint:disable no-relative-imports */
-// external modules
+// external
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 

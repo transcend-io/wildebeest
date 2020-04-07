@@ -3,7 +3,7 @@
  * The main migration runner and checking class definition
  */
 
-// external modules
+// external
 import { S3 } from 'aws-sdk';
 import * as express from 'express';
 import { existsSync, readdirSync } from 'fs';

@@ -1,4 +1,4 @@
-// external modules
+// external
 import difference from 'lodash/difference';
 import uniq from 'lodash/uniq';
 import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';

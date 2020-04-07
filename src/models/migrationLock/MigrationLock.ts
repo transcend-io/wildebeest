@@ -2,7 +2,7 @@
  * A database model for a MigrationLock request.
  */
 
-// external modules
+// external
 import { Transaction } from 'sequelize';
 
 // global
@@ -18,19 +18,16 @@ import Migration from '@wildebeest/models/migration/Migration';
 import { ExtractAttributes, ModelMap } from '@wildebeest/types';
 
 // local
-import attributes from './attributes';
+import definition from './definition';
 
 /**
  * A MigrationLock db model
  */
 export default class MigrationLock<TModels extends ModelMap>
   extends WildebeestModel<TModels>
-  implements ExtractAttributes<typeof attributes> {
+  implements ExtractAttributes<typeof definition['attributes']> {
   /** The model definition */
-  public static definition = {
-    attributes,
-    tableName: 'migrationLocks',
-  };
+  public static definition = definition;
 
   /**
    * Lock the migrations so no one else attempts to migrate the db at the same time.

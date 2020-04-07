@@ -1,4 +1,4 @@
-// external modules
+// external
 import { QueryTypes, Sequelize, Transaction } from 'sequelize';
 
 /**

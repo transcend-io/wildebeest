@@ -1,4 +1,4 @@
-// external modules
+// external
 import flatten from 'lodash/flatten';
 
 // migrationTypes

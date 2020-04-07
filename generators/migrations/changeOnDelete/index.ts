@@ -1,4 +1,4 @@
-// external modules
+// external
 import kebabCase from 'lodash/kebabCase';
 
 // global

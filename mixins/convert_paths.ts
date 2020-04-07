@@ -21,7 +21,7 @@
  * @author awendland
  */
 
-// external modules
+// external
 import fs from 'fs';
 import { join } from 'path';
 

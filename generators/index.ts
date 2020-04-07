@@ -1,4 +1,4 @@
-// external modules
+// external
 import difference from 'lodash/difference';
 import kebabCase from 'lodash/kebabCase';
 

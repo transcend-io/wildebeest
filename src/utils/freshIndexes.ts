@@ -1,4 +1,4 @@
-// external modules
+// external
 import { ModelOptions } from 'sequelize';
 
 /**

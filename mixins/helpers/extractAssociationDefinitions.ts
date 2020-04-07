@@ -1,4 +1,4 @@
-// external modules
+// external
 import * as ts from 'typescript';
 
 // mixins
