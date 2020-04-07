@@ -7,8 +7,7 @@ import difference from 'lodash/difference';
 import { join } from 'path';
 
 // Call bash command
-const cmdSync = (str: string): string =>
-  execSync(str).toString().split('\n')[0];
+const cmdSync = (str: string): string => execSync(str).toString();
 
 // Logger
 const logger = console;
@@ -116,6 +115,7 @@ export function main(
   baseBranch: string,
   migrationsRoot: string,
   buildRoot?: string,
+  verbose = false,
 ): void {
   // List the migrations on the base branch
   const baseMigrations = getMigrationsList(
@@ -133,6 +133,16 @@ export function main(
   const lastMigrationNumber = getMigrationNumber(
     baseMigrations[baseMigrations.length - 1],
   );
+
+  // Log out
+  if (verbose) {
+    logger.log({
+      baseMigrations,
+      currentMigrations,
+      extraMigrations,
+      lastMigrationNumber,
+    });
+  }
 
   // Move the migration files to the end
   moveMigrationsToEnd(lastMigrationNumber + 1, extraMigrations, migrationsRoot);
@@ -152,7 +162,12 @@ export function main(
 }
 
 // Environment variables
-const { BASE_BRANCH = 'master', MIGRATIONS_ROOT, BUILD_ROOT } = process.env;
+const {
+  BASE_BRANCH = 'master',
+  MIGRATIONS_ROOT,
+  BUILD_ROOT,
+  VERBOSE = false,
+} = process.env;
 
 if (!MIGRATIONS_ROOT) {
   throw new Error(
@@ -161,4 +176,4 @@ if (!MIGRATIONS_ROOT) {
 }
 
 // Run
-main(BASE_BRANCH, MIGRATIONS_ROOT, BUILD_ROOT);
+main(BASE_BRANCH, MIGRATIONS_ROOT, BUILD_ROOT, VERBOSE);
