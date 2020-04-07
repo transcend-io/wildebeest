@@ -81,7 +81,7 @@ export default function extractAssociationDefinitions(
   }
 
   /**
-   * Visit nodes finding exported ASSOCIATIONS
+   * Visit nodes finding exported associations
    *
    * @param node - The node to visit
    */

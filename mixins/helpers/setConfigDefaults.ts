@@ -9,7 +9,7 @@ import { GenerateMixinsConfig } from '@mixins/types';
 import defaultDetermineModelToExtend from './determineModelToExtend';
 
 /**
- * Define alll properties of config
+ * Define all properties of config
  *
  * @param config - The  raw config
  * @returns The keys of the object preserving type
@@ -19,8 +19,8 @@ export default function setConfigDefaults({
   pluralCase = pluralize,
   singularCase = pluralize.singular,
   baseFileName = 'Base.ts',
-  associationFileName = 'associations.ts',
-  associationDefinitionName = 'ASSOCIATIONS',
+  associationFileName = 'definition.ts',
+  associationDefinitionName = 'associations',
   tsConfigPath,
   baseModelTemplatePath = join(__dirname, '..', 'base.hbs'),
   determineModelToExtend = defaultDetermineModelToExtend,
