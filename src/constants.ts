@@ -1,4 +1,4 @@
-// external modules
+// external
 import { snakeCase } from 'change-case';
 import { ModelIndexesOptions } from 'sequelize';
 

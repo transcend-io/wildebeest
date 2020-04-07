@@ -1,4 +1,4 @@
-// external modules
+// external
 import { execSync } from 'child_process';
 
 // global

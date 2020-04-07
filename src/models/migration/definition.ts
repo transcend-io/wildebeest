@@ -1,13 +1,16 @@
-// external modules
+// external
 import { DataTypes } from 'sequelize';
 
 // global
 import createAttributes from '@wildebeest/utils/createAttributes';
 
+// local
+import hooks from './hooks';
+
 /**
  * Attribute definitions for the model
  */
-const ATTRIBUTES = createAttributes({
+const attributes = createAttributes({
   /** The id is an integer */
   id: {
     autoIncrement: true,
@@ -26,4 +29,10 @@ const ATTRIBUTES = createAttributes({
     unique: 'name must be unique',
   },
 });
-export default ATTRIBUTES;
+
+// Model definition
+export default {
+  attributes,
+  options: { hooks },
+  tableName: 'migrations',
+};

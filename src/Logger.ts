@@ -1,5 +1,5 @@
 /* eslint-disable no-console,class-methods-use-this */
-// external modules
+// external
 /* tslint:disable no-var-requires */
 const chalk = require('chalk'); // eslint-disable-line @typescript-eslint/no-var-requires
 /* tslint:enable no-var-requires */

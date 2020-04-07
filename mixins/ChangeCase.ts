@@ -1,4 +1,4 @@
-// external modules
+// external
 import camelCase from 'lodash/camelCase';
 import pluralize from 'pluralize';
 

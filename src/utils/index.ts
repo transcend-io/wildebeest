@@ -12,6 +12,7 @@ export { default as configureAssociations } from './configureAssociations';
 export { default as configureModelDefinition } from './configureModelDefinition';
 export { default as createAssociationApply } from './createAssociationApply';
 export { default as createAttributes } from './createAttributes';
+export { default as createHooks } from './createHooks';
 export { default as createAssociationApplyValue } from './createAssociationApplyValue';
 export { default as createIndex } from './createIndex';
 export { default as createUmzugLogger } from './createUmzugLogger';

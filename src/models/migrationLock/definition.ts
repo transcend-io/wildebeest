@@ -1,4 +1,4 @@
-// external modules
+// external
 import { DataTypes } from 'sequelize';
 
 // global
@@ -7,7 +7,7 @@ import createAttributes from '@wildebeest/utils/createAttributes';
 /**
  * Attribute definitions for the model
  */
-const ATTRIBUTES = createAttributes({
+const attributes = createAttributes({
   /** Indicates that the migrator should be locked because another instance is running the migrations. */
   isLocked: {
     allowNull: false,
@@ -16,4 +16,9 @@ const ATTRIBUTES = createAttributes({
     unique: 'isLocked must be unique',
   },
 });
-export default ATTRIBUTES;
+
+// Model definition
+export default {
+  attributes,
+  tableName: 'migrationLocks',
+};

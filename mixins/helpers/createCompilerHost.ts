@@ -1,4 +1,4 @@
-// external modules
+// external
 import { join } from 'path';
 import * as ts from 'typescript';
 

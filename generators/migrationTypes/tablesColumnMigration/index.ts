@@ -1,4 +1,4 @@
-// external modules
+// external
 import intersection from 'lodash/intersection';
 
 // migrationTypes

@@ -1,4 +1,4 @@
-// external modules
+// external
 import transform from 'lodash/transform';
 
 // global

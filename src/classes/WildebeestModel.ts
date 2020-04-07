@@ -1,6 +1,6 @@
 /* eslint-disable-line max-lines */
 
-// external modules
+// external
 import * as Bluebird from 'bluebird';
 import { Model, ModelOptions, Op } from 'sequelize';
 import { ModelHooks } from 'sequelize/types/lib/hooks';

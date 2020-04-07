@@ -1,4 +1,4 @@
-// external modules
+// external
 const { join } = require('path');
 const { readFileSync, writeFileSync } = require('fs');
 const glob = require('glob');

@@ -1,4 +1,4 @@
-// external modules
+// external
 import difference from 'lodash/difference';
 import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 

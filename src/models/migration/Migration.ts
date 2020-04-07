@@ -2,7 +2,7 @@
  * A database model for a Migration request.
  */
 
-// external modules
+// external
 import {
   DownToOptions,
   ExecuteOptions,
@@ -16,21 +16,16 @@ import { ExtractAttributes, ModelMap, UpToOptions } from '@wildebeest/types';
 import logSection from '@wildebeest/utils/logSection';
 
 // local
-import attributes from './attributes';
-import * as options from './options';
+import definition from './definition';
 
 /**
  * A Migration db model
  */
 export default class Migration<TModels extends ModelMap>
   extends WildebeestModel<TModels>
-  implements ExtractAttributes<typeof attributes> {
+  implements ExtractAttributes<typeof definition['attributes']> {
   /** The model definition */
-  public static definition = {
-    attributes,
-    options,
-    tableName: 'migrations',
-  };
+  public static definition = definition;
 
   /** The current batch number to add */
   public static batch: number;

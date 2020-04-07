@@ -1,4 +1,4 @@
-// external modules
+// external
 import { Op } from 'sequelize';
 
 // global

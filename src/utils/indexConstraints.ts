@@ -1,4 +1,4 @@
-// external modules
+// external
 import keyBy from 'lodash/keyBy';
 
 /**

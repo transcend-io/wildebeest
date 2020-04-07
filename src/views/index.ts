@@ -2,7 +2,7 @@
  * Handlebars templates used for the running wildebeest migrations.
  */
 
-// external modules
+// external
 import { readFileSync } from 'fs';
 import Handlebars from 'handlebars';
 

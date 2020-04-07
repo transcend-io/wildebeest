@@ -2,7 +2,7 @@
  * Migration files for migrating the db using Sequelize and Umzug
  */
 
-// external modules
+// external
 import { DataTypes } from 'sequelize';
 
 // local

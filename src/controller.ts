@@ -1,4 +1,4 @@
-// external modules
+// external
 import * as express from 'express';
 
 // global

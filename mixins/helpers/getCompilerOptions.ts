@@ -1,4 +1,4 @@
-// external modules
+// external
 import * as fs from 'fs';
 import { join } from 'path';
 import { CompilerOptions } from 'typescript';

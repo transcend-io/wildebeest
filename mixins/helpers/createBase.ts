@@ -1,4 +1,4 @@
-// external modules
+// external
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
