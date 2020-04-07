@@ -25,6 +25,7 @@ export * from './types';
 export { default as Logger } from './Logger';
 export const {
   createAssociationApply,
+  createHooks,
   createAssociationApplyValue,
   createAttributes,
   escapeJson,
