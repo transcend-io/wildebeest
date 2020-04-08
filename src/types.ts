@@ -3,6 +3,7 @@
 import * as express from 'express';
 import * as sequelize from 'sequelize';
 import { HookReturn, ModelHooks } from 'sequelize/types/lib/hooks';
+import { ValidationOptions } from 'sequelize/types/lib/instance-validator';
 import * as umzug from 'umzug';
 
 // models
@@ -471,6 +472,16 @@ export type HookOptions<M extends WildebeestModel<ModelMap>> = Partial<
   Spread<
     ModelHooks<M>,
     {
+      /** Before validate, missing transaction */
+      beforeValidate(
+        attributes: M,
+        options: ValidationOptions & Partial<TransactionOptions>,
+      ): HookReturn;
+      /** After validate, missing transaction */
+      afterValidate(
+        attributes: M,
+        options: ValidationOptions & Partial<TransactionOptions>,
+      ): HookReturn;
       /** Before row is created */
       beforeCreate(
         attributes: M,
