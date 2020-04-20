@@ -67,7 +67,7 @@ export type NamingConventions = typeof DEFAULT_NAMING_CONVENTIONS;
  * The options needed to configure a wildebeest
  */
 export type WildebeestOptions<TModels extends ModelMap> = {
-  /** The uri of the database to connect o */
+  /** The uri of the database to connect to */
   databaseUri: string;
   /** The path to the folder where the migrations themselves are defined */
   directory: string;
