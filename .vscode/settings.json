@@ -29,7 +29,8 @@
     "symlinks",
     "types",
     "umzug",
-    "unnested"
+    "unnested",
+    "upsert"
   ],
   "[handlebars]": { "editor.formatOnSave": false },
   "eslint.validate": [
