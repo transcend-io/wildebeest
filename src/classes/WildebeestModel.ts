@@ -215,7 +215,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
    * @returns The merged default definitions
    */
   public static mergeDefaultDefinitions<
-    TNewDefaults extends Partial<ModelDefinition<any>>, // StringKeys<ModelMap>
+    TNewDefaults extends Partial<ModelDefinition<any>>,
     M extends typeof WildebeestModel
   >(
     this: M,

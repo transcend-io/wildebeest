@@ -72,9 +72,11 @@ export type SubNotType<Base, Condition> = Pick<
 /**
  * Convert unions to intersection
  */
-export type UnionToIntersection<U> = (U extends any // eslint-disable-line @typescript-eslint/no-explicit-any
-? (k: U) => void
-: never) extends (k: infer I) => void
+export type UnionToIntersection<U> = (
+  U extends any // eslint-disable-line @typescript-eslint/no-explicit-any
+    ? (k: U) => void
+    : never
+) extends (k: infer I) => void
   ? I
   : never;
 
