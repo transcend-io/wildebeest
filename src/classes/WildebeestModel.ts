@@ -209,22 +209,15 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
 
   /**
    * Get the model definition by merging the default definition and definition
+   * TODO: Type this better so that it can be moved out of main
    *
-   * @param this -This model
    * @param mergeDefaults - The defaults to merge with the existing defaults
    * @returns The merged default definitions
    */
   public static mergeDefaultDefinitions<
-    TNewDefaults extends Partial<ModelDefinition<any>>,
-    M extends typeof WildebeestModel
-  >(
-    this: M,
-    mergeDefaults: TNewDefaults,
-  ): TNewDefaults & M['definitionDefaults'] {
-    if (!this.definitionDefaults) {
-      this.definitionDefaults = {};
-    }
-
+    TNewDefaults extends Partial<ModelDefinition<StringKeys<ModelMap>>>,
+    M extends any
+  >(mergeDefaults: TNewDefaults): TNewDefaults & M['definitionDefaults'] {
     return {
       // Definition overrides defaults
       ...this.definitionDefaults,
@@ -252,7 +245,7 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
         this.definitionDefaults.options,
         mergeDefaults.options,
       ),
-    };
+    } as any;
   }
 
   /**
