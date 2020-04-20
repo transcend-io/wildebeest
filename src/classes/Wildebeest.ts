@@ -539,8 +539,9 @@ export default class Wildebeest<TModels extends ModelMap> {
         // Log when lock is not acquired
         if (!lock) {
           this.logger.info(
-            `Detected migration occurring, sleeping randomly up to ${sleepTime /
-              ONE_SECOND} seconds`,
+            `Detected migration occurring, sleeping randomly up to ${
+              sleepTime / ONE_SECOND
+            } seconds`,
           );
         }
       } /* eslint-enable */
