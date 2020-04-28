@@ -51,7 +51,7 @@ export default class WildebeestDb<TModels extends ModelMap> extends Sequelize {
     TOptions extends
       | {
           /** The current transaction */
-          transaction: Transaction;
+          transaction?: Transaction;
         }
       | undefined,
     T
