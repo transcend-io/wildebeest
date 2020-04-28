@@ -447,7 +447,7 @@ export type QueryHelpers<
  */
 export type TransactionOptions = {
   /** The database transaction */
-  transaction: sequelize.Transaction;
+  transaction?: sequelize.Transaction;
 };
 
 /**
