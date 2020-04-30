@@ -40,7 +40,7 @@
     "build:watch": "tsc --watch"
   },
   "dependencies": {
-    "aws-sdk": "^2.654.0",
+    "aws-sdk": "^2.655.0",
     "change-case": "=3.1.0",
     "express": "^4.17.1",
     "handlebars": "^4.7.6",
