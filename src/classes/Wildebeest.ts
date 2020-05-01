@@ -23,11 +23,11 @@ import getNumberedList, {
   NUMBERED_REGEX,
 } from '@wildebeest/utils/getNumberedList';
 import pascalCase from '@wildebeest/utils/pascalCase';
+// utils
+import randomTimeoutPromise from '@wildebeest/utils/randomTimeoutPromise';
 import restoreFromDump from '@wildebeest/utils/restoreFromDump';
 import sleepPromise from '@wildebeest/utils/sleepPromise';
 import tableExists from '@wildebeest/utils/tableExists';
-// utils
-import randomTimeoutPromise from '@wildebeest/utils/randomTimeoutPromise';
 
 // checks
 import { checkExtraneousTables, checkModel } from '@wildebeest/checks';
@@ -402,6 +402,7 @@ export default class Wildebeest<TModels extends ModelMap> {
    */
   public async setup(): Promise<void> {
     // Check if the migrations table exists
+    /* eslint-disable no-await-in-loop */
     while (!(await tableExists(this.db, this.tableNames.migration))) {
       // If the table does not exist yet, restore the genesis migration and indicate the first migration ocurred
       // Only run this from one node by controlling the value of waitForMigration
@@ -422,7 +423,7 @@ export default class Wildebeest<TModels extends ModelMap> {
       this.logger.info('Waiting for the genesis migration to finish');
       // wait for some time
       await randomTimeoutPromise(MIGRATION_TIMEOUT);
-    } /* eslint-enable no-await-in-loop */
+    }
   }
 
   /**
