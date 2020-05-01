@@ -35,9 +35,10 @@
     "test": "echo no tests",
     "test:nobuild": "NODE_ENV=test ./node_modules/.bin/mocha \"build/**/*.test.{js,ts}\" --reporter spec --timeout 10000",
     "####### Build #######": "",
-    "prepare": "npm run build",
+    "prepare": "yarn run snyk-protect && npm run build",
     "build": "rimraf build && tsc && copy './mixins/{**/*.hbs,**/*.json}' build/mixins && copy './src/{**/*.hbs,**/*.json}' build/src && node ./fix_absolute_imports.js",
-    "build:watch": "tsc --watch"
+    "build:watch": "tsc --watch",
+    "snyk-protect": "snyk protect"
   },
   "dependencies": {
     "aws-sdk": "^2.654.0",
@@ -47,7 +48,8 @@
     "lodash": "^4.17.15",
     "pluralize": "^8.0.0",
     "sequelize": "^5.21.6",
-    "umzug": "^2.3.0"
+    "umzug": "^2.3.0",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.4",
@@ -73,5 +75,6 @@
     "tslint": "^6.1.1",
     "tslint-microsoft-contrib": "^6.2.0",
     "typescript": "^3.8.3"
-  }
+  },
+  "snyk": true
 }
