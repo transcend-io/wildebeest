@@ -26,6 +26,8 @@ import pascalCase from '@wildebeest/utils/pascalCase';
 import restoreFromDump from '@wildebeest/utils/restoreFromDump';
 import sleepPromise from '@wildebeest/utils/sleepPromise';
 import tableExists from '@wildebeest/utils/tableExists';
+// utils
+import randomTimeoutPromise from '@wildebeest/utils/randomTimeoutPromise';
 
 // checks
 import { checkExtraneousTables, checkModel } from '@wildebeest/checks';
@@ -111,6 +113,8 @@ export type WildebeestOptions<TModels extends ModelMap> = {
   errOnSyncFailure?: boolean;
   /** When testing migrations, this should be the bottom migration to run down to. Defaults to 2 since 1 must be a genesis migration */
   bottomTest?: number;
+  /** Wait for migration to finish */
+  waitForMigration?: boolean;
 };
 
 /**
@@ -244,6 +248,9 @@ export default class Wildebeest<TModels extends ModelMap> {
   /** A router containing routes that can be used to run migrations and check the status of synced models */
   public router: express.Router;
 
+  /** Run table migration when DB empty */
+  public waitForMigration: boolean;
+
   /**
    * Initialize a wildebeest migration runner
    */
@@ -270,6 +277,7 @@ export default class Wildebeest<TModels extends ModelMap> {
     pluralCase = pluralize,
     allowSchemaWrites = process.env.NODE_ENV === 'development',
     errOnSyncFailure = process.env.NODE_ENV === 'production',
+    waitForMigration = false,
   }: WildebeestOptions<TModels>) {
     // The db as a sequelize migrator
     this.db = new WildebeestDb(databaseUri, sequelizeOptions);
@@ -368,6 +376,7 @@ export default class Wildebeest<TModels extends ModelMap> {
 
     // Construct the router
     this.router = createRoutes(this);
+    this.waitForMigration = waitForMigration;
   }
 
   /**
@@ -393,21 +402,27 @@ export default class Wildebeest<TModels extends ModelMap> {
    */
   public async setup(): Promise<void> {
     // Check if the migrations table exists
-    const exists = await tableExists(this.db, this.tableNames.migration);
+    while (!(await tableExists(this.db, this.tableNames.migration))) {
+      // If the table does not exist yet, restore the genesis migration and indicate the first migration ocurred
+      // Only run this from one node by controlling the value of waitForMigration
+      if (!this.waitForMigration) {
+        await restoreFromDump(this, this.restoreSchemaOnEmpty);
 
-    // If the table does not exist yet, restore the genesis migration and indicate the first migration ocurred
-    if (!exists) {
-      await restoreFromDump(this, this.restoreSchemaOnEmpty);
-    }
+        // Run the first migration if it has not been run yet
+        const hasMigrations = await Migration.count().then((cnt) => cnt > 0);
+        if (!hasMigrations) {
+          await Migration.execute({
+            migrations: [this.lookupMigration[this.bottomTest].fileName],
+            method: 'up',
+          });
+        }
+        break;
+      }
 
-    // Run the first migration if it has not been run yet
-    const hasMigrations = await Migration.count().then((cnt) => cnt > 0);
-    if (!hasMigrations) {
-      await Migration.execute({
-        migrations: [this.lookupMigration[this.bottomTest].fileName],
-        method: 'up',
-      });
-    }
+      this.logger.info('Waiting for the genesis migration to finish');
+      // wait for some time
+      await randomTimeoutPromise(MIGRATION_TIMEOUT);
+    } /* eslint-enable no-await-in-loop */
   }
 
   /**
