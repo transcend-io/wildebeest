@@ -4,11 +4,7 @@ import { QueryTypes } from 'sequelize';
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import { ONE_MINUTE, ONE_SECOND } from '@wildebeest/constants';
-import {
-  Attributes,
-  MigrationTransactionOptions,
-  ModelMap,
-} from '@wildebeest/types';
+import { Attributes, MigrationTransactionOptions } from '@wildebeest/types';
 
 /**
  * Options to define which rows to process
@@ -37,14 +33,13 @@ export type WhereOptions = {
  */
 export default async function batchProcess<
   T extends {},
-  TModels extends ModelMap,
   TAttributes extends Attributes
 >(
-  { db, logger }: Wildebeest<TModels>,
+  { db, logger }: Wildebeest,
   tableName: string,
   whereOptions: WhereOptions = {},
   processRow: (row: T) => void,
-  transactionOptions?: MigrationTransactionOptions<TModels, TAttributes>,
+  transactionOptions?: MigrationTransactionOptions<TAttributes>,
   logThreshold: number = ONE_MINUTE / 3,
 ): Promise<number> {
   const { queryInterface } = db;

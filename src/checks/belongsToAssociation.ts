@@ -2,9 +2,9 @@
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import {
   BelongsToAssociation,
-  ModelMap,
-  StringKeys,
   SyncError,
+  WildebeestModelName,
+  WildebeestStringModelName,
 } from '@wildebeest/types';
 
 /**
@@ -15,13 +15,13 @@ import {
  * @param tableName - The table of the model being checked
  * @param association - The association configuration
  * @param name - The name of the association
- * @returns True if belongs to association is valiid
+ * @returns True if belongs to association is valid
  */
-export default function checkBelongsToAssociation<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
-  modelName: StringKeys<TModels>,
+export default function checkBelongsToAssociation(
+  wildebeest: Wildebeest,
+  modelName: WildebeestStringModelName,
   tableName: string,
-  association: BelongsToAssociation<StringKeys<TModels>>,
+  association: BelongsToAssociation<WildebeestModelName>,
   associationName: string,
 ): SyncError[] {
   // Keep track of errors
@@ -31,13 +31,15 @@ export default function checkBelongsToAssociation<TModels extends ModelMap>(
   const associationModelName =
     typeof association === 'object' && association.modelName
       ? association.modelName
-      : (associationName as StringKeys<TModels>);
+      : (associationName as WildebeestStringModelName);
 
   // Get the associations of the association
   const {
     associations = {},
     dontMatchBelongsTo,
-  } = wildebeest.getModelDefinition(associationModelName);
+  } = wildebeest.getModelDefinition(
+    associationModelName as WildebeestModelName,
+  );
 
   // Can skip if dont need to match it
   if (dontMatchBelongsTo) {

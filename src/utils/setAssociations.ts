@@ -3,6 +3,7 @@
 import WildebeestModel from '@wildebeest/classes/WildebeestModel';
 
 // local
+import { WildebeestModelName } from '@wildebeest/types';
 import apply from './apply';
 
 /**
@@ -63,7 +64,7 @@ export default function setAssociations<T extends typeof WildebeestModel>(
   // Process `belongsToMany` associations
   apply(associations.belongsToMany, (association, associationName) => {
     // Get the child model
-    const associationModel = db.model(associationName);
+    const associationModel = db.model(associationName as WildebeestModelName);
 
     // Belongs to
     Model.associations[

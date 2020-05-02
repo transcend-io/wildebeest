@@ -11,9 +11,9 @@ import getForeignKeyName from './getForeignKeyName';
  * @param associations - The associations for that db model
  * @returns The expected column names
  */
-export default function expectedColumnNames<TModelNames extends string>(
+export default function expectedColumnNames(
   attributes: Attributes = {},
-  associations: Associations<TModelNames> = {},
+  associations: Associations = {},
 ): string[] {
   const { belongsTo = {} } = associations;
   return [

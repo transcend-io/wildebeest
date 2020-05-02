@@ -1,10 +1,6 @@
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
-import {
-  Attributes,
-  MigrationTransactionOptions,
-  ModelMap,
-} from '@wildebeest/types';
+import { Attributes, MigrationTransactionOptions } from '@wildebeest/types';
 
 // local
 import columnAllowsNull from './columnAllowsNull';
@@ -22,11 +18,11 @@ import migrateEnumColumn, { MigrateEnumOptions } from './migrateEnumColumn';
  * @param options - Specify additional options to pass to migrateEnumColumn
  * @returns The change enum promise
  */
-export default async function migrateEnumValues<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
+export default async function migrateEnumValues(
+  wildebeest: Wildebeest,
   enumValueList: string[],
   migrateEnumOptions: MigrateEnumOptions,
-  transactionOptions: MigrationTransactionOptions<TModels, Attributes>,
+  transactionOptions: MigrationTransactionOptions<Attributes>,
 ): Promise<void> {
   const { tableName, columnName } = migrateEnumOptions;
 

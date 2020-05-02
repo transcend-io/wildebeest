@@ -1,6 +1,6 @@
 // global
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
-import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
+import { MigrationTransactionOptions } from '@wildebeest/types';
 
 /**
  * Options for creating an index
@@ -23,11 +23,11 @@ export type CreateIndexOptions = {
  * @param options - The index options
  * @param transactionOptions - The transaction options
  */
-export default async function createIndex<TModels extends ModelMap>(
-  db: WildebeestDb<TModels>,
+export default async function createIndex(
+  db: WildebeestDb,
   name: string,
   options: CreateIndexOptions,
-  transactionOptions?: MigrationTransactionOptions<TModels>,
+  transactionOptions?: MigrationTransactionOptions,
 ): Promise<void> {
   const { tableName, fields, ...rest } = options;
   await db.queryInterface.addIndex(tableName, fields, {

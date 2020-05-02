@@ -1,9 +1,9 @@
-// external moduels
+// external
 import difference from 'lodash/difference';
 import { QueryTypes } from 'sequelize';
 
 // global
-import { ModelMap, SyncError } from '@wildebeest/types';
+import { SyncError } from '@wildebeest/types';
 
 // classes
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
@@ -25,8 +25,8 @@ export type TableDefinition = {
  * @param tableNames - The tables names that should exist
  * @returns Any errors related to extra tables.
  */
-export default async function checkExtraneousTables<TModels extends ModelMap>(
-  db: WildebeestDb<TModels>,
+export default async function checkExtraneousTables(
+  db: WildebeestDb,
   tableNames: string[],
 ): Promise<SyncError[]> {
   // Keep track of errors

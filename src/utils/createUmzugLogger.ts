@@ -11,7 +11,7 @@ export const BASE_100_MIGRATIONS_REGEX = /== ([0-9][0-9]00).+?\(.+?s\)/;
  * Create a logging function to use with umzugs
  *
  * @param logger - The logger to use
- * @returns A logging function that can be used to initalize umzug
+ * @returns A logging function that can be used to initialize umzug
  */
 export default function createUmzugLogger(
   logger: Logger,

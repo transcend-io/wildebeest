@@ -1,5 +1,5 @@
 // global
-import { MigrationDefinition, ModelMap } from '@wildebeest/types';
+import { MigrationDefinition } from '@wildebeest/types';
 
 // local
 import custom from './custom';
@@ -18,13 +18,12 @@ export type InitMigrationOptions = {
  * @param options - Init migration options
  * @returns The init migrator
  */
-export default function init<TModels extends ModelMap>({
+export default function init({
   genesisSchema,
-}: InitMigrationOptions): MigrationDefinition<TModels> {
+}: InitMigrationOptions): MigrationDefinition {
   return custom({
-    up: (transactionOptions, wildebeest) =>
+    up: (_, wildebeest) =>
       wildebeest.runWithLock((lock) => lock.restoreSchema(genesisSchema)),
-    down: (transactionOptions, wildebeest) =>
-      wildebeest.runWithLock((lock) => lock.dropAll()),
+    down: (_, wildebeest) => wildebeest.runWithLock((lock) => lock.dropAll()),
   });
 }

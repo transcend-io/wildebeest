@@ -7,7 +7,6 @@ import {
   ExtractRequiredAttributes,
   Identity,
   MigrationTransactionOptions,
-  ModelMap,
   SubNotType,
 } from '@wildebeest/types';
 import getKeys from '@wildebeest/utils/getKeys';
@@ -44,13 +43,10 @@ export type ExtractUpdateAttributes<TAttributes extends Attributes> = Identity<
 /**
  * Database column definitions, often found in attributes.js
  */
-export type RowUpdater<
-  TModels extends ModelMap,
-  TAttributes extends Attributes
-> = (
+export type RowUpdater<TAttributes extends Attributes> = (
   row: AttributeInputs,
-  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
-  db: WildebeestDb<TModels>,
+  transactionOptions: MigrationTransactionOptions<TAttributes>,
+  db: WildebeestDb,
 ) =>
   | ExtractUpdateAttributes<TAttributes>
   | PromiseLike<ExtractUpdateAttributes<TAttributes>>;
@@ -79,15 +75,14 @@ export type UpdateRowOptions = {
  */
 export default async function updateRows<
   T extends {},
-  TModels extends ModelMap,
   TAttributes extends Attributes
 >(
-  wildebeest: Wildebeest<TModels>,
+  wildebeest: Wildebeest,
   tableName: string,
-  getRowDefaults: RowUpdater<TModels, TAttributes>,
+  getRowDefaults: RowUpdater<TAttributes>,
   columnDefinitions: TAttributes,
   options: UpdateRowOptions = {},
-  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
+  transactionOptions: MigrationTransactionOptions<TAttributes>,
   batchProcessOptions: WhereOptions = {
     attributes: '*',
     orderBy: options.idName || 'id',
@@ -97,7 +92,7 @@ export default async function updateRows<
   const { onNullValue, idName = 'id' } = options;
 
   // Update rows in batches
-  return batchProcess<T, TModels, TAttributes>(
+  return batchProcess<T, TAttributes>(
     wildebeest,
     tableName,
     batchProcessOptions,

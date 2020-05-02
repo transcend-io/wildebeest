@@ -2,6 +2,7 @@ import {
   BelongsToAssociation,
   HasManyAssociation,
   HasOneAssociation,
+  WildebeestModelName,
 } from '@wildebeest/types';
 
 // local
@@ -10,10 +11,10 @@ import getKeys from './getKeys';
 /**
  * No belongs to many
  */
-export type AssociationWithoutBelongsToMany<TModelNames extends string> =
-  | BelongsToAssociation<TModelNames>
-  | HasManyAssociation<TModelNames>
-  | HasOneAssociation<TModelNames>;
+export type AssociationWithoutBelongsToMany =
+  | BelongsToAssociation<WildebeestModelName>
+  | HasManyAssociation<WildebeestModelName>
+  | HasOneAssociation<WildebeestModelName>;
 
 /**
  * Get the association definitions for a given model name
@@ -22,12 +23,14 @@ export type AssociationWithoutBelongsToMany<TModelNames extends string> =
  * @param associations - The association lookup to check for model name in
  * @returns The keys of the object preserving type
  */
-export default function getAssociationsByModelName<TModelNames extends string>(
-  modelName: TModelNames,
+export default function getAssociationsByModelName<
+  TModelName extends WildebeestModelName
+>(
+  modelName: TModelName,
   associations: {
-    [k in string]: AssociationWithoutBelongsToMany<TModelNames>;
+    [k in string]: AssociationWithoutBelongsToMany;
   },
-): AssociationWithoutBelongsToMany<TModelNames>[] {
+): AssociationWithoutBelongsToMany[] {
   return getKeys(associations)
     .filter((associationName) => {
       const association = associations[associationName];

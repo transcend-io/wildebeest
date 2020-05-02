@@ -4,6 +4,7 @@ import {
   HasManyAssociation,
   HasOneAssociation,
   ObjByString,
+  WildebeestModelName,
 } from '@wildebeest/types';
 
 // local
@@ -23,7 +24,7 @@ type ApplyFuncForAssociation<TOutputBase> = <
 /**
  * Apply functions with association
  */
-type AssociationApply<TDatabaseModelName extends string> = {
+type AssociationApply<TDatabaseModelName extends WildebeestModelName> = {
   /** Enforce a belongsTo association */
   belongsTo: ApplyFuncForAssociation<BelongsToAssociation<TDatabaseModelName>>;
   /** Enforce a hasMany association */
@@ -38,7 +39,7 @@ type AssociationApply<TDatabaseModelName extends string> = {
  * @returns A set of apply functions that will enforce association types without casting their underlying values
  */
 export default function createAssociationApply<
-  TDatabaseModelName extends string
+  TDatabaseModelName extends WildebeestModelName
 >(): AssociationApply<TDatabaseModelName> {
   const asBelongsTo = <
     TBelongsTo extends BelongsToAssociation<TDatabaseModelName>

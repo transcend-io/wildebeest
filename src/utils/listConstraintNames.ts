@@ -3,7 +3,7 @@ import { QueryTypes } from 'sequelize';
 
 // global
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
-import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
+import { MigrationTransactionOptions } from '@wildebeest/types';
 
 /**
  * A db constraint
@@ -20,10 +20,10 @@ export type PgConstraint = {
  * @param tableName - The table to list constraints for
  * @returns The names of the constraints
  */
-export default async function listConstraintNames<TModels extends ModelMap>(
-  db: WildebeestDb<TModels>,
+export default async function listConstraintNames(
+  db: WildebeestDb,
   tableName: string,
-  transactionOptions?: MigrationTransactionOptions<TModels>,
+  transactionOptions?: MigrationTransactionOptions,
 ): Promise<string[]> {
   const { queryInterface } = db;
   //  Determine the constraints

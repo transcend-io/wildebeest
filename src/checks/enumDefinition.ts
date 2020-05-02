@@ -5,7 +5,7 @@ import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
-import { ModelMap, SyncError } from '@wildebeest/types';
+import { SyncError } from '@wildebeest/types';
 
 /**
  * Unnested Value
@@ -22,8 +22,8 @@ export type UnnestedAttr = {
  * @param name - The name of the enum
  * @returns The enum values
  */
-export async function listEnumValues<TModels extends ModelMap>(
-  db: WildebeestDb<TModels>,
+export async function listEnumValues(
+  db: WildebeestDb,
   name: string,
 ): Promise<string[]> {
   const enumValues: UnnestedAttr[] = await db.queryInterface.sequelize.query(
@@ -42,8 +42,8 @@ export async function listEnumValues<TModels extends ModelMap>(
  * @param name - The name of the enum
  * @returns True if the enum is defined
  */
-export async function hasEnum<TModels extends ModelMap>(
-  db: WildebeestDb<TModels>,
+export async function hasEnum(
+  db: WildebeestDb,
   name: string,
 ): Promise<boolean> {
   const [enumItem] = await db.queryInterface.sequelize.query(
@@ -68,8 +68,8 @@ export async function hasEnum<TModels extends ModelMap>(
  * @param definition - The enum attribute definition
  * @returns Any errors related to enum definitions
  */
-export default async function EnumDefinition<TModels extends ModelMap>(
-  { namingConventions, db }: Wildebeest<TModels>,
+export default async function EnumDefinition(
+  { namingConventions, db }: Wildebeest,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,

@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "incremental": true,
+    /* Basic Options */
     "target": "ES2018",
     "module": "commonjs",
     "lib": ["esnext", "dom", "es2015"],
@@ -8,6 +10,8 @@
     "sourceMap": true,
     "removeComments": false,
     "esModuleInterop": true,
+
+    /* Module Resolution Options */
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
@@ -17,13 +21,20 @@
     },
     "outDir": "./build",
     "types": ["node", "mocha"],
-    "strict": true
+
+    /* Strict Type-Checking Options */
+    "strict": true,
+
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     "src/**/*",
     "mixins/**/*",
     "scripts/**/*"
     // "generators/**/*" TODO
-  ],
-  "exclude": ["node_modules", "build", "docs", "Internal-Documentation"]
+  ]
 }

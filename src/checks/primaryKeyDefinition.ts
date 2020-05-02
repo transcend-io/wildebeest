@@ -2,7 +2,7 @@
 import { QueryTypes } from 'sequelize';
 
 // global
-import { ModelMap, SyncError } from '@wildebeest/types';
+import { SyncError } from '@wildebeest/types';
 
 // classes
 import Wildebeest from '@wildebeest/classes/Wildebeest';
@@ -29,8 +29,8 @@ export type PrimaryKeyConfig = {
  * @param tableName - The name of the table to get the primary key from
  * @returns The primary key configuration
  */
-export async function getTablePrimaryKey<TModels extends ModelMap>(
-  db: WildebeestDb<TModels>,
+export async function getTablePrimaryKey(
+  db: WildebeestDb,
   tableName: string,
 ): Promise<PrimaryKeyConfig> {
   const [primaryKey] = await db.queryInterface.sequelize.query<
@@ -65,10 +65,8 @@ export async function getTablePrimaryKey<TModels extends ModelMap>(
  * @param name - The name of the expected primary key
  * @returns Any errors with the primary key definition
  */
-export default async function checkPrimaryKeyDefinition<
-  TModels extends ModelMap
->(
-  { db, namingConventions }: Wildebeest<TModels>,
+export default async function checkPrimaryKeyDefinition(
+  { db, namingConventions }: Wildebeest,
   tableName: string,
   name: string,
 ): Promise<SyncError[]> {

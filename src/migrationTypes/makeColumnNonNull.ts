@@ -3,14 +3,13 @@ import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  ModelMap,
 } from '@wildebeest/types';
 
 /**
- * Some queries expect the primary key columnt to be called id TODO factor this out
+ * Some queries expect the primary key column to be called id TODO factor this out
  */
 export type RowWithId = {
-  /** Id of column in priamry key */
+  /** Id of column in primary key */
   id: string | number;
 };
 
@@ -19,8 +18,7 @@ export type RowWithId = {
  */
 export type MakeColumnNonNullOptions<
   T extends RowWithId,
-  TValue extends string | number | null,
-  TModels extends ModelMap
+  TValue extends string | number | null
 > = {
   /** The name of the table to modify */
   tableName: string;
@@ -29,8 +27,8 @@ export type MakeColumnNonNullOptions<
   /** Get the row default value */
   getRowDefault?: (
     row: T,
-    transactionOptions: MigrationTransactionOptions<TModels>,
-    db: WildebeestDb<TModels>,
+    transactionOptions: MigrationTransactionOptions,
+    db: WildebeestDb,
   ) => Promise<TValue>;
   /** When true, drop all null rows */
   drop?: boolean;
@@ -44,11 +42,8 @@ export type MakeColumnNonNullOptions<
  */
 export default function makeColumnNonNull<
   T extends RowWithId,
-  TValue extends string | number | null,
-  TModels extends ModelMap
->(
-  options: MakeColumnNonNullOptions<T, TValue, TModels>,
-): MigrationDefinition<TModels> {
+  TValue extends string | number | null
+>(options: MakeColumnNonNullOptions<T, TValue>): MigrationDefinition {
   const { tableName, columnName, getRowDefault, drop = false } = options;
   return {
     up: async (wildebeest, withTransaction) =>
@@ -104,7 +99,7 @@ export default function makeColumnNonNull<
           `ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" SET not null;`,
         );
       }),
-    down: async (wildebeest, withTransaction) =>
+    down: async (_, withTransaction) =>
       withTransaction(({ queryT }) =>
         queryT.raw(
           `ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" DROP not null;`,

@@ -6,7 +6,6 @@ import { OnDelete } from '@wildebeest/enums';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  ModelMap,
 } from '@wildebeest/types';
 import getForeignKeyConfig from '@wildebeest/utils/getForeignKeyConfig';
 
@@ -33,12 +32,12 @@ export type ChangeOnDeleteOptions = {
  * @param onDelete - What to set onDelete to
  * @returns The change constraint promise
  */
-export async function changeConstraintOnDelete<TModels extends ModelMap>(
-  db: WildebeestDb<TModels>,
+export async function changeConstraintOnDelete(
+  db: WildebeestDb,
   tableName: string,
   constraintName: string,
   onDelete: OnDelete,
-  transactionOptions: MigrationTransactionOptions<TModels>,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   // Raw query interface
   const { queryT } = transactionOptions;
@@ -70,9 +69,9 @@ export async function changeConstraintOnDelete<TModels extends ModelMap>(
  * @param options - The change on delete options
  * @returns he change on delete migrator
  */
-export default function changeOnDelete<TModels extends ModelMap>(
+export default function changeOnDelete(
   options: ChangeOnDeleteOptions,
-): MigrationDefinition<TModels> {
+): MigrationDefinition {
   const { tableName, columnName, newOnDelete, oldOnDelete } = options;
   return {
     up: async ({ db, namingConventions }, withTransaction) =>

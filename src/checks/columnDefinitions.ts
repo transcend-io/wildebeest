@@ -3,12 +3,7 @@ import difference from 'lodash/difference';
 import uniq from 'lodash/uniq';
 
 // global
-import {
-  ConfiguredModelDefinition,
-  ModelMap,
-  StringKeys,
-  SyncError,
-} from '@wildebeest/types';
+import { ConfiguredModelDefinition, SyncError } from '@wildebeest/types';
 import expectedColumnNames from '@wildebeest/utils/expectedColumnNames';
 import listColumns from '@wildebeest/utils/listColumns';
 
@@ -25,9 +20,9 @@ import checkColumnDefinition from './columnDefinition';
  * @param model - The db model to check against
  * @returns Any errors related to all column definitions in the table
  */
-export default async function checkColumnDefinitions<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
-  model: ConfiguredModelDefinition<StringKeys<TModels>>,
+export default async function checkColumnDefinitions(
+  wildebeest: Wildebeest,
+  model: ConfiguredModelDefinition,
 ): Promise<SyncError[]> {
   // Keep track of errors
   const errors: SyncError[] = [];

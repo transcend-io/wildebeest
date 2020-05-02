@@ -5,9 +5,9 @@ import flatten from 'lodash/flatten';
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import {
   ConfiguredModelDefinition,
-  ModelMap,
-  StringKeys,
   SyncError,
+  WildebeestModelName,
+  WildebeestStringModelName,
 } from '@wildebeest/types';
 import apply from '@wildebeest/utils/apply';
 import getKeys from '@wildebeest/utils/getKeys';
@@ -25,10 +25,10 @@ import checkMatchingBelongsTo from './matchingBelongsTo';
  * @param modelName - The name of the model
  * @returns Any errors related to the association not being in sync
  */
-export default async function checkAssociationsSync<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
-  model: ConfiguredModelDefinition<StringKeys<TModels>>,
-  modelName: StringKeys<TModels>,
+export default async function checkAssociationsSync(
+  wildebeest: Wildebeest,
+  model: ConfiguredModelDefinition,
+  modelName: WildebeestStringModelName,
 ): Promise<SyncError[]> {
   // Keep track of errors
   const errors: SyncError[] = [];
@@ -75,14 +75,14 @@ export default async function checkAssociationsSync<TModels extends ModelMap>(
   );
 
   // Validate the belongsToMany associations
-  getKeys(belongsToMany).forEach((assocationName) => {
+  getKeys(belongsToMany).forEach((associationName) => {
     // Get the associations of the association
     const { associations = {} } = wildebeest.getModelDefinition(
-      assocationName as StringKeys<TModels>, // TODO this should  be typed
+      associationName as WildebeestModelName, // TODO this should  be typed
     );
     if (!associations.belongsToMany || !associations.belongsToMany[modelName]) {
       errors.push({
-        message: `Missing belongsToMany on "${assocationName}" to ${modelName}`,
+        message: `Missing belongsToMany on "${associationName}" to ${modelName}`,
         tableName: model.tableName,
       });
     }

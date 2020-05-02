@@ -1,6 +1,10 @@
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
-import { ModelMap, StringKeys, SyncError } from '@wildebeest/types';
+import {
+  SyncError,
+  WildebeestModelName,
+  WildebeestStringModelName,
+} from '@wildebeest/types';
 import getAssociationsByModelName from '@wildebeest/utils/getAssociationsByModelName';
 
 /**
@@ -11,20 +15,25 @@ import getAssociationsByModelName from '@wildebeest/utils/getAssociationsByModel
  * @param associationTable - The name of the table being associated
  * @returns Any errors related to mismatching belongs to configurations
  */
-export default function checkMatchingBelongsTo<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
-  modelName: StringKeys<TModels>,
-  associationTable: StringKeys<TModels>,
+export default function checkMatchingBelongsTo(
+  wildebeest: Wildebeest,
+  modelName: WildebeestStringModelName,
+  associationTable: WildebeestStringModelName,
 ): SyncError[] {
   // Keep track of errors
   const errors: SyncError[] = [];
 
   // Get the associations of the association
-  const { associations = {} } = wildebeest.getModelDefinition(associationTable);
+  const { associations = {} } = wildebeest.getModelDefinition(
+    associationTable as WildebeestModelName,
+  );
   const { belongsTo = {} } = associations;
 
   // Ensure `modelName` is found in one of the associations
-  if (getAssociationsByModelName(modelName, belongsTo).length === 0) {
+  if (
+    getAssociationsByModelName(modelName as WildebeestModelName, belongsTo)
+      .length === 0
+  ) {
     errors.push({
       message: `Missing belongsTo opposite on "${associationTable}" to ${modelName}`,
       tableName: wildebeest.pluralCase(modelName),

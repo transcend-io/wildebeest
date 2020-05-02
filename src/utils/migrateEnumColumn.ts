@@ -3,11 +3,7 @@ import { Op } from 'sequelize';
 
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
-import {
-  Attributes,
-  MigrationTransactionOptions,
-  ModelMap,
-} from '@wildebeest/types';
+import { Attributes, MigrationTransactionOptions } from '@wildebeest/types';
 
 // local
 import dropEnum from './dropEnum';
@@ -41,14 +37,11 @@ export type MigrateEnumOptions = {
  * @param transactionOptions - The current transaction
  * @returns The migrated enum promise
  */
-export default async function migrateEnumColumn<
-  TModels extends ModelMap,
-  TAttributes extends Attributes
->(
-  wildebeest: Wildebeest<TModels>,
+export default async function migrateEnumColumn<TAttributes extends Attributes>(
+  wildebeest: Wildebeest,
   enumValue: { [key in string]: string },
   options: MigrateEnumOptions,
-  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
+  transactionOptions: MigrationTransactionOptions<TAttributes>,
 ): Promise<void> {
   // Raw query interface
   const { queryInterface, DataTypes } = wildebeest.db;

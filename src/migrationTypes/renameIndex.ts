@@ -2,7 +2,6 @@
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  ModelMap,
 } from '@wildebeest/types';
 
 /**
@@ -22,9 +21,9 @@ export type RenameIndexOptions = {
  * @param rawTransactionOptions - The existing transaction
  * @returns The rename table promise
  */
-export async function renameTableIndex<TModels extends ModelMap>(
+export async function renameTableIndex(
   { oldName, newName }: RenameIndexOptions,
-  { queryT }: MigrationTransactionOptions<TModels>,
+  { queryT }: MigrationTransactionOptions,
 ): Promise<void> {
   await queryT.raw(`ALTER INDEX "${oldName}" RENAME TO "${newName}"`);
 }
@@ -35,15 +34,15 @@ export async function renameTableIndex<TModels extends ModelMap>(
  * @param options - Rename index options
  * @returns The rename index migrator
  */
-export default function renameIndex<TModels extends ModelMap>(
+export default function renameIndex(
   options: RenameIndexOptions,
-): MigrationDefinition<TModels> {
+): MigrationDefinition {
   return {
-    up: async (wildebeest, withTransaction) =>
+    up: async (_, withTransaction) =>
       withTransaction((transactionOptions) =>
         renameTableIndex(options, transactionOptions),
       ),
-    down: async (wildebeest, withTransaction) =>
+    down: async (_, withTransaction) =>
       withTransaction((transactionOptions) =>
         renameTableIndex(
           {

@@ -3,6 +3,7 @@ import {
   BelongsToAssociation,
   HasManyAssociation,
   HasOneAssociation,
+  WildebeestModelName,
 } from '@wildebeest/types';
 
 // local
@@ -41,7 +42,7 @@ type ApplyFuncForAssociation<TOutputBase, TEnumValue extends string> = <
  * Apply functions with association
  */
 type AssociationApply<
-  TDatabaseModelName extends string,
+  TDatabaseModelName extends WildebeestModelName,
   TEnumValue extends string
 > = {
   /** Enforce a belongsTo association */
@@ -78,7 +79,7 @@ const toEnum = <TEnumValue extends string>(
  * @returns A set of apply functions that will enforce association types without casting their underlying values
  */
 export default function createAssociationApplyValue<
-  TDatabaseModelName extends string
+  TDatabaseModelName extends WildebeestModelName
 >(): <TEnumValue extends string>() => AssociationApply<
   TDatabaseModelName,
   TEnumValue

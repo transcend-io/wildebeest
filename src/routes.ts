@@ -7,15 +7,12 @@ import express from 'express';
 
 // local
 import Wildebeest from '@wildebeest/classes/Wildebeest';
-import { ModelMap } from '@wildebeest/types';
 import * as controller from './controller';
 
 /**
  * Construct a router
  */
-export default <TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
-): express.Router => {
+export default (wildebeest: Wildebeest): express.Router => {
   // instantiate a router
   const router = express.Router();
 
@@ -24,7 +21,7 @@ export default <TModels extends ModelMap>(
   // /////////// //
 
   // Save the wildebeest onto res.locals
-  router.all('*', (req, res, next) => {
+  router.all('*', (_, res, next) => {
     res.locals.wildebeest = wildebeest;
     next();
   });

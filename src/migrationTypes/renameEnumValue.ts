@@ -6,7 +6,6 @@ import Wildebeest from '@wildebeest/classes/Wildebeest';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  ModelMap,
 } from '@wildebeest/types';
 import listEnumAttributes from '@wildebeest/utils/listEnumAttributes';
 import migrateEnumValues from '@wildebeest/utils/migrateEnumValues';
@@ -35,10 +34,10 @@ export type RenameEnumValueOptions = {
  * @param rawTransactionOptions - The existing transaction
  * @returns The rename table promise
  */
-export async function renameValueOfEnum<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
+export async function renameValueOfEnum(
+  wildebeest: Wildebeest,
   options: RenameEnumValueOptions,
-  transactionOptions: MigrationTransactionOptions<TModels>,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const { name, tableName, columnName, oldValue, newValue } = options;
   // Get the existing enum values
@@ -74,9 +73,9 @@ export async function renameValueOfEnum<TModels extends ModelMap>(
  * @param options - The rename enum value options
  * @returns The rename enum value migrator
  */
-export default function renameEnumValue<TModels extends ModelMap>(
+export default function renameEnumValue(
   options: RenameEnumValueOptions,
-): MigrationDefinition<TModels> {
+): MigrationDefinition {
   const { oldValue, newValue, ...rest } = options;
   return {
     up: async (wildebeest, withTransaction) =>

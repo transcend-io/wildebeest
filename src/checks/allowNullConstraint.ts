@@ -2,7 +2,7 @@
 import { ModelAttributeColumnOptions } from 'sequelize';
 
 // global
-import { ModelMap, SyncError } from '@wildebeest/types';
+import { SyncError } from '@wildebeest/types';
 import columnAllowsNull from '@wildebeest/utils/columnAllowsNull';
 
 // classes
@@ -15,10 +15,8 @@ import WildebeestDb from '@wildebeest/classes/WildebeestDb';
  * @param definition - The attribute definition
  * @returns Any errors with the allow null constraint
  */
-export default async function checkAllowNullConstraint<
-  TModels extends ModelMap
->(
-  db: WildebeestDb<TModels>,
+export default async function checkAllowNullConstraint(
+  db: WildebeestDb,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,

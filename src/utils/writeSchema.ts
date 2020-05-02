@@ -4,7 +4,6 @@ import { copyFileSync } from 'fs';
 
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
-import { ModelMap } from '@wildebeest/types';
 
 /**
  * Write the current database schema to a file
@@ -15,8 +14,8 @@ import { ModelMap } from '@wildebeest/types';
  * @param name - The name of the schema file
  * @returns The schema written
  */
-export default async function writeSchema<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
+export default async function writeSchema(
+  wildebeest: Wildebeest,
   name: string,
 ): Promise<void> {
   // Hold the output of the sql

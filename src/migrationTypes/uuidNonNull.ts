@@ -1,5 +1,5 @@
 // global
-import { MigrationDefinition, ModelMap } from '@wildebeest/types';
+import { MigrationDefinition } from '@wildebeest/types';
 
 // local
 import changeColumn from './changeColumn';
@@ -22,9 +22,9 @@ export type UUIDNonNullOptions = {
  * @param options - Options for making the uuid column non-null
  * @returns The uuid non null migrator
  */
-export default function uuidNonNull<TModels extends ModelMap>(
+export default function uuidNonNull(
   options: UUIDNonNullOptions,
-): MigrationDefinition<TModels> {
+): MigrationDefinition {
   const { tableName, columnName, destroy = false } = options;
   return changeColumn({
     tableName,

@@ -8,12 +8,10 @@ import pluralize from 'pluralize';
 import { FindOptions } from 'sequelize';
 
 // global
+import WildebeestModel from '@wildebeest/classes/WildebeestModel';
 import { AssociationType } from '@wildebeest/enums';
 import { AttributeInputs, MergedHookOptions } from '@wildebeest/types';
 import { pascalCase } from '@wildebeest/utils';
-
-// local
-import { AnyModel } from './types';
 
 /**
  * True if NODE_ENV=test
@@ -63,7 +61,7 @@ export default (
    * @param allOptions - Options to pass to all instances when creating a model, to pass specific options, provider an options: {} attribute in the input
    * @returns The created models
    */
-  function createMany<TInstance extends AnyModel>(
+  function createMany<TInstance extends WildebeestModel>(
     this: This,
     inputs: AttributeInputs[],
     allOptions?: MergedHookOptions<TInstance, 'create'>,
@@ -81,7 +79,7 @@ export default (
    * @param options - The options to pass as the second arg
    * @returns The destroy promise
    */
-  function destroyAll<TInstance extends AnyModel>(
+  function destroyAll<TInstance extends WildebeestModel>(
     this: This,
     options?: MergedHookOptions<TInstance, 'destroy'>,
   ): Promise<void[]> {
@@ -97,7 +95,7 @@ export default (
    * @param options - Options included in create
    * @returns True on success
    */
-  function destroyOne<TInstance extends AnyModel>(
+  function destroyOne<TInstance extends WildebeestModel>(
     this: This,
     findOptions: FindOptions,
     options?: MergedHookOptions<TInstance, 'destroy'>,
@@ -113,7 +111,7 @@ export default (
    * @param findOptions - Options for finding the instance
    * @returns The associated db model
    */
-  function getCached<TInstance extends AnyModel>(
+  function getCached<TInstance extends WildebeestModel>(
     this: This,
     findOptions?: FindOptions,
   ): Promise<TInstance> {
@@ -139,7 +137,7 @@ export default (
    * @param errorMessage - The error message to display on failure
    * @returns The first db model instance that matches the options
    */
-  function getOne<TInstance extends AnyModel>(
+  function getOne<TInstance extends WildebeestModel>(
     this: This,
     findOptions?: FindOptions,
     errorMessage = 'not found',
@@ -169,7 +167,7 @@ export default (
    * @param defaultInput - Input for creating the the default model
    * @returns The connected instance of the default
    */
-  async function getOrDefault<TInstance extends AnyModel>(
+  async function getOrDefault<TInstance extends WildebeestModel>(
     this: This,
     defaultInput: AttributeInputs,
   ): Promise<TInstance> {
@@ -191,7 +189,7 @@ export default (
    * @param options - The options to pass as the second arg
    * @returns The updated instance
    */
-  function updateAll<TInstance extends AnyModel>(
+  function updateAll<TInstance extends WildebeestModel>(
     this: This,
     input: TInstance,
     options?: MergedHookOptions<TInstance, 'update'>,
@@ -209,7 +207,7 @@ export default (
    * @param options - Options to pass
    * @returns The updated instance
    */
-  function updateOne<TInstance extends AnyModel>(
+  function updateOne<TInstance extends WildebeestModel>(
     this: This,
     findOptions: FindOptions,
     input: AttributeInputs,
@@ -228,7 +226,7 @@ export default (
    * @param options - The options to pass as the second arg
    * @returns The updated or created instance
    */
-  function updateOrCreate<TInstance extends AnyModel>(
+  function updateOrCreate<TInstance extends WildebeestModel>(
     this: This,
     findOptions: FindOptions,
     input: AttributeInputs,
@@ -260,7 +258,7 @@ export default (
    * @param options - The options to pass as the second arg
    * @returns The updated or created instance
    */
-  function updateOrCreateOne<TInstance extends AnyModel>(
+  function updateOrCreateOne<TInstance extends WildebeestModel>(
     this: This,
     input: AttributeInputs,
     options?: MergedHookOptions<TInstance, 'create'> &

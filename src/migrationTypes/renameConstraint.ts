@@ -2,7 +2,6 @@
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  ModelMap,
 } from '@wildebeest/types';
 import listConstraintNames from '@wildebeest/utils/listConstraintNames';
 
@@ -31,10 +30,10 @@ export type RenameConstraintOptions = {
  * @param rawTransactionOptions - The previous transaction options
  * @returns The change constraint promise
  */
-export async function changeConstraintName<TModels extends ModelMap>(
+export async function changeConstraintName(
   options: RenameConstraintOptions,
-  transactionOptions: MigrationTransactionOptions<TModels>,
-  db: WildebeestDb<TModels>,
+  transactionOptions: MigrationTransactionOptions,
+  db: WildebeestDb,
 ): Promise<void> {
   // Raw query interface
   const { queryT } = transactionOptions;
@@ -66,9 +65,9 @@ export async function changeConstraintName<TModels extends ModelMap>(
  * @param options - Options for renaming a constraint
  * @returns The rename constraint migrator
  */
-export default function renameConstraint<TModels extends ModelMap>(
+export default function renameConstraint(
   options: RenameConstraintOptions,
-): MigrationDefinition<TModels> {
+): MigrationDefinition {
   const { oldName, newName, ...rest } = options;
   return {
     up: async (wildebeest, withTransaction) =>

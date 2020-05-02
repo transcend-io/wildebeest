@@ -1,5 +1,6 @@
 // external
-import { QueryTypes, Sequelize, Transaction } from 'sequelize';
+import { WildebeestDb } from '@wildebeest/classes';
+import { QueryTypes, Transaction } from 'sequelize';
 
 /**
  * Check if the model table exists
@@ -10,7 +11,7 @@ import { QueryTypes, Sequelize, Transaction } from 'sequelize';
  * @returns True if the table exists
  */
 export default async function tableExists(
-  db: Sequelize,
+  db: WildebeestDb,
   tableName: string,
   transaction?: Transaction,
 ): Promise<boolean> {

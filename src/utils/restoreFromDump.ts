@@ -4,7 +4,6 @@ import { execSync } from 'child_process';
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import { IS_TEST } from '@wildebeest/constants';
-import { ModelMap } from '@wildebeest/types';
 
 /**
  * Restore the database from a pd_dump output
@@ -14,8 +13,8 @@ import { ModelMap } from '@wildebeest/types';
  * @param schemaPath - The path to the schema folder
  * @returns The pg_restore promise
  */
-export default async function restoreFromDump<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
+export default async function restoreFromDump(
+  wildebeest: Wildebeest,
   name: string,
 ): Promise<void> {
   if (!wildebeest.schemaExists(name)) {

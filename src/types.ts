@@ -62,6 +62,17 @@ export type Merge<TObj extends ObjByString> = UnionToIntersection<
 export type StringKeys<TObj extends ObjByString> = Extract<keyof TObj, string>;
 
 /**
+ * Extract the sub types of an object, based on some condition.
+ *
+ * In other words, given an object with mixed value types, filter the key-value pairs to only
+ * contain values that extend `Condition`
+ */
+export type SubType<Base, Condition> = Pick<
+  Base,
+  { [Key in keyof Base]: Base[Key] extends Condition ? Key : never }[keyof Base]
+>;
+
+/**
  * Filter object for values that do not extend some condition
  */
 export type SubNotType<Base, Condition> = Pick<
@@ -179,16 +190,15 @@ export type ConfiguredAttributes = {
 /**
  * Function that returns column definition where key is column name and value is column definition
  */
-export type DefineColumns<
-  TModels extends ModelMap,
-  TAttributes extends Attributes
-> = (db: WildebeestDb<TModels>) => TAttributes;
+export type DefineColumns<TAttributes extends Attributes> = (
+  db: WildebeestDb,
+) => TAttributes;
 
 /**
  * Since the keys of the associations object specify the `as`, the `modelName` must be provided when the association name !== modelName
  * to indicate what model the association is referring to.
  */
-export type AssociationModelName<TModelName extends string> = {
+export type AssociationModelName<TModelName extends WildebeestModelName> = {
   /** The name of the model that the association is to */
   modelName?: TModelName;
 };
@@ -200,7 +210,7 @@ export type AssociationModelName<TModelName extends string> = {
  *
  * When `NON_NULL` is provided, the options will be set to [NON_NULL]{@link module:constants.NON_NULL} and the association will have an `onDelete: 'CASCADE'`
  */
-export type BelongsToAssociation<TModelName extends string> =
+export type BelongsToAssociation<TModelName extends WildebeestModelName> =
   | (sequelize.BelongsToOptions & AssociationModelName<TModelName>)
   | 'NON_NULL';
 
@@ -211,7 +221,7 @@ export type BelongsToAssociation<TModelName extends string> =
  *
  * When `CASCADE` is provided, the options will be set to [CASCADE_HOOKS]{@link module:constants.CASCADE_HOOKS}
  */
-export type HasOneAssociation<TModelName extends string> =
+export type HasOneAssociation<TModelName extends WildebeestModelName> =
   | (sequelize.HasOneOptions & AssociationModelName<TModelName>)
   | 'CASCADE';
 
@@ -222,17 +232,16 @@ export type HasOneAssociation<TModelName extends string> =
  *
  * When `CASCADE` is provided, the options will be set to [CASCADE_HOOKS]{@link module:constants.CASCADE_HOOKS}
  */
-export type HasManyAssociation<TModelName extends string> =
+export type HasManyAssociation<TModelName extends WildebeestModelName> =
   | (sequelize.HasManyOptions & AssociationModelName<TModelName>)
   | 'CASCADE';
 
 /**
  * This model belongsToMany of another model. This adds a join table between the models.
  */
-export type BelongsToManyAssociation<TModelName extends string> = Omit<
-  sequelize.BelongsToManyOptions,
-  'through'
-> & {
+export type BelongsToManyAssociation<
+  TModelName extends WildebeestModelName
+> = Omit<sequelize.BelongsToManyOptions, 'through'> & {
   /** The name of the model joining through */
   throughModelName: TModelName;
 };
@@ -240,7 +249,7 @@ export type BelongsToManyAssociation<TModelName extends string> = Omit<
 /**
  * The intersection of all of the different association types
  */
-export type Association<TModelName extends string> =
+export type Association<TModelName extends WildebeestModelName> =
   | BelongsToAssociation<TModelName>
   | HasOneAssociation<TModelName>
   | HasManyAssociation<TModelName>
@@ -249,39 +258,43 @@ export type Association<TModelName extends string> =
 /**
  * The associations for a model
  */
-export type Associations<TModelNames extends string = StringKeys<ModelMap>> = {
+export type Associations = {
   /** The belongs to associations (adds `associationId` to the model) */
   belongsTo?: {
-    [associationName in string]: BelongsToAssociation<TModelNames>;
+    [associationName in string]: BelongsToAssociation<WildebeestModelName>;
   };
   /** The has one associations (adds `thisId` to the association model) */
-  hasOne?: { [associationName in string]: HasOneAssociation<TModelNames> };
+  hasOne?: {
+    [associationName in string]: HasOneAssociation<WildebeestModelName>;
+  };
   /** The has many associations (adds `thisId` to the association model) */
-  hasMany?: { [associationName in string]: HasManyAssociation<TModelNames> };
+  hasMany?: {
+    [associationName in string]: HasManyAssociation<WildebeestModelName>;
+  };
   /** Indicates there exists a join table with the association */
   belongsToMany?: {
-    [associationName in string]: BelongsToManyAssociation<TModelNames>;
+    [associationName in string]: BelongsToManyAssociation<WildebeestModelName>;
   }; // TODO [string in TModelName]
 };
 
 /**
  * The associations for a converted into standard sequelize options
  */
-export type ConfiguredAssociations<TModelNames extends string> = {
+export type ConfiguredAssociations = {
   /** The belongs to associations (adds `associationId` to the model) */
   belongsTo: {
     [associationName in string]: sequelize.BelongsToOptions &
-      Required<AssociationModelName<TModelNames>>;
+      Required<AssociationModelName<WildebeestModelName>>;
   };
   /** The has one associations (adds `thisId` to the association model) */
   hasOne: {
     [associationName in string]: sequelize.HasOneOptions &
-      Required<AssociationModelName<TModelNames>>;
+      Required<AssociationModelName<WildebeestModelName>>;
   };
   /** The has many associations (adds `thisId` to the association model) */
   hasMany: {
     [associationName in string]: sequelize.HasManyOptions &
-      Required<AssociationModelName<TModelNames>>;
+      Required<AssociationModelName<WildebeestModelName>>;
   };
   /** Indicates there exists a join table with the association */
   belongsToMany: {
@@ -293,7 +306,6 @@ export type ConfiguredAssociations<TModelNames extends string> = {
  * A definition of a database model
  */
 export type ModelDefinition<
-  TModelNames extends string,
   TModel extends sequelize.Model = sequelize.Model
 > = {
   /** The name of the table */
@@ -303,7 +315,7 @@ export type ModelDefinition<
   /** The default attributes to add to every model (ID, createdAt, updatedAt), set this to remove these columns */
   defaultAttributes?: Attributes;
   /** The associations for that db model */
-  associations?: Associations<TModelNames>;
+  associations?: Associations;
   /** The sequelize db model options */
   options?: sequelize.ModelOptions<TModel>;
   /** Indicate if the model is a join table and extra checks will be enforced */
@@ -318,20 +330,19 @@ export type ModelDefinition<
  * A configured model definition with defaults filled out
  */
 export type ConfiguredModelDefinition<
-  TModelNames extends string,
   TModel extends sequelize.Model = sequelize.Model
 > = Required<
   Omit<
-    ModelDefinition<TModelNames, TModel>,
+    ModelDefinition<TModel>,
     'dontMatchBelongTo' | 'associations' | 'attributes' | 'defaultAttributes'
   >
 > & {
   /** The configured model attributes */
   attributes: ConfiguredAttributes;
   /** The configured sequelize association options */
-  associations: ConfiguredAssociations<TModelNames>;
+  associations: ConfiguredAssociations;
   /** Save the initial associations */
-  rawAssociations: Required<Associations<TModelNames>>;
+  rawAssociations: Required<Associations>;
   /** Save the initial attributes */
   rawAttributes: Attributes;
 };
@@ -339,16 +350,92 @@ export type ConfiguredModelDefinition<
 /**
  * Model map definition from model name to model definition
  */
-export type ModelMapConstructor<
-  TConstructorClass extends typeof WildebeestModel
-> = {
-  [modelName in string]: TConstructorClass;
+export type AnyModelMap = {
+  [modelName in string]: typeof WildebeestModel;
 };
 
 /**
- * Any model map, arbitrary of class constructor
+ * A mapping from database model name to
  */
-export type ModelMap = ModelMapConstructor<any>;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ModelMap extends AnyModelMap {}
+
+/**
+ * The names of database models
+ */
+export type WildebeestModelName = StringKeys<ModelMap>;
+
+/**
+ * This is the name of a db model but since migrations may change the name of the model,
+ * easiest thing we can do is make a string.
+ *
+ * It is still useful to know that the paramter is a db model name so we specify explicitly
+ */
+export type WildebeestStringModelName = string;
+
+/**
+ * A UUID for a db model.
+ *
+ * Uses nominal typing to enforce that an ID of one model will never be assigned to the id of another model.
+ */
+export type ID<TModelName extends WildebeestModelName> = string & {
+  /** The name of the db model */
+  modelName: TModelName;
+};
+
+/**
+ * Map containing db model
+ */
+export type InstanceMap = {
+  [k in keyof ModelMap]: InstanceType<ModelMap[k]>;
+};
+
+/**
+ * Map from database model name to input attributes for that model
+ */
+export type ModelInputMap = {
+  [k in keyof ModelMap]: ExtractAttributes<
+    // ModelMap[k]['definition']['attributes']
+    any
+  >;
+};
+
+/**
+ * A database model instance that is defined. Basically `Model` but enforced to be one of the specific models aka `ApiKey`, `User`, `Organization`, `Amplitude`...
+ */
+export type ModelInstance = InstanceMap[keyof InstanceMap] & {
+  /** Always a valid database model */
+  modelName: WildebeestModelName;
+};
+
+/**
+ * Map containing db model
+ */
+export type InstanceMapInverse<TModel extends ModelInstance> = keyof SubType<
+  InstanceMap,
+  TModel
+>;
+
+/**
+ * Type generic that looks up the db model instance type by mode name
+ */
+export type ModelByName<TModelName extends WildebeestModelName> = InstanceType<
+  ModelMap[TModelName]
+>;
+
+/**
+ * Type generic that looks up the db model instance type by mode name
+ */
+export type ModelConstructorByModel<
+  TModel extends ModelInstance
+> = ModelMap[InstanceMapInverse<TModel>];
+
+/**
+ * Generic type that converts a database model to its constructor
+ */
+export type ModelToConstructor<
+  TModel extends ModelInstance
+> = ModelMap[TModel['modelName']];
 
 // ///// //
 // Umzug //
@@ -357,16 +444,16 @@ export type ModelMap = ModelMapConstructor<any>;
 /**
  * A migration that should run on the db
  */
-export type MigrationDefinition<TModels extends ModelMap> = {
+export type MigrationDefinition = {
   /** The up migration (there should be no loss of data) */
   up: (
-    wildebeest: Wildebeest<TModels>,
-    withTransaction: WithTransaction<TModels>,
+    wildebeest: Wildebeest,
+    withTransaction: WithTransaction,
   ) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any,max-len
   /** The down migration to reverse the up migration, with potential loss of data */
   down: (
-    wildebeest: Wildebeest<TModels>,
-    withTransaction: WithTransaction<TModels>,
+    wildebeest: Wildebeest,
+    withTransaction: WithTransaction,
   ) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any,max-len
 };
 
@@ -408,10 +495,7 @@ export type QueryWithTransaction = <T extends AnyArray = AnyArray>(
 /**
  * The helper functions wrapped in transactions
  */
-export type QueryHelpers<
-  TModels extends ModelMap,
-  TAttributes extends Attributes
-> = {
+export type QueryHelpers<TAttributes extends Attributes> = {
   /** Run a SELECT query in the transaction that returns a list */
   select: QueryWithTransaction;
   /** Delete rows inside the transaction */
@@ -435,7 +519,7 @@ export type QueryHelpers<
   /** Batch update a table */
   batchUpdate: (
     tableName: string,
-    getRowDefaults: RowUpdater<TModels, TAttributes>,
+    getRowDefaults: RowUpdater<TAttributes>,
     columnDefinitions: TAttributes,
     options: UpdateRowOptions,
     batchProcessOptions?: WhereOptions,
@@ -454,11 +538,10 @@ export type TransactionOptions = {
  * Transaction options when running a migration come with helper functions
  */
 export type MigrationTransactionOptions<
-  TModels extends ModelMap,
   TAttributes extends Attributes = Attributes
 > = {
   /** Helper functions that run within the migration transaction */
-  queryT: QueryHelpers<TModels, TAttributes>;
+  queryT: QueryHelpers<TAttributes>;
 } & TransactionOptions;
 
 // ///// //
@@ -468,7 +551,7 @@ export type MigrationTransactionOptions<
 /**
  * Db model hooks
  */
-export type HookOptions<M extends WildebeestModel<ModelMap>> = Partial<
+export type HookOptions<M extends WildebeestModel> = Partial<
   Spread<
     ModelHooks<M>,
     {
@@ -567,14 +650,11 @@ export type MergedHookOptions<
 /**
  * Wildebeest is mounted onto res.locals
  */
-export type WildebeestResponse<TModels extends ModelMap> = Omit<
-  express.Response,
-  'locals'
-> & {
+export type WildebeestResponse = Omit<express.Response, 'locals'> & {
   /** Local values accessible in controller functions */
   locals: {
     /** The wildebeest migrator */
-    wildebeest: Wildebeest<TModels>;
+    wildebeest: Wildebeest;
   };
 };
 
@@ -590,4 +670,21 @@ export type SyncError = {
   message: string;
   /** The name (or names) of the related db models */
   tableName: string;
+};
+
+/**
+ * Identifiers for which model instances need to be joined
+ */
+export type SyncAssociationsIdentifiers<
+  TPrimaryModelName extends WildebeestModelName,
+  TAssociationModelName extends WildebeestModelName
+> = {
+  /** The id of the `primaryModel` that being updated */
+  primaryModelId: ID<TPrimaryModelName>;
+  /** The ids that of the `secondaryModel` that should have a join with the instance in the `primaryModel`. A promise can be provided to dynamically determine these ids. */
+  associationIds: ID<TAssociationModelName>[];
+  /** The extra where options when validating `associationIds` (oftentimes { organizationId: 'my-org-uuid' }) */
+  secondaryFindWhere: WhereOptions;
+  /** The instance of the primary model can be provided if already in memory */
+  primaryInstance?: ModelByName<TPrimaryModelName>;
 };

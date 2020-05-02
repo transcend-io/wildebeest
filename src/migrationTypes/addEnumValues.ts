@@ -7,7 +7,6 @@ import Wildebeest from '@wildebeest/classes/Wildebeest';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  ModelMap,
 } from '@wildebeest/types';
 import listEnumAttributes from '@wildebeest/utils/listEnumAttributes';
 import migrateEnumValues from '@wildebeest/utils/migrateEnumValues';
@@ -39,10 +38,10 @@ export type ChangeEnumAttributeOptions = {
  * @param transactionOptions - The raw transaction options
  * @returns The change enum promise
  */
-export async function addValuesToEnum<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
+export async function addValuesToEnum(
+  wildebeest: Wildebeest,
   options: ChangeEnumAttributeOptions,
-  transactionOptions: MigrationTransactionOptions<TModels>,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   // Raw query interface
   const { name, tableName, columnName, attributes } = options;
@@ -74,10 +73,10 @@ export async function addValuesToEnum<TModels extends ModelMap>(
  * @param transactionOptions - The current transaction options
  * @returns The change enum promise
  */
-export async function removeValuesFromEnum<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
+export async function removeValuesFromEnum(
+  wildebeest: Wildebeest,
   options: ChangeEnumAttributeOptions,
-  transactionOptions: MigrationTransactionOptions<TModels>,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const {
     name,
@@ -122,9 +121,9 @@ export async function removeValuesFromEnum<TModels extends ModelMap>(
  * @param options - Options for adding attributes from the enum
  * @returns The add enum values migrator
  */
-export default function addEnumValues<TModels extends ModelMap>(
+export default function addEnumValues(
   options: ChangeEnumAttributeOptions,
-): MigrationDefinition<TModels> {
+): MigrationDefinition {
   return {
     up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>

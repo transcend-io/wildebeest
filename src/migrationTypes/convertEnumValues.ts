@@ -7,7 +7,6 @@ import Wildebeest from '@wildebeest/classes/Wildebeest';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  ModelMap,
 } from '@wildebeest/types';
 import {
   invert,
@@ -33,12 +32,12 @@ export type ConvertEnumValuesOptions = {
  * @param renameValues - The enum value maps to rename
  * @param transactionOptions - The current transaction
  */
-export async function renameColumnEnumValues<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
+export async function renameColumnEnumValues(
+  wildebeest: Wildebeest,
   tableName: string,
   columnName: string,
   renameValues: { [oldValue in string]: string },
-  transactionOptions: MigrationTransactionOptions<TModels>,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const name = wildebeest.namingConventions.enum(tableName, columnName);
 
@@ -76,10 +75,10 @@ export async function renameColumnEnumValues<TModels extends ModelMap>(
  * Rename many enum values in many tables
  * @param options - The enum values to rename
  */
-export async function renameManyEnumValues<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
+export async function renameManyEnumValues(
+  wildebeest: Wildebeest,
   options: ConvertEnumValuesOptions,
-  transactionOptions: MigrationTransactionOptions<TModels>,
+  transactionOptions: MigrationTransactionOptions,
   invertValues = false,
 ): Promise<void> {
   const changePromises = Object.entries(options).map(([tableName, columns]) =>
@@ -103,9 +102,9 @@ export async function renameManyEnumValues<TModels extends ModelMap>(
  * @param options - The convertEnumValues options
  * @returns The custom migrator
  */
-export default function convertEnumValues<TModels extends ModelMap>(
+export default function convertEnumValues(
   options: ConvertEnumValuesOptions,
-): MigrationDefinition<TModels> {
+): MigrationDefinition {
   return {
     up: async (wildebeest, withTransaction) =>
       withTransaction((transactionOptions) =>

@@ -2,7 +2,7 @@
 import { QueryTypes } from 'sequelize';
 
 // global
-import { ConfiguredAttribute, ModelMap, SyncError } from '@wildebeest/types';
+import { ConfiguredAttribute, SyncError } from '@wildebeest/types';
 import getForeignKeyConfig from '@wildebeest/utils/getForeignKeyConfig';
 
 // local
@@ -16,8 +16,8 @@ import WildebeestDb from '@wildebeest/classes/WildebeestDb';
  * @param name - The name of the constraint
  * @returns True if the constraint is defined
  */
-export async function hasConstraint<TModels extends ModelMap>(
-  db: WildebeestDb<TModels>,
+export async function hasConstraint(
+  db: WildebeestDb,
   name: string,
 ): Promise<boolean> {
   const [constraint] = await db.queryInterface.sequelize.query(
@@ -40,8 +40,8 @@ export async function hasConstraint<TModels extends ModelMap>(
  * @param definition - The attribute definition
  * @returns Any errors with the association configuration
  */
-export default async function checkAssociationConfig<TModels extends ModelMap>(
-  { namingConventions, db }: Wildebeest<TModels>,
+export default async function checkAssociationConfig(
+  { namingConventions, db }: Wildebeest,
   tableName: string,
   name: string,
   definition: ConfiguredAttribute,

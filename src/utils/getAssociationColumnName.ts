@@ -1,5 +1,5 @@
 // global
-import { Association } from '@wildebeest/types';
+import { Association, WildebeestModelName } from '@wildebeest/types';
 
 /**
  * Get the name of the column for a belongsTo association
@@ -8,10 +8,9 @@ import { Association } from '@wildebeest/types';
  * @param name - The name of the association
  * @returns The name of the column
  */
-export default function getAssociationColumnName<TModelName extends string>(
-  association: Association<TModelName>,
-  associationName: string,
-): string {
+export default function getAssociationColumnName<
+  TModelName extends WildebeestModelName
+>(association: Association<TModelName>, associationName: string): string {
   // Return name when specified
   if (
     typeof association === 'object' &&

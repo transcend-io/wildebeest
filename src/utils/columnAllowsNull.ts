@@ -3,7 +3,7 @@ import { QueryTypes } from 'sequelize';
 
 // global
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
-import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
+import { MigrationTransactionOptions } from '@wildebeest/types';
 
 /**
  * Check if a postgres column allows null values
@@ -13,11 +13,11 @@ import { MigrationTransactionOptions, ModelMap } from '@wildebeest/types';
  * @param columnName - The name of the column
  * @returns True if null values are allowed
  */
-export default async function columnAllowsNull<TModels extends ModelMap>(
-  db: WildebeestDb<TModels>,
+export default async function columnAllowsNull(
+  db: WildebeestDb,
   tableName: string,
   columnName: string,
-  transactionOptions?: MigrationTransactionOptions<TModels>,
+  transactionOptions?: MigrationTransactionOptions,
 ): Promise<boolean> {
   const [row] = await db.queryInterface.sequelize.query(
     `

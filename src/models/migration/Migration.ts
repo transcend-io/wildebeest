@@ -1,7 +1,3 @@
-/**
- * A database model for a Migration request.
- */
-
 // external
 import {
   DownToOptions,
@@ -12,7 +8,7 @@ import {
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestModel from '@wildebeest/classes/WildebeestModel';
-import { ExtractAttributes, ModelMap, UpToOptions } from '@wildebeest/types';
+import { ExtractAttributes, UpToOptions } from '@wildebeest/types';
 import logSection from '@wildebeest/utils/logSection';
 
 // local
@@ -21,8 +17,7 @@ import definition from './definition';
 /**
  * A Migration db model
  */
-export default class Migration<TModels extends ModelMap>
-  extends WildebeestModel<TModels>
+export default class Migration extends WildebeestModel
   implements ExtractAttributes<typeof definition['attributes']> {
   /** The model definition */
   public static definition = definition;
@@ -38,7 +33,7 @@ export default class Migration<TModels extends ModelMap>
    * @returns The down promise
    */
   public static async logSection(
-    cb: (wildebeest: Wildebeest<ModelMap>) => any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    cb: (wildebeest: Wildebeest) => any, // eslint-disable-line @typescript-eslint/no-explicit-any
     header?: string,
   ): Promise<void> {
     const { wildebeest } = this;
@@ -83,7 +78,7 @@ export default class Migration<TModels extends ModelMap>
    *
    * @returns The latest migration that has been one
    */
-  public static latest(): Promise<Migration<ModelMap>> {
+  public static latest(): Promise<Migration> {
     return this.findOne({ order: [['name', 'DESC']] });
   }
 

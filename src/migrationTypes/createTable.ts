@@ -6,7 +6,6 @@ import {
   DefineColumns,
   MigrationDefinition,
   MigrationTransactionOptions,
-  ModelMap,
 } from '@wildebeest/types';
 import { addTableColumnConstraint, dropEnum, isEnum } from '@wildebeest/utils';
 import { getStringKeys } from '@wildebeest/utils/getKeys';
@@ -15,27 +14,21 @@ import { RawConstraint } from '@wildebeest/utils/indexConstraints';
 /**
  * Options for dropping a table
  */
-export type DropTableOptions<
-  TAttributes extends Attributes,
-  TModels extends ModelMap
-> = {
+export type DropTableOptions<TAttributes extends Attributes> = {
   /** The name of the table to drop */
   tableName: string;
   /** A function that returns the column definitions for the new table */
-  getColumns?: DefineColumns<TModels, TAttributes>;
+  getColumns?: DefineColumns<TAttributes>;
 };
 
 /**
  * Options for creating a new table
  */
-export type CreateTablesOptions<
-  TAttributes extends Attributes,
-  TModels extends ModelMap
-> = {
+export type CreateTablesOptions<TAttributes extends Attributes> = {
   /** The name(s) of the table to create */
   tableName: string | string[];
   /** A function that returns the column definitions for the new table */
-  getColumns: DefineColumns<TModels, TAttributes>;
+  getColumns: DefineColumns<TAttributes>;
   /** The columns that should get cascade constraints */
   constraints?: RawConstraint[];
   /** When true, the columns id, createdAt, and updatedAt will not be added in addition to columns from `getColumns` */
@@ -45,10 +38,10 @@ export type CreateTablesOptions<
 /**
  * Options for creating a new table
  */
-export type CreateTableOptions<
-  TAttributes extends Attributes,
-  TModels extends ModelMap
-> = Omit<CreateTablesOptions<TAttributes, TModels>, 'tableName'> & {
+export type CreateTableOptions<TAttributes extends Attributes> = Omit<
+  CreateTablesOptions<TAttributes>,
+  'tableName'
+> & {
   /** The name of the table to create */
   tableName: string;
 };
@@ -59,13 +52,10 @@ export type CreateTableOptions<
  * @param options - The options for creating the table
  * @returns The create table promise
  */
-export async function createNewTable<
-  TAttributes extends Attributes,
-  TModels extends ModelMap
->(
-  wildebeest: Wildebeest<TModels>,
-  options: CreateTableOptions<TAttributes, TModels>,
-  transactionOptions: MigrationTransactionOptions<TModels>,
+export async function createNewTable<TAttributes extends Attributes>(
+  wildebeest: Wildebeest,
+  options: CreateTableOptions<TAttributes>,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   // Raw query interface
   const { queryInterface } = wildebeest.db;
@@ -120,13 +110,10 @@ export async function createNewTable<
  * @param transactionOptions - The current transaction
  * @returns The remove table promise
  */
-export async function dropTable<
-  TAttributes extends Attributes,
-  TModels extends ModelMap
->(
-  wildebeest: Wildebeest<TModels>,
-  options: DropTableOptions<TAttributes, TModels>,
-  transactionOptions: MigrationTransactionOptions<TModels>,
+export async function dropTable<TAttributes extends Attributes>(
+  wildebeest: Wildebeest,
+  options: DropTableOptions<TAttributes>,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   // Raw query interface
   const { db, namingConventions } = wildebeest;
@@ -158,12 +145,9 @@ export async function dropTable<
  * @param options - Options for creating a new table
  * @returns The create table migrator
  */
-export default function createTable<
-  TAttributes extends Attributes,
-  TModels extends ModelMap
->(
-  options: CreateTablesOptions<TAttributes, TModels>,
-): MigrationDefinition<TModels> {
+export default function createTable<TAttributes extends Attributes>(
+  options: CreateTablesOptions<TAttributes>,
+): MigrationDefinition {
   const {
     tableName,
     getColumns,
@@ -174,9 +158,10 @@ export default function createTable<
   // Get default columns combined with provided columns
   const getAllColumns = (
     defaultAttributes: Attributes,
-  ): ((db: WildebeestDb<TModels>) => Attributes) => (
-    db: WildebeestDb<TModels>,
-  ): Attributes => ({ ...defaultAttributes, ...getColumns(db) });
+  ): ((db: WildebeestDb) => Attributes) => (db: WildebeestDb): Attributes => ({
+    ...defaultAttributes,
+    ...getColumns(db),
+  });
 
   const tableList = Array.isArray(tableName) ? tableName : [tableName];
 

@@ -1,11 +1,6 @@
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
-import {
-  ConfiguredModelDefinition,
-  ModelMap,
-  StringKeys,
-  SyncError,
-} from '@wildebeest/types';
+import { ConfiguredModelDefinition, SyncError } from '@wildebeest/types';
 import isEnum from '@wildebeest/utils/isEnum';
 
 // local
@@ -25,13 +20,9 @@ import checkUniqueConstraint from './uniqueConstraint';
  * @param name - The name of the column to check
  * @returns Any errors related to the column definition
  */
-export default async function checkColumnDefinition<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
-  {
-    tableName,
-    attributes,
-    rawAttributes,
-  }: ConfiguredModelDefinition<StringKeys<TModels>>,
+export default async function checkColumnDefinition(
+  wildebeest: Wildebeest,
+  { tableName, attributes, rawAttributes }: ConfiguredModelDefinition,
   name: string,
 ): Promise<SyncError[]> {
   // Keep track of errors

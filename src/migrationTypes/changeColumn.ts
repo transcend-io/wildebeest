@@ -7,20 +7,19 @@ import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  ModelMap,
 } from '@wildebeest/types';
 import { dropEnum, isEnum, migrateEnumColumn } from '@wildebeest/utils';
 
 /**
  * Change a single column in a table
  */
-export type ChangeColumnOptions<TModels extends ModelMap> = {
+export type ChangeColumnOptions = {
   /** The name of the column to change */
   columnName: string;
   /** The new column definition */
-  getNewColumn: (db: WildebeestDb<TModels>) => ModelAttributeColumnOptions;
+  getNewColumn: (db: WildebeestDb) => ModelAttributeColumnOptions;
   /** The previous column definition (only needed when optimizing updates) */
-  getOldColumn: (db: WildebeestDb<TModels>) => ModelAttributeColumnOptions;
+  getOldColumn: (db: WildebeestDb) => ModelAttributeColumnOptions;
   /** When true, drop all rows */
   drop?: boolean;
   /** When true, drop all null values */
@@ -30,18 +29,18 @@ export type ChangeColumnOptions<TModels extends ModelMap> = {
 /**
  * Change a single column in a table
  */
-export type ChangeTableColumnOptions<TModels extends ModelMap> = {
+export type ChangeTableColumnOptions = {
   /** The name(S) of the table to change the column on */
   tableName: string | string[];
-} & ChangeColumnOptions<TModels>;
+} & ChangeColumnOptions;
 
 /**
  * Change column on a single table
  */
-export type ChangeSingleColumnOptions<TModels extends ModelMap> = {
+export type ChangeSingleColumnOptions = {
   /** The name of the table to change the column on */
   tableName: string;
-} & ChangeColumnOptions<TModels>;
+} & ChangeColumnOptions;
 
 /**
  * Change the definition of a column
@@ -49,10 +48,10 @@ export type ChangeSingleColumnOptions<TModels extends ModelMap> = {
  * @param options - Options for changing a column definition
  * @returns The change column promise
  */
-export async function changeColumnDefinition<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
-  options: ChangeSingleColumnOptions<TModels>,
-  transactionOptions: MigrationTransactionOptions<TModels>,
+export async function changeColumnDefinition(
+  wildebeest: Wildebeest,
+  options: ChangeSingleColumnOptions,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   // Raw query interface
   const { queryInterface } = wildebeest.db;
@@ -131,9 +130,9 @@ export async function changeColumnDefinition<TModels extends ModelMap>(
  * @param options - Options for changing a column in a table(s)
  * @returns The change column migrator
  */
-export default function changeColumn<TModels extends ModelMap>(
-  options: ChangeTableColumnOptions<TModels>,
-): MigrationDefinition<TModels> {
+export default function changeColumn(
+  options: ChangeTableColumnOptions,
+): MigrationDefinition {
   const { tableName, getNewColumn, getOldColumn, ...rest } = options;
   // Convert the tables to modify to a list
   const tableNames: string[] = Array.isArray(tableName)

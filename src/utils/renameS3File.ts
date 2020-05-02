@@ -3,7 +3,6 @@ import { S3 } from 'aws-sdk';
 
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
-import { ModelMap } from '@wildebeest/types';
 
 /**
  * Rename an s3 file
@@ -14,8 +13,8 @@ import { ModelMap } from '@wildebeest/types';
  * @param mimetype - The mimetype of the file
  * @returns The rename promise
  */
-export default async function renameS3File<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
+export default async function renameS3File(
+  wildebeest: Wildebeest,
   s3: S3,
   Bucket: string,
   oldKey: string,

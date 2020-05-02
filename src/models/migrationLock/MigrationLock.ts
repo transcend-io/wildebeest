@@ -15,7 +15,7 @@ import tableExists from '@wildebeest/utils/tableExists';
 
 // models
 import Migration from '@wildebeest/models/migration/Migration';
-import { ExtractAttributes, ModelMap } from '@wildebeest/types';
+import { ExtractAttributes } from '@wildebeest/types';
 
 // local
 import definition from './definition';
@@ -23,8 +23,7 @@ import definition from './definition';
 /**
  * A MigrationLock db model
  */
-export default class MigrationLock<TModels extends ModelMap>
-  extends WildebeestModel<TModels>
+export default class MigrationLock extends WildebeestModel
   implements ExtractAttributes<typeof definition['attributes']> {
   /** The model definition */
   public static definition = definition;
@@ -36,7 +35,7 @@ export default class MigrationLock<TModels extends ModelMap>
    *
    * @returns The locked migration lock instance
    */
-  public static async acquireLock(): Promise<MigrationLock<ModelMap> | null> {
+  public static async acquireLock(): Promise<MigrationLock | null> {
     // If there is no lock table yet, return a new empty class
     const lockSetup = await this.isSetup();
     const ThisModel = this as any;
@@ -45,7 +44,7 @@ export default class MigrationLock<TModels extends ModelMap>
     }
 
     // Release lock if exits prematurely
-    let migrationLock: MigrationLock<ModelMap> | null;
+    let migrationLock: MigrationLock | null;
     const handleExit = async (): Promise<void> => {
       if (migrationLock) {
         migrationLock = null;

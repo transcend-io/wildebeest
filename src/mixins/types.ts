@@ -30,19 +30,10 @@ import {
 } from 'sequelize/types';
 
 // global
-import {
-  AttributeInputs,
-  MergedHookOptions,
-  ModelMap,
-} from '@wildebeest/types';
+import { AttributeInputs, MergedHookOptions } from '@wildebeest/types';
 
 // classes
 import WildebeestModel from '@wildebeest/classes/WildebeestModel';
-
-/**
- * Any wildebeest model
- */
-export type AnyModel = WildebeestModel<ModelMap>;
 
 /**
  * Filter keys in object T for those with value U
@@ -59,7 +50,7 @@ export type ArrType<T> = T extends (infer TObj)[] ? TObj : T;
 /**
  * Enforce that the result is a model
  */
-export type IsModel<TM> = TM extends AnyModel ? TM : never;
+export type IsModel<TM> = TM extends WildebeestModel ? TM : never;
 
 // ///////////// //
 // belongsToMany //
@@ -73,7 +64,9 @@ export {
 /**
  * BelongsToManyCreateAssociationMixin
  */
-export type BelongsToManyCreateAssociationMixin<TModel extends AnyModel> = (
+export type BelongsToManyCreateAssociationMixin<
+  TModel extends WildebeestModel
+> = (
   values: AttributeInputs,
   options?: MergedHookOptions<TModel, 'create'> &
     BelongsToManyCreateAssociationMixinOptions,
@@ -83,7 +76,7 @@ export type BelongsToManyCreateAssociationMixin<TModel extends AnyModel> = (
  * BelongsToManyHasAssociationMixin with primary key set by default
  */
 export type BelongsToManyHasAssociationMixin<
-  TModel extends AnyModel,
+  TModel extends WildebeestModel,
   TModelPrimaryKey = TModel['id']
 > = SequelizeBelongsToManyHasAssociationMixin<TModel, TModelPrimaryKey>;
 
@@ -91,7 +84,7 @@ export type BelongsToManyHasAssociationMixin<
  * BelongsToManyAddAssociationMixin with primary key set by default
  */
 export type BelongsToManyAddAssociationMixin<
-  TModel extends AnyModel,
+  TModel extends WildebeestModel,
   TModelPrimaryKey = TModel['id']
 > = SequelizeBelongsToManyAddAssociationMixin<TModel, TModelPrimaryKey>;
 
@@ -99,7 +92,7 @@ export type BelongsToManyAddAssociationMixin<
  * BelongsToManySetAssociationsMixin with primary key set by default
  */
 export type BelongsToManySetAssociationsMixin<
-  TModel extends AnyModel,
+  TModel extends WildebeestModel,
   TModelPrimaryKey = TModel['id']
 > = SequelizeBelongsToManySetAssociationsMixin<TModel, TModelPrimaryKey>;
 
@@ -107,7 +100,7 @@ export type BelongsToManySetAssociationsMixin<
  * BelongsToManyAddAssociationsMixin with primary key set by default
  */
 export type BelongsToManyAddAssociationsMixin<
-  TModel extends AnyModel,
+  TModel extends WildebeestModel,
   TModelPrimaryKey = TModel['id']
 > = SequelizeBelongsToManyAddAssociationsMixin<TModel, TModelPrimaryKey>;
 
@@ -115,7 +108,7 @@ export type BelongsToManyAddAssociationsMixin<
  * BelongsToManyRemoveAssociationMixin with primary key set by default
  */
 export type BelongsToManyRemoveAssociationMixin<
-  TModel extends AnyModel,
+  TModel extends WildebeestModel,
   TModelPrimaryKey = TModel['id']
 > = SequelizeBelongsToManyRemoveAssociationMixin<TModel, TModelPrimaryKey>;
 
@@ -123,7 +116,7 @@ export type BelongsToManyRemoveAssociationMixin<
  * BelongsToManyRemoveAssociationsMixin with primary key set by default
  */
 export type BelongsToManyRemoveAssociationsMixin<
-  TModel extends AnyModel,
+  TModel extends WildebeestModel,
   TModelPrimaryKey = TModel['id']
 > = SequelizeBelongsToManyRemoveAssociationsMixin<TModel, TModelPrimaryKey>;
 
@@ -136,7 +129,7 @@ export { BelongsToGetAssociationMixin };
 /**
  * BelongsToCreateAssociationMixin
  */
-export type BelongsToCreateAssociationMixin<TModel extends AnyModel> = (
+export type BelongsToCreateAssociationMixin<TModel extends WildebeestModel> = (
   values: AttributeInputs,
   options?: MergedHookOptions<TModel, 'create'> &
     BelongsToCreateAssociationMixinOptions,
@@ -146,28 +139,30 @@ export type BelongsToCreateAssociationMixin<TModel extends AnyModel> = (
  * BelongsToSetAssociationMixin with primary key set by default
  */
 export type BelongsToSetAssociationMixin<
-  TModel extends AnyModel,
+  TModel extends WildebeestModel,
   TPrimaryKey = TModel['id']
 > = SequelizeBelongsToSetAssociationMixin<TModel, TPrimaryKey>;
 
 /**
  * Lookup the relationship and return the cached value if already looked up
  */
-export type BelongsToGetCachedAssociationMixin<TModel extends AnyModel> = (
-  findOptions?: FindOptions,
-) => Promise<TModel>;
+export type BelongsToGetCachedAssociationMixin<
+  TModel extends WildebeestModel
+> = (findOptions?: FindOptions) => Promise<TModel>;
 
 /**
  * Lookup the relationship and return the cached value if already looked up
  */
-export type BelongsToGetOrDefaultAssociationMixin<TModel extends AnyModel> = (
-  defaultInput?: AttributeInputs,
-) => Promise<TModel>;
+export type BelongsToGetOrDefaultAssociationMixin<
+  TModel extends WildebeestModel
+> = (defaultInput?: AttributeInputs) => Promise<TModel>;
 
 /**
  * Lookup a child and update it, or create a new instance when not found
  */
-export type BelongsToUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
+export type BelongsToUpdateOrCreateAssociationMixin<
+  TModel extends WildebeestModel
+> = (
   input: AttributeInputs,
   options?: MergedHookOptions<TModel, 'create'> &
     MergedHookOptions<TModel, 'update'>,
@@ -182,7 +177,7 @@ export { HasOneGetAssociationMixin };
 /**
  * HasOneCreateAssociationMixin
  */
-export type HasOneCreateAssociationMixin<TModel extends AnyModel> = (
+export type HasOneCreateAssociationMixin<TModel extends WildebeestModel> = (
   values: AttributeInputs,
   options?: MergedHookOptions<TModel, 'create'> &
     HasOneCreateAssociationMixinOptions,
@@ -192,28 +187,30 @@ export type HasOneCreateAssociationMixin<TModel extends AnyModel> = (
  * HasOneSetAssociationMixin with primary key set by default
  */
 export type HasOneSetAssociationMixin<
-  TModel extends AnyModel,
+  TModel extends WildebeestModel,
   TModelPrimaryKey = TModel['id']
 > = SequelizeHasOneSetAssociationMixin<TModel, TModelPrimaryKey>;
 
 /**
  * Lookup the relationship and return the cached value if already looked up
  */
-export type HasOneGetCachedAssociationMixin<TModel extends AnyModel> = (
+export type HasOneGetCachedAssociationMixin<TModel extends WildebeestModel> = (
   findOptions?: FindOptions,
 ) => Promise<TModel>;
 
 /**
  * Lookup the relationship and return the cached value if already looked up
  */
-export type HasOneGetOrDefaultAssociationMixin<TModel extends AnyModel> = (
-  defaultInput?: AttributeInputs,
-) => Promise<TModel>;
+export type HasOneGetOrDefaultAssociationMixin<
+  TModel extends WildebeestModel
+> = (defaultInput?: AttributeInputs) => Promise<TModel>;
 
 /**
  * Lookup a child and update it, or create a new instance when not found
  */
-export type HasOneUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
+export type HasOneUpdateOrCreateAssociationMixin<
+  TModel extends WildebeestModel
+> = (
   input: AttributeInputs,
   options?: MergedHookOptions<TModel, 'create'> &
     MergedHookOptions<TModel, 'update'>,
@@ -228,7 +225,7 @@ export { HasManyCountAssociationsMixin, HasManyGetAssociationsMixin };
 /**
  * HasManyCreateAssociationMixin with primary key set by default
  */
-export type HasManyCreateAssociationMixin<TModel extends AnyModel> = (
+export type HasManyCreateAssociationMixin<TModel extends WildebeestModel> = (
   values: AttributeInputs,
   options?: MergedHookOptions<TModel, 'create'> &
     HasManyCreateAssociationMixinOptions,
@@ -238,7 +235,7 @@ export type HasManyCreateAssociationMixin<TModel extends AnyModel> = (
  * HasManyHasAssociationMixin with primary key set by default
  */
 export type HasManyHasAssociationMixin<
-  TModel extends AnyModel,
+  TModel extends WildebeestModel,
   TModelPrimaryKey = TModel['id']
 > = SequelizeHasManyHasAssociationMixin<TModel, TModelPrimaryKey>;
 
@@ -246,14 +243,16 @@ export type HasManyHasAssociationMixin<
  * HasManyAddAssociationMixin with primary key set by default
  */
 export type HasManyAddAssociationMixin<
-  TModel extends AnyModel,
+  TModel extends WildebeestModel,
   TModelPrimaryKey = TModel['id']
 > = SequelizeHasManyAddAssociationMixin<TModel, TModelPrimaryKey>;
 
 /**
  * Bulk create a handful of models
  */
-export type HasManyCreateManyAssociationsMixin<TModel extends AnyModel> = (
+export type HasManyCreateManyAssociationsMixin<
+  TModel extends WildebeestModel
+> = (
   inputs: AttributeInputs[],
   allOptions?: MergedHookOptions<TModel, 'create'>,
 ) => Promise<TModel[]>;
@@ -261,14 +260,16 @@ export type HasManyCreateManyAssociationsMixin<TModel extends AnyModel> = (
 /**
  * Destroy all child instances with individual hooks
  */
-export type HasManyDestroyAllAssociationMixin<TModel extends AnyModel> = (
-  options?: MergedHookOptions<TModel, 'destroy'>,
-) => Promise<void>;
+export type HasManyDestroyAllAssociationMixin<
+  TModel extends WildebeestModel
+> = (options?: MergedHookOptions<TModel, 'destroy'>) => Promise<void>;
 
 /**
  * Find a single item and destroy it, if the item does not exist throw and error
  */
-export type HasManyDestroyOneAssociationMixin<TModel extends AnyModel> = (
+export type HasManyDestroyOneAssociationMixin<
+  TModel extends WildebeestModel
+> = (
   findOptions: FindOptions,
   options?: MergedHookOptions<TModel, 'destroy'>,
 ) => Promise<boolean>;
@@ -276,7 +277,7 @@ export type HasManyDestroyOneAssociationMixin<TModel extends AnyModel> = (
 /**
  * Get the first item matching options and throws error if no matches
  */
-export type HasManyGetOneAssociationMixin<TModel extends AnyModel> = (
+export type HasManyGetOneAssociationMixin<TModel extends WildebeestModel> = (
   findOptions: FindOptions,
   errorMessage?: string,
 ) => Promise<TModel>;
@@ -284,7 +285,9 @@ export type HasManyGetOneAssociationMixin<TModel extends AnyModel> = (
 /**
  * Update all children of a model
  */
-export type HasManyUpdateAllAssociationsMixin<TModel extends AnyModel> = (
+export type HasManyUpdateAllAssociationsMixin<
+  TModel extends WildebeestModel
+> = (
   input: AttributeInputs,
   options?: MergedHookOptions<TModel, 'update'>,
 ) => Promise<TModel>;
@@ -292,7 +295,7 @@ export type HasManyUpdateAllAssociationsMixin<TModel extends AnyModel> = (
 /**
  * Find a single child instance and update it, throw an error when not found
  */
-export type HasManyUpdateOneAssociationMixin<TModel extends AnyModel> = (
+export type HasManyUpdateOneAssociationMixin<TModel extends WildebeestModel> = (
   findOptions: FindOptions,
   input: AttributeInputs,
   options?: MergedHookOptions<TModel, 'update'>,
@@ -301,7 +304,9 @@ export type HasManyUpdateOneAssociationMixin<TModel extends AnyModel> = (
 /**
  * Lookup a child and update it, or create a new instance when not found
  */
-export type HasManyUpdateOrCreateAssociationMixin<TModel extends AnyModel> = (
+export type HasManyUpdateOrCreateAssociationMixin<
+  TModel extends WildebeestModel
+> = (
   findOptions: FindOptions,
   input: AttributeInputs,
   options?: MergedHookOptions<TModel, 'create'> &

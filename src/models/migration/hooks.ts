@@ -1,5 +1,4 @@
 // global
-import { ModelMap } from '@wildebeest/types';
 import createHooks from '@wildebeest/utils/createHooks';
 
 // local
@@ -11,7 +10,7 @@ const getNumber = (name: string): number =>
 /**
  * The default model hooks
  */
-export default createHooks<Migration<ModelMap>>({
+export default createHooks<Migration>({
   /**
    * Updates the batch number of a new migration
    *

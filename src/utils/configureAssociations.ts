@@ -1,6 +1,5 @@
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
-import WildebeestModel from '@wildebeest/classes/WildebeestModel';
 import { CASCADE_HOOKS, NON_NULL } from '@wildebeest/constants';
 import {
   AssociationModelName,
@@ -8,7 +7,7 @@ import {
   ConfiguredAssociations,
   ModelMap,
   Requirize,
-  StringKeys,
+  WildebeestModelName,
 } from '@wildebeest/types';
 import apply from '@wildebeest/utils/apply';
 
@@ -21,7 +20,7 @@ import apply from '@wildebeest/utils/apply';
  */
 export function setAs<
   TOpts extends AssociationModelName<TModelName>,
-  TModelName extends string
+  TModelName extends WildebeestModelName
 >(
   { modelName, ...options }: TOpts,
   name: string,
@@ -42,30 +41,25 @@ export function setAs<
  * @param associations - The raw association inputs
  * @returns The configured sequelize associations configurations
  */
-export default function configureAssociations<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
-  modelName: string,
+export default function configureAssociations(
+  wildebeest: Wildebeest,
   {
     belongsTo = {},
     belongsToMany = {},
     hasMany = {},
     hasOne = {},
-  }: Associations<StringKeys<TModels>>,
-): ConfiguredAssociations<StringKeys<TModels>> {
-  /** The model names in the db */
-  type TModelName = StringKeys<TModels>;
-
+  }: Associations,
+): ConfiguredAssociations {
   const { models } = wildebeest;
 
-  const getModel = (
-    name: Extract<keyof TModels, string>,
-  ): typeof WildebeestModel => {
+  const getModel = <TModelName extends WildebeestModelName>(
+    name: TModelName,
+  ): ModelMap[TModelName] => {
     const def = models[name];
     if (def) {
       return def;
     }
-    wildebeest.logger.error(`ERROR: model ${name} could not be found`);
-    return undefined as any;
+    throw new Error(`ERROR: model ${name} could not be found`);
   };
 
   return {
@@ -76,7 +70,7 @@ export default function configureAssociations<TModels extends ModelMap>(
         : {
             ...NON_NULL,
             onDelete: 'CASCADE',
-            modelName: associationName as TModelName,
+            modelName: associationName as WildebeestModelName,
           },
     ),
     // Through must be provided when defining a belongsToMany association
@@ -88,13 +82,19 @@ export default function configureAssociations<TModels extends ModelMap>(
     hasMany: apply(hasMany, (options, associationName) =>
       typeof options === 'object'
         ? setAs(options, associationName, wildebeest.pluralCase)
-        : { ...CASCADE_HOOKS, modelName: associationName as TModelName },
+        : {
+            ...CASCADE_HOOKS,
+            modelName: associationName as WildebeestModelName,
+          },
     ),
     // Replace CASCADE_HOOKS and tableName
     hasOne: apply(hasOne, (options, associationName) =>
       typeof options === 'object'
         ? setAs(options, associationName)
-        : { ...CASCADE_HOOKS, modelName: associationName as TModelName },
+        : {
+            ...CASCADE_HOOKS,
+            modelName: associationName as WildebeestModelName,
+          },
     ),
   };
 }

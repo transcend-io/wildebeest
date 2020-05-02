@@ -7,12 +7,7 @@ import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import { MAX_CONSTRAINT_NAME } from '@wildebeest/constants';
-import {
-  ConfiguredModelDefinition,
-  ModelMap,
-  StringKeys,
-  SyncError,
-} from '@wildebeest/types';
+import { ConfiguredModelDefinition, SyncError } from '@wildebeest/types';
 import listIndexNames from '@wildebeest/utils/listIndexNames';
 
 /**
@@ -22,8 +17,8 @@ import listIndexNames from '@wildebeest/utils/listIndexNames';
  * @param name - The name of the index
  * @returns True if the index is defined
  */
-export async function hasIndex<TModels extends ModelMap>(
-  db: WildebeestDb<TModels>,
+export async function hasIndex(
+  db: WildebeestDb,
   name: string,
 ): Promise<boolean> {
   const [index] = await db.queryInterface.sequelize.query(
@@ -62,14 +57,9 @@ export async function hasIndex<TModels extends ModelMap>(
  * @param model - The database model definition to verify
  * @returns Any errors related to db indexes
  */
-export default async function checkIndexes<TModels extends ModelMap>(
-  { db, namingConventions }: Wildebeest<TModels>,
-  {
-    options,
-    attributes,
-    rawAttributes,
-    tableName,
-  }: ConfiguredModelDefinition<StringKeys<TModels>>,
+export default async function checkIndexes(
+  { db, namingConventions }: Wildebeest,
+  { options, attributes, rawAttributes, tableName }: ConfiguredModelDefinition,
 ): Promise<SyncError[]> {
   // Keep track of errors
   const errors: SyncError[] = [];

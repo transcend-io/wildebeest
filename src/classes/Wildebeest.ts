@@ -31,8 +31,7 @@ import tableExists from '@wildebeest/utils/tableExists';
 import { checkExtraneousTables, checkModel } from '@wildebeest/checks';
 
 // models
-import Migration from '@wildebeest/models/migration/Migration';
-import MigrationLock from '@wildebeest/models/migrationLock/MigrationLock';
+import wildebeestModels, { Migration, MigrationLock } from '@wildebeest/models';
 
 // global
 import {
@@ -48,10 +47,9 @@ import createRoutes from '@wildebeest/routes';
 import {
   Attributes,
   MigrationConfig,
-  ModelDefinition,
   ModelMap,
-  StringKeys,
   SyncError,
+  WildebeestModelName,
 } from '@wildebeest/types';
 import { getStringKeys } from '@wildebeest/utils/getKeys';
 
@@ -66,7 +64,7 @@ export type NamingConventions = typeof DEFAULT_NAMING_CONVENTIONS;
 /**
  * The options needed to configure a wildebeest
  */
-export type WildebeestOptions<TModels extends ModelMap> = {
+export type WildebeestOptions = {
   /** The uri of the database to connect to */
   databaseUri: string;
   /** The path to the folder where the migrations themselves are defined */
@@ -76,7 +74,7 @@ export type WildebeestOptions<TModels extends ModelMap> = {
   /** The name of the schema file to be used to restore the database to when it is completed empty */
   restoreSchemaOnEmpty: string;
   /** The database model definitions to be validated */
-  models: TModels;
+  models: ModelMap;
   /** Options to provide to sequelize */
   sequelizeOptions?: Options;
   /** A logger that that should always log results. This is used mainly for logging errors and critical information */
@@ -116,7 +114,7 @@ export type WildebeestOptions<TModels extends ModelMap> = {
 /**
  * A migration runner interface
  */
-export default class Wildebeest<TModels extends ModelMap> {
+export default class Wildebeest {
   /**
    * Index the migrations and validate that the numbering is correct
    */
@@ -145,14 +143,14 @@ export default class Wildebeest<TModels extends ModelMap> {
   // // //
 
   /** The database to migrate against */
-  public db: WildebeestDb<TModels>;
+  public db: WildebeestDb;
 
   /** The database model definitions to be validated */
-  public models: TModels;
+  public models: ModelMap & typeof wildebeestModels;
 
   /** The configured database model definitions */
   public modelDefinitions: {
-    [modelName in StringKeys<TModels>]: ModelDefinition<StringKeys<TModels>>;
+    [modelName in keyof ModelMap]: ModelMap[modelName]['definition'];
   };
 
   /** Needed to restore schema dumps using pg_restore and pg_dump */
@@ -270,7 +268,7 @@ export default class Wildebeest<TModels extends ModelMap> {
     pluralCase = pluralize,
     allowSchemaWrites = process.env.NODE_ENV === 'development',
     errOnSyncFailure = process.env.NODE_ENV === 'production',
-  }: WildebeestOptions<TModels>) {
+  }: WildebeestOptions) {
     // The db as a sequelize migrator
     this.db = new WildebeestDb(databaseUri, sequelizeOptions);
     this.tableNames = tableNames;
@@ -284,15 +282,12 @@ export default class Wildebeest<TModels extends ModelMap> {
     Migration.definition.tableName = this.tableNames.migration;
     MigrationLock.definition.tableName = this.tableNames.migrationLock;
     this.models = {
+      ...wildebeestModels,
       ...models,
-      migration: Migration,
-      migrationLock: MigrationLock,
     };
-    this.modelDefinitions = (apply(this.models, (model) =>
+    this.modelDefinitions = apply(this.models, (model) =>
       model.getDefinition(),
-    ) as any) as {
-      [modelName in StringKeys<TModels>]: ModelDefinition<StringKeys<TModels>>;
-    };
+    );
 
     // misc
     this.errOnSyncFailure = errOnSyncFailure;
@@ -376,9 +371,9 @@ export default class Wildebeest<TModels extends ModelMap> {
    * @param modelName - The model name to lookup
    * @returns Its model definition, throws error if not found
    */
-  public getModelDefinition(
-    modelName: StringKeys<TModels>,
-  ): ModelDefinition<StringKeys<TModels>> {
+  public getModelDefinition<TModelName extends WildebeestModelName>(
+    modelName: TModelName,
+  ): ModelMap[TModelName]['definition'] {
     const model = this.modelDefinitions[modelName];
     if (!model) {
       throw new Error(`Could not find model for: "${modelName}"`);
@@ -423,12 +418,12 @@ export default class Wildebeest<TModels extends ModelMap> {
     // This is significantly faster on server start time than trying to acquire and run with lock
     const last = this.migrations.pop();
     if (last) {
-      const { name } = await this.models.migration.findOne({
+      const lastMigration = await this.models.migration.findOne({
         order: [['createdAt', 'DESC']],
         limit: 1,
       });
 
-      if (name === last.fileName) {
+      if (lastMigration?.name === last.fileName) {
         this.logger.info('Skipping migrate because db is fully migrated');
         return;
       }
@@ -504,7 +499,7 @@ export default class Wildebeest<TModels extends ModelMap> {
    * @returns The amount of time it took to run in ms
    */
   public async runWithLock(
-    cb: (lock: MigrationLock<ModelMap>) => Promise<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+    cb: (lock: MigrationLock) => Promise<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
   ): Promise<number> {
     // Timer start
     const start = new Date().getTime();
@@ -618,7 +613,7 @@ export default class Wildebeest<TModels extends ModelMap> {
     apply(this.models, (ModelDef, name) =>
       ModelDef.customInit(
         this,
-        name,
+        name as WildebeestModelName,
         ModelDef.definition.tableName || this.pluralCase(name),
       ),
     );

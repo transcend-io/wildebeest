@@ -1,5 +1,5 @@
 // db
-import { Association } from '@wildebeest/types';
+import { Association, WildebeestModelName } from '@wildebeest/types';
 
 /**
  * Get the name of the foreign key if it is provided
@@ -8,10 +8,9 @@ import { Association } from '@wildebeest/types';
  * @param defaultValue - When none is provided, fall back to this
  * @returns The name of the foreign key or null if not provided
  */
-export default function getForeignKeyName<TModelName extends string>(
-  association: Association<TModelName>,
-  defaultValue = 'id',
-): string {
+export default function getForeignKeyName<
+  TModelName extends WildebeestModelName
+>(association: Association<TModelName>, defaultValue = 'id'): string {
   if (typeof association === 'string' || !association.foreignKey) {
     return defaultValue;
   }

@@ -2,7 +2,7 @@
 import * as sequelize from 'sequelize';
 
 // global
-import { Association } from '@wildebeest/types';
+import { Association, WildebeestModelName } from '@wildebeest/types';
 
 /**
  * Get the attribute definition for an association column
@@ -11,7 +11,9 @@ import { Association } from '@wildebeest/types';
  * @param config - The attribute config of the column to join on
  * @returns The association attribute definition
  */
-export default function getAssociationAttribute<TModelName extends string>(
+export default function getAssociationAttribute<
+  TModelName extends WildebeestModelName
+>(
   association: Association<TModelName>,
   config: sequelize.ModelAttributeColumnOptions = {
     defaultValue: sequelize.UUIDV4,

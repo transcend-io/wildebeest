@@ -7,7 +7,6 @@ import {
   Attributes,
   MigrationDefinition,
   MigrationTransactionOptions,
-  ModelMap,
 } from '@wildebeest/types';
 import batchProcess from '@wildebeest/utils/batchProcess';
 import renameS3File from '@wildebeest/utils/renameS3File';
@@ -15,11 +14,7 @@ import renameS3File from '@wildebeest/utils/renameS3File';
 /**
  * Options for creating a migration that will rename s3 files
  */
-export type RenameS3FileOptions<
-  T,
-  TModels extends ModelMap,
-  TAttributes extends Attributes
-> = {
+export type RenameS3FileOptions<T, TAttributes extends Attributes> = {
   /** The name of the file table to rename files for */
   tableName: string;
   /** The name of the bucket to rename files in */
@@ -31,12 +26,12 @@ export type RenameS3FileOptions<
   /** Function to get the old file key */
   getOldKey: (
     file: T,
-    transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
+    transactionOptions: MigrationTransactionOptions<TAttributes>,
   ) => string | Promise<string>;
   /** Function to get the new file key */
   getNewKey: (
     file: T,
-    transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
+    transactionOptions: MigrationTransactionOptions<TAttributes>,
   ) => string | Promise<string>;
   /** When true, remove files that did not have an associated s3 file */
   remove?: boolean;
@@ -57,16 +52,12 @@ export type File = {
 /**
  * Change the name of a file on s3
  */
-async function moveFile<
-  T,
-  TModels extends ModelMap,
-  TAttributes extends Attributes
->(
-  wildebeest: Wildebeest<TModels>,
+async function moveFile<T, TAttributes extends Attributes>(
+  wildebeest: Wildebeest,
   s3: S3,
   file: T & File,
-  options: RenameS3FileOptions<T, TModels, TAttributes>,
-  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
+  options: RenameS3FileOptions<T, TAttributes>,
+  transactionOptions: MigrationTransactionOptions<TAttributes>,
 ): Promise<{
   /** Number of renamed */
   renamed?: number;
@@ -108,14 +99,10 @@ async function moveFile<
  * @param options - The rename file options
  * @returns The rename promise
  */
-async function renameFiles<
-  T,
-  TModels extends ModelMap,
-  TAttributes extends Attributes
->(
-  wildebeest: Wildebeest<TModels>,
-  options: RenameS3FileOptions<T, TModels, TAttributes>,
-  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
+async function renameFiles<T, TAttributes extends Attributes>(
+  wildebeest: Wildebeest,
+  options: RenameS3FileOptions<T, TAttributes>,
+  transactionOptions: MigrationTransactionOptions<TAttributes>,
 ): Promise<void> {
   const { tableName, s3, attributes = '', throwOnFailure = false } = options;
 
@@ -131,16 +118,18 @@ async function renameFiles<
   if (!attributes.includes('mimetype')) {
     useAttributes = `mimetype${useAttributes ? `,${useAttributes}` : ''}`;
   }
-  await batchProcess<T & File, TModels, TAttributes>(
+  await batchProcess<T & File, TAttributes>(
     wildebeest,
     tableName,
     { attributes: useAttributes },
     async (file) => {
-      const { errors = 0, renamed = 0 } = await moveFile<
-        T & File,
-        TModels,
-        TAttributes
-      >(wildebeest, s3 || wildebeest.s3, file, options, transactionOptions);
+      const { errors = 0, renamed = 0 } = await moveFile<T & File, TAttributes>(
+        wildebeest,
+        s3 || wildebeest.s3,
+        file,
+        options,
+        transactionOptions,
+      );
       renameCount += renamed;
       errorCount += errors;
     },
@@ -163,13 +152,9 @@ async function renameFiles<
  * @param options - The options for renaming s3 files belong to a table
  * @returns The rename s3 files migrator
  */
-export default function renameS3Files<
-  T,
-  TModels extends ModelMap,
-  TAttributes extends Attributes
->(
-  options: RenameS3FileOptions<T, TModels, TAttributes>,
-): MigrationDefinition<TModels> {
+export default function renameS3Files<T, TAttributes extends Attributes>(
+  options: RenameS3FileOptions<T, TAttributes>,
+): MigrationDefinition {
   const { getOldKey, getNewKey, ...rest } = options;
   return {
     up: async (wildebeest, withTransaction) =>

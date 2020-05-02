@@ -12,12 +12,12 @@ import {
 } from 'sequelize';
 
 // global
-import { ModelMap, StringKeys } from '@wildebeest/types';
+import { ModelMap, WildebeestModelName } from '@wildebeest/types';
 
 /**
  * A db model
  */
-export default class WildebeestDb<TModels extends ModelMap> extends Sequelize {
+export default class WildebeestDb extends Sequelize {
   /** No need to call getter to access queryInterface during migrations */
   public queryInterface: QueryInterface;
 
@@ -25,9 +25,9 @@ export default class WildebeestDb<TModels extends ModelMap> extends Sequelize {
   public DataTypes = DataTypes;
 
   /** Db model needs to be fixed */
-  public model!: <TModelName extends StringKeys<TModels>>(
+  public model!: <TModelName extends WildebeestModelName>(
     modelName: TModelName,
-  ) => TModels[TModelName];
+  ) => ModelMap[TModelName];
 
   /**
    * Connect a global query interface

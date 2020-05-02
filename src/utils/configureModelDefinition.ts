@@ -8,8 +8,6 @@ import {
   ConfiguredAttributes,
   ConfiguredModelDefinition,
   ModelDefinition,
-  ModelMap,
-  StringKeys,
 } from '@wildebeest/types';
 
 // local
@@ -24,9 +22,9 @@ import getForeignKeyName from './getForeignKeyName';
  * @param wildebeest - The wildebeest configuration
  * @param belongsTo - The belongs to associations
  */
-export function createAttributesFromAssociations<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
-  belongsTo: ConfiguredAssociations<StringKeys<TModels>>['belongsTo'],
+export function createAttributesFromAssociations(
+  wildebeest: Wildebeest,
+  belongsTo: ConfiguredAssociations['belongsTo'],
 ): ConfiguredAttributes {
   return transform(
     belongsTo,
@@ -64,8 +62,8 @@ export function createAttributesFromAssociations<TModels extends ModelMap>(
  * @param model - The model definition
  * @returns The configured sequelize associations configurations
  */
-export default function configureModelDefinition<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
+export default function configureModelDefinition(
+  wildebeest: Wildebeest,
   modelName: string,
   {
     tableName,
@@ -76,8 +74,8 @@ export default function configureModelDefinition<TModels extends ModelMap>(
     skip = false,
     isJoin = false,
     dontMatchBelongsTo = false,
-  }: ModelDefinition<StringKeys<TModels>>,
-): ConfiguredModelDefinition<StringKeys<TModels>> {
+  }: ModelDefinition,
+): ConfiguredModelDefinition {
   const {
     belongsTo = {},
     belongsToMany = {},
@@ -87,7 +85,6 @@ export default function configureModelDefinition<TModels extends ModelMap>(
 
   const configuredAssociations = configureAssociations(
     wildebeest,
-    modelName,
     associations,
   );
   return {

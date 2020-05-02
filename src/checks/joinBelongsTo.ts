@@ -2,10 +2,11 @@
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import {
   ConfiguredModelDefinition,
-  ModelMap,
-  StringKeys,
   SyncError,
+  WildebeestModelName,
+  WildebeestStringModelName,
 } from '@wildebeest/types';
+import { getKeys } from '@wildebeest/utils';
 
 /**
  * Check that the associations are correct for a `belongsTo` between two tables that are joining
@@ -14,9 +15,9 @@ import {
  * @param model - The model to check the associations for
  * @returns Any errors related to the belongs to association config of a join table
  */
-export default async function checkJoinBelongsTo<TModels extends ModelMap>(
-  db: WildebeestDb<TModels>,
-  { associations, tableName }: ConfiguredModelDefinition<StringKeys<TModels>>,
+export default async function checkJoinBelongsTo(
+  db: WildebeestDb,
+  { associations, tableName }: ConfiguredModelDefinition,
 ): Promise<SyncError[]> {
   // Keep track of errors
   const errors: SyncError[] = [];
@@ -42,18 +43,16 @@ export default async function checkJoinBelongsTo<TModels extends ModelMap>(
   } else {
     // Joins between these models
     // TODO expecting to be first two there
-    const [first, second] = Object.keys(belongsTo) as Extract<
-      keyof TModels,
-      string
-    >[];
+    const [first, second] = getKeys(belongsTo);
 
     // Helper to check if belongsToMany config is setup
     const hasBelongsToConfig = (
-      firstModelName: StringKeys<TModels>,
-      secondModelName: StringKeys<TModels>,
+      firstModelName: WildebeestStringModelName,
+      secondModelName: WildebeestStringModelName,
     ): boolean => {
-      const oppositeAssociations = db.model(firstModelName).definition
-        .associations;
+      const oppositeAssociations = db.model(
+        firstModelName as WildebeestModelName,
+      ).definition.associations;
       return (
         !!oppositeAssociations &&
         !!oppositeAssociations.belongsToMany &&

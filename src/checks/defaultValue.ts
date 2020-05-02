@@ -5,7 +5,7 @@ import { ModelAttributeColumnOptions } from 'sequelize';
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 
 // global
-import { ModelMap, SyncError } from '@wildebeest/types';
+import { SyncError } from '@wildebeest/types';
 import getColumnDefault from '@wildebeest/utils/getColumnDefault';
 import isEnum from '@wildebeest/utils/isEnum';
 
@@ -17,8 +17,8 @@ import isEnum from '@wildebeest/utils/isEnum';
  * @param definition - The attribute definition
  * @returns Any errors with the default value of a column
  */
-export default async function DefaultValue<TModels extends ModelMap>(
-  { db, namingConventions }: Wildebeest<TModels>,
+export default async function DefaultValue(
+  { db, namingConventions }: Wildebeest,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,

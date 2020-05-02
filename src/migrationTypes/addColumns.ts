@@ -12,7 +12,6 @@ import {
   // ExtractAttributes,
   MigrationDefinition,
   MigrationTransactionOptions,
-  ModelMap,
 } from '@wildebeest/types';
 import {
   addTableColumnConstraint,
@@ -29,20 +28,17 @@ import { RowUpdater } from '@wildebeest/utils/updateRows';
 /**
  * Options for adding new columns to a single table
  */
-export type AddTableColumnsOptions<
-  TAttributes extends Attributes,
-  TModels extends ModelMap
-> = {
+export type AddTableColumnsOptions<TAttributes extends Attributes> = {
   /** The name of the table */
   tableName: string | string[];
   /** Function that returns column definition where key is column name and value is column definition */
-  getColumns: DefineColumns<TModels, TAttributes>;
+  getColumns: DefineColumns<TAttributes>;
   /** The foreign key constraints. When a string, it refers to the name of the column and table is calculated by pascalCase(removeId(columnName)) */
   constraints?: RawConstraint[];
   /** Drop the table values first. True means drop all rows. Can also specify the where options to drop */
   drop?: boolean | WhereOptions;
   /**  When migrating a table with data in it, write a function that takes in a db row and returns the new defaults for that row */
-  getRowDefaults?: RowUpdater<TModels, TAttributes>;
+  getRowDefaults?: RowUpdater<TAttributes>;
   /** The constraint on delete (SET NULL is default) */
   onDelete?: OnDelete;
   /** The name of the id column */
@@ -74,10 +70,10 @@ export type AddTableColumnOptions = {
 /**
  * Options for adding new columns to a table
  */
-export type AddColumnsOptions<
-  TAttributes extends Attributes,
-  TModels extends ModelMap
-> = Omit<AddTableColumnsOptions<TAttributes, TModels>, 'tableName'> & {
+export type AddColumnsOptions<TAttributes extends Attributes> = Omit<
+  AddTableColumnsOptions<TAttributes>,
+  'tableName'
+> & {
   /** The name of the table */
   tableName: string | string[];
 };
@@ -90,13 +86,10 @@ export type AddColumnsOptions<
  * @param transactionOptions - The current transaction
  * @returns The add column promise
  */
-export async function addColumn<
-  TAttributes extends Attributes,
-  TModels extends ModelMap
->(
-  wildebeest: Wildebeest<TModels>,
+export async function addColumn<TAttributes extends Attributes>(
+  wildebeest: Wildebeest,
   options: AddTableColumnOptions,
-  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
+  transactionOptions: MigrationTransactionOptions<TAttributes>,
 ): Promise<void> {
   const { tableName, columnName, column } = options;
   // Pull apart column config
@@ -128,13 +121,10 @@ export async function addColumn<
  * @param transactionOptions - The current transaction
  * @returns The add column promise
  */
-export async function setColumn<
-  TAttributes extends Attributes,
-  TModels extends ModelMap
->(
-  wildebeest: Wildebeest<TModels>,
+export async function setColumn<TAttributes extends Attributes>(
+  wildebeest: Wildebeest,
   options: AddTableColumnOptions,
-  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
+  transactionOptions: MigrationTransactionOptions<TAttributes>,
 ): Promise<void> {
   const {
     tableName,
@@ -252,13 +242,10 @@ export function shouldDrop(
  * @param transactionOptions - The current transaction
  * @returns The remove column promise
  */
-export async function removeColumn<
-  TAttributes extends Attributes,
-  TModels extends ModelMap
->(
-  wildebeest: Wildebeest<TModels>,
+export async function removeColumn<TAttributes extends Attributes>(
+  wildebeest: Wildebeest,
   options: AddTableColumnOptions,
-  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
+  transactionOptions: MigrationTransactionOptions<TAttributes>,
 ): Promise<void> {
   // Raw query interface
   const { queryInterface } = wildebeest.db;
@@ -290,16 +277,13 @@ export async function removeColumn<
  * @param transactionOptions - The current transaction
  * @returns The add column promise
  */
-export async function addTableColumns<
-  TAttributes extends Attributes,
-  TModels extends ModelMap
->(
-  wildebeest: Wildebeest<TModels>,
-  options: Omit<AddTableColumnsOptions<TAttributes, TModels>, 'tableName'> & {
+export async function addTableColumns<TAttributes extends Attributes>(
+  wildebeest: Wildebeest,
+  options: Omit<AddTableColumnsOptions<TAttributes>, 'tableName'> & {
     /** Single table only */
     tableName: string;
   },
-  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
+  transactionOptions: MigrationTransactionOptions<TAttributes>,
 ): Promise<void> {
   const { queryT } = transactionOptions;
   const {
@@ -377,16 +361,13 @@ export async function addTableColumns<
  * @param transactionOptions - The current transaction
  * @returns The add column promise
  */
-export async function removeTableColumns<
-  TAttributes extends Attributes,
-  TModels extends ModelMap
->(
-  wildebeest: Wildebeest<TModels>,
-  options: Omit<AddTableColumnsOptions<TAttributes, TModels>, 'tableName'> & {
+export async function removeTableColumns<TAttributes extends Attributes>(
+  wildebeest: Wildebeest,
+  options: Omit<AddTableColumnsOptions<TAttributes>, 'tableName'> & {
     /** Single table only */
     tableName: string;
   },
-  transactionOptions: MigrationTransactionOptions<TModels, TAttributes>,
+  transactionOptions: MigrationTransactionOptions<TAttributes>,
 ): Promise<void> {
   const { queryT } = transactionOptions;
   const { getColumns, drop, tableName } = options;
@@ -422,11 +403,8 @@ export async function removeTableColumns<
  * @returns The add columns migrator
  */
 export default function addColumns<
-  TAttributes extends Attributes, // TODO will have to provide ugh
-  TModels extends ModelMap
->(
-  options: AddColumnsOptions<TAttributes, TModels>,
-): MigrationDefinition<TModels> {
+  TAttributes extends Attributes // TODO will have to provide ugh
+>(options: AddColumnsOptions<TAttributes>): MigrationDefinition {
   const { tableName, ...rest } = options;
   // List of tables
   const tablesNames = Array.isArray(tableName) ? tableName : [tableName];

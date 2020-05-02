@@ -1,9 +1,8 @@
 // global
 import {
   ConfiguredModelDefinition,
-  ModelMap,
-  StringKeys,
   SyncError,
+  WildebeestStringModelName,
 } from '@wildebeest/types';
 import tableExists from '@wildebeest/utils/tableExists';
 
@@ -23,13 +22,19 @@ import checkIndexes from './indexes';
  * @param modelName - The name of the model
  * @returns Any errors related to the model definition
  */
-export default async function checkModel<TModels extends ModelMap>(
-  wildebeest: Wildebeest<TModels>,
-  model: ConfiguredModelDefinition<StringKeys<TModels>>,
-  modelName: StringKeys<TModels>,
+export default async function checkModel(
+  wildebeest: Wildebeest,
+  model: ConfiguredModelDefinition | undefined,
+  modelName: WildebeestStringModelName,
 ): Promise<SyncError[]> {
   // Keep track of errors
   const errors: SyncError[] = [];
+
+  if (!model) {
+    throw new Error(
+      `No model! Db must be initialized before running migration tests`,
+    );
+  }
 
   // You can skip the check
   if (model.skip) {

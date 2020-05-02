@@ -3,7 +3,7 @@ import { ModelAttributeColumnOptions, QueryTypes } from 'sequelize';
 
 // global
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
-import { ModelMap, SyncError } from '@wildebeest/types';
+import { SyncError } from '@wildebeest/types';
 
 /**
  * Mapping from sequelize type to data type
@@ -29,8 +29,8 @@ export const SEQUELIZE_TO_DATA_TYPE: { [k in string]: string } = {
  * @param columnName - The name of the column
  * @returns The type of the column in postgres
  */
-export async function getColumnType<TModels extends ModelMap>(
-  db: WildebeestDb<TModels>,
+export async function getColumnType(
+  db: WildebeestDb,
   tableName: string,
   columnName: string,
 ): Promise<string> {
@@ -58,8 +58,8 @@ export async function getColumnType<TModels extends ModelMap>(
  * @param definition - The model definition
  * @returns Any errors related to the type of the column
  */
-export default async function checkColumnType<TModels extends ModelMap>(
-  db: WildebeestDb<TModels>,
+export default async function checkColumnType(
+  db: WildebeestDb,
   tableName: string,
   name: string,
   definition: ModelAttributeColumnOptions,

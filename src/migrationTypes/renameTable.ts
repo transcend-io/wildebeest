@@ -3,7 +3,6 @@ import Wildebeest from '@wildebeest/classes/Wildebeest';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
-  ModelMap,
 } from '@wildebeest/types';
 import { listConstraintNames, listIndexNames } from '@wildebeest/utils';
 
@@ -33,10 +32,10 @@ export type RenameTableOptions = {
  * @param rawTransactionOptions - The existing transaction
  * @returns The rename table promise
  */
-export async function changeTableName<TModels extends ModelMap>(
-  { db }: Wildebeest<TModels>,
+export async function changeTableName(
+  { db }: Wildebeest,
   options: RenameTableOptions,
-  transactionOptions: MigrationTransactionOptions<TModels>,
+  transactionOptions: MigrationTransactionOptions,
 ): Promise<void> {
   const { oldName, newName, renameConstraints = false, drop = false } = options;
   const { queryT } = transactionOptions;
@@ -97,9 +96,9 @@ export async function changeTableName<TModels extends ModelMap>(
  * @param options - The options for renaming a table
  * @returns The rename table migrator
  */
-export default function renameTable<TModels extends ModelMap>(
+export default function renameTable(
   options: RenameTableOptions,
-): MigrationDefinition<TModels> {
+): MigrationDefinition {
   const { oldName, newName, ...rest } = options;
   return {
     up: async (wildebeest, withTransaction) =>
