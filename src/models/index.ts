@@ -13,3 +13,11 @@ const MODELS = {
   migrationLock,
 };
 export default MODELS;
+
+export const WildebeestModelMap = {
+  migration: migration.default,
+  migrationLock: migrationLock.default,
+};
+
+/** Type override */
+export type WildebeestModelMap = typeof WildebeestModelMap;

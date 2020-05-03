@@ -9,6 +9,7 @@ import * as umzug from 'umzug';
 // models
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import WildebeestModel from '@wildebeest/classes/WildebeestModel';
+import { WildebeestModelMap } from '@wildebeest/models';
 
 // local
 import { IndexType } from './enums';
@@ -348,17 +349,10 @@ export type ConfiguredModelDefinition<
 };
 
 /**
- * Model map definition from model name to model definition
- */
-export type AnyModelMap = {
-  [modelName in string]: typeof WildebeestModel;
-};
-
-/**
  * A mapping from database model name to
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ModelMap extends AnyModelMap {}
+export interface ModelMap extends WildebeestModelMap {}
 
 /**
  * The names of database models

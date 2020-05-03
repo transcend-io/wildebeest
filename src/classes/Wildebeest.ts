@@ -380,7 +380,7 @@ export default class Wildebeest {
    * @returns Its model definition, throws error if not found
    */
   public getModelDefinition(modelName: string): ModelDefinition {
-    const model = this.modelDefinitions[modelName];
+    const model = this.modelDefinitions[modelName as keyof ModelMap];
     if (!model) {
       throw new Error(`Could not find model for: "${modelName}"`);
     }
