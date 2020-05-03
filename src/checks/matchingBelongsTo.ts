@@ -24,9 +24,7 @@ export default function checkMatchingBelongsTo(
   const errors: SyncError[] = [];
 
   // Get the associations of the association
-  const { associations = {} } = wildebeest.getModelDefinition(
-    associationTable as WildebeestModelName,
-  );
+  const { associations = {} } = wildebeest.getModelDefinition(associationTable);
   const { belongsTo = {} } = associations;
 
   // Ensure `modelName` is found in one of the associations

@@ -25,7 +25,6 @@ import {
   ID,
   MergedHookOptions,
   ModelDefinition,
-  SyncAssociationsIdentifiers,
   WildebeestModelName,
 } from '@wildebeest/types';
 import apply from '@wildebeest/utils/apply';
@@ -35,31 +34,8 @@ import getKeys from '@wildebeest/utils/getKeys';
 import setAssociations from '@wildebeest/utils/setAssociations';
 
 // mixins
-import syncJoinAssociations from '@wildebeest/classes/helpers/syncJoinAssociations';
 import { ONE_MINUTE, ONE_SECOND } from '@wildebeest/constants';
 import mixins, { Prototypes } from '@wildebeest/mixins';
-import { CustomWildebeestModelName } from '@wildebeest/models';
-
-// /**
-//  * Convert a model to JSON as best we can (overrides sequelize prototype)
-//  * TODO make more accurate
-//  */
-// export type ModelToJson<M extends WildebeestModel> = Pick<
-//   M,
-//   {
-//     // Exclude functions
-//     [Key in keyof M]: M[Key] extends (...args: any[]) => any // eslint-disable-line @typescript-eslint/no-explicit-any
-//       ? never // Exclude non-model keys
-//       : Key extends
-//           | 'db'
-//           | 'sequelize'
-//           | 'wildebeest'
-//           | 'isNewRecord'
-//           | 'hookOptionsT'
-//       ? never
-//       : Key;
-//   }[keyof M]
-// >;
 
 /**
  * Options for batch processing
@@ -139,7 +115,7 @@ export default class WildebeestModel extends SequelizeModel {
   public static Op: typeof Op = Op;
 
   /** The configured sequelize model definition */
-  public static configuredDefinition?: ConfiguredModelDefinition; // TODO set this and use getters instead
+  public static configuredDefinition?: ConfiguredModelDefinition;
 
   /** The wildebeest configuration is added on the customInit setup */
   public static wildebeest?: Wildebeest;
@@ -160,6 +136,11 @@ export default class WildebeestModel extends SequelizeModel {
 
   /**
    * Builds a new model instance and calls save on it.
+   *
+   * @param this - This instance
+   * @param values - Create input values
+   * @param options - Input options
+   * @returns The created model
    */
   public static create<M extends WildebeestModel>(
     this: (new () => M) & typeof SequelizeModel,
@@ -211,7 +192,7 @@ export default class WildebeestModel extends SequelizeModel {
    * Helper function to merge db model options with a default set. Only merges hooks and indexes
    *
    * @param defaultOptions - The default options
-   * @param options - The options to override
+   * @param otherOptions - The options to override
    * @returns The combined model options
    */
   public static mergeOptions(
@@ -318,6 +299,8 @@ export default class WildebeestModel extends SequelizeModel {
 
   /**
    * Get the model definition by merging the default definition and definition
+   *
+   * @returns The model definition merged together
    */
   public static getDefinition(): ModelDefinition {
     return this.mergeDefaultDefinitions(this.definition);
@@ -327,7 +310,7 @@ export default class WildebeestModel extends SequelizeModel {
    * Setup all relations for this model
    */
   public static createRelations(): void {
-    setAssociations(this);
+    setAssociations(this as any);
   }
 
   /**
@@ -399,13 +382,13 @@ export default class WildebeestModel extends SequelizeModel {
   /**
    * Wildebeest has a custom init function that also assigns wildebeest as an attribute on the class prototype
    *
-   * @param model - The db model definition
    * @param wildebeest - The wildebeest instance
-   * @returns Initializes the model
+   * @param modelName - The name of the model to initialize
+   * @param tableName - The name of the table
    */
   public static customInit(
     wildebeest: Wildebeest,
-    modelName: WildebeestModelName | CustomWildebeestModelName,
+    modelName: WildebeestModelName,
     tableName: string,
   ): void {
     if (!this.definition) {
@@ -417,7 +400,7 @@ export default class WildebeestModel extends SequelizeModel {
     // save definitions
     this.wildebeest = wildebeest;
     this.db = wildebeest.db;
-    this.modelName = modelName as WildebeestModelName;
+    this.modelName = modelName;
     this.tableName = tableName;
 
     // Configure the model definition
@@ -479,46 +462,6 @@ export default class WildebeestModel extends SequelizeModel {
 
   /** Indicator that the model was created and not updated TODO does sequelize already do this? */
   public __wasCreated?: true;
-
-  /**
-   * This is a helper function that will synchronize many-to-many associations when the instance is updated.
-   * The update should provide the currently expected associations and the function will ensure that any extra existing associations will be destroyed and any missing associations will be added.
-   *
-   * @param this - Need to cast to do this to allow the inference to be the same as this model
-   * @param modelOptions - The models to join upon
-   * @param identifiers - The identifiers for which models to sync join public associations on
-   * @returns The promise that will synchronize the join associations
-   */
-  public static async syncJoins<
-    M extends WildebeestModel,
-    TPrimaryModelName extends WildebeestModelName,
-    TAssociationModelName extends WildebeestModelName
-  >(
-    this: (new () => M) &
-      typeof WildebeestModel & {
-        /** Name of the model */
-        modelName: TPrimaryModelName;
-      },
-    modelOptions: {
-      /** The name of the model being joined with */
-      secondaryModel: TAssociationModelName;
-      /** The name of the join model */
-      joinModel?: WildebeestModelName;
-    },
-    identifiers: SyncAssociationsIdentifiers<
-      TPrimaryModelName,
-      TAssociationModelName
-    >,
-  ): Promise<void> {
-    if (!this.wildebeest) {
-      throw new Error(`Cannot call syncJoins until wildebeest is initialized`);
-    }
-    return syncJoinAssociations(
-      this.wildebeest,
-      { primaryModel: this.modelName, ...modelOptions },
-      identifiers as any,
-    );
-  }
 
   /**
    * Loop over rows in a table in batches and process
@@ -656,7 +599,8 @@ export default class WildebeestModel extends SequelizeModel {
 
   /**
    * Updates or creates an entry depending on if one is found matching input options
-   * TODO: Type this better, move to Wildebeest
+   *
+   * TODO: Type improved
    *
    * @param this - The model itself
    * @param findOptions - Options used to search for finding an entry
@@ -700,11 +644,15 @@ export default class WildebeestModel extends SequelizeModel {
     };
   }
 
-  /** Input for creating a new model TODO */
+  /**
+   * Input for creating a new model. This is not a real runtime object, but defining
+   * `update`, `create` or `destroy` types here will enforce custom types be defined in
+   * the options attribute in `this.update` this.create` `this.destroy`
+   */
   public modelInputT!: {};
 
   /**
-   * Get the db model name from an instance TODO wildebeest?
+   * Get the db model name from an instance
    *
    * @returns The model name
    */
@@ -716,7 +664,9 @@ export default class WildebeestModel extends SequelizeModel {
   }
 
   /**
-   * Override to JSON to be current attributes  TODO wildebeest?
+   * Override to JSON to be current attributes
+   *
+   * TODO type could be improved
    *
    * @param this - This model instance
    * @returns This model as a JSON object, with an override to be typed
@@ -726,7 +676,7 @@ export default class WildebeestModel extends SequelizeModel {
   }
 
   /**
-   * Override update to include special options  TODO wildebeest?
+   * Override update to include special options
    *
    * @param this - This model instance
    * @param keys - The keys to update
@@ -742,7 +692,7 @@ export default class WildebeestModel extends SequelizeModel {
   }
 
   /**
-   * Override destroy to include special options  TODO wildebeest?
+   * Override destroy to include special options
    *
    * @param this - This model instance
    * @param options - Destroy options

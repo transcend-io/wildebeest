@@ -10,13 +10,14 @@ import apply from './apply';
  * Setup the associations for a db model, saving the association to the class definition of the model
  *
  * TODO Do not set names of model associations dynamically
+ * TODO any casting here is needed when ModelMap is made specific in @types override
  *
  * @param Model - The model to set the associations for
  * @returns Returns the model instance with associations set
  */
-export default function setAssociations<T extends typeof WildebeestModel>(
-  Model: T,
-): T {
+export default function setAssociations(
+  Model: typeof WildebeestModel,
+): typeof WildebeestModel {
   // Grab the associations
   const { wildebeest, db, configuredDefinition } = Model;
 
@@ -31,7 +32,7 @@ export default function setAssociations<T extends typeof WildebeestModel>(
   // Process `hasMany` associations
   apply(associations.hasMany, (association, associationName) => {
     // Get the child model
-    const childModel = db.model(association.modelName);
+    const childModel = db.model(association.modelName) as any;
 
     // Has many relation
     Model.associations[wildebeest.pluralCase(associationName)] = Model.hasMany(
@@ -43,7 +44,7 @@ export default function setAssociations<T extends typeof WildebeestModel>(
   // Process `hasOne` associations
   apply(associations.hasOne, (association, associationName) => {
     // Get the child model
-    const childModel = db.model(association.modelName);
+    const childModel = db.model(association.modelName) as any;
 
     // Has one child relation
     Model.associations[associationName] = Model.hasOne(childModel, association);
@@ -52,7 +53,7 @@ export default function setAssociations<T extends typeof WildebeestModel>(
   // Process `belongsTo` associations
   apply(associations.belongsTo, (association, associationName) => {
     // Get the child model
-    const parentModel = db.model(association.modelName);
+    const parentModel = db.model(association.modelName) as any;
 
     // Belongs to
     Model.associations[associationName] = Model.belongsTo(
@@ -64,7 +65,9 @@ export default function setAssociations<T extends typeof WildebeestModel>(
   // Process `belongsToMany` associations
   apply(associations.belongsToMany, (association, associationName) => {
     // Get the child model
-    const associationModel = db.model(associationName as WildebeestModelName);
+    const associationModel = db.model(
+      associationName as WildebeestModelName,
+    ) as any;
 
     // Belongs to
     Model.associations[

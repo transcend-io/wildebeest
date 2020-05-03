@@ -6,7 +6,6 @@ import Wildebeest from '@wildebeest/classes/Wildebeest';
 import {
   ConfiguredModelDefinition,
   SyncError,
-  WildebeestModelName,
   WildebeestStringModelName,
 } from '@wildebeest/types';
 import apply from '@wildebeest/utils/apply';
@@ -78,7 +77,7 @@ export default async function checkAssociationsSync(
   getKeys(belongsToMany).forEach((associationName) => {
     // Get the associations of the association
     const { associations = {} } = wildebeest.getModelDefinition(
-      associationName as WildebeestModelName, // TODO this should  be typed
+      associationName,
     );
     if (!associations.belongsToMany || !associations.belongsToMany[modelName]) {
       errors.push({

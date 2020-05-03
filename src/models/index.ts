@@ -1,19 +1,15 @@
 // local
-import Migration from './migration';
-import MigrationLock from './migrationLock';
+import * as migration from './migration';
+import * as migrationLock from './migrationLock';
 
-export { MigrationLock, Migration };
+export { default as MigrationLock } from './migrationLock/MigrationLock';
+export { default as Migration } from './migration/Migration';
 
 /**
  * Database models needed to run migrations
  */
 const MODELS = {
-  migration: Migration,
-  migrationLock: MigrationLock,
+  migration,
+  migrationLock,
 };
 export default MODELS;
-
-/**
- * Names of wildebeest db models
- */
-export type CustomWildebeestModelName = keyof typeof MODELS;

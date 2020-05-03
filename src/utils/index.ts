@@ -1,8 +1,3 @@
-/**
- * Helper functions used to run migrations
- */
-
-// local
 export { default as apply } from './apply';
 export { default as addTableColumnConstraint } from './addTableColumnConstraint';
 export { default as batchProcess } from './batchProcess';
@@ -32,7 +27,7 @@ export { default as getNumberedList } from './getNumberedList';
 export { default as getAssociationsByModelName } from './getAssociationsByModelName';
 export { default as getForeignKeyName } from './getForeignKeyName';
 export { default as getKeys } from './getKeys';
-export { default as indexConstraints } from './indexConstraints';
+export { default as indexConstraints, RawConstraint } from './indexConstraints';
 export { default as inferTableReference } from './inferTableReference';
 export { default as invert } from './invert';
 export { default as isEnum } from './isEnum';

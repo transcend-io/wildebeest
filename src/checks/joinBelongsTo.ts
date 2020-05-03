@@ -1,4 +1,5 @@
 // global
+import type { WildebeestModel } from '@wildebeest/classes';
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import {
   ConfiguredModelDefinition,
@@ -6,7 +7,7 @@ import {
   WildebeestModelName,
   WildebeestStringModelName,
 } from '@wildebeest/types';
-import { getKeys } from '@wildebeest/utils';
+import getKeys from '@wildebeest/utils/getKeys';
 
 /**
  * Check that the associations are correct for a `belongsTo` between two tables that are joining
@@ -21,6 +22,10 @@ export default async function checkJoinBelongsTo(
 ): Promise<SyncError[]> {
   // Keep track of errors
   const errors: SyncError[] = [];
+
+  const getModel = (
+    modelName: WildebeestStringModelName,
+  ): typeof WildebeestModel => db.model(modelName as WildebeestModelName);
 
   // Ensure db is defined
   if (!db) {
@@ -50,9 +55,8 @@ export default async function checkJoinBelongsTo(
       firstModelName: WildebeestStringModelName,
       secondModelName: WildebeestStringModelName,
     ): boolean => {
-      const oppositeAssociations = db.model(
-        firstModelName as WildebeestModelName,
-      ).definition.associations;
+      const oppositeAssociations = getModel(firstModelName).definition
+        .associations;
       return (
         !!oppositeAssociations &&
         !!oppositeAssociations.belongsToMany &&

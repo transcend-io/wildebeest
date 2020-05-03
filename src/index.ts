@@ -14,6 +14,8 @@ import Wildebeest, {
 import { ModelToJson } from './classes/WildebeestModel';
 import { CASCADE_HOOKS, NON_NULL } from './constants';
 
+export { default as models } from './models';
+
 // Helpers
 export {
   addTableColumns,
@@ -23,13 +25,15 @@ export {
   addValuesToEnum,
   removeValuesFromEnum,
 } from './migrationTypes/addEnumValues';
+export { changeDefaultValue } from './migrationTypes/changeColumnDefault';
+export { changeConstraintOnDelete } from './migrationTypes/changeOnDelete';
+export { createNewTable, dropTable } from './migrationTypes/createTable';
 
 // expose all migration types and classes
 export * from './classes';
 export * from './migrationTypes';
 
 // Types
-export * from './models';
 export * from './utils';
 export * from './mixins/types';
 export * from './types';

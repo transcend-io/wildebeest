@@ -47,6 +47,7 @@ import createRoutes from '@wildebeest/routes';
 import {
   Attributes,
   MigrationConfig,
+  ModelDefinition,
   ModelMap,
   SyncError,
   WildebeestModelName,
@@ -117,6 +118,10 @@ export type WildebeestOptions = {
 export default class Wildebeest {
   /**
    * Index the migrations and validate that the numbering is correct
+   *
+   * @param directory - The directory where migration files live
+   * @param bottom - The migration number to stop at
+   * @returns The list of migrations to run
    */
   public static indexMigrations(
     directory: string,
@@ -146,7 +151,7 @@ export default class Wildebeest {
   public db: WildebeestDb;
 
   /** The database model definitions to be validated */
-  public models: ModelMap & typeof wildebeestModels;
+  public models: ModelMap;
 
   /** The configured database model definitions */
   public modelDefinitions: {
@@ -282,12 +287,12 @@ export default class Wildebeest {
     Migration.definition.tableName = this.tableNames.migration;
     MigrationLock.definition.tableName = this.tableNames.migrationLock;
     this.models = {
-      ...wildebeestModels,
+      ...apply(wildebeestModels, (model) => model.default),
       ...models,
     };
     this.modelDefinitions = apply(this.models, (model) =>
       model.getDefinition(),
-    );
+    ) as any;
 
     // misc
     this.errOnSyncFailure = errOnSyncFailure;
@@ -368,12 +373,13 @@ export default class Wildebeest {
   /**
    * Lookup the model definition by model name
    *
+   * Note: This is type casting the result to a more generic type since this is used
+   * internally to wildebeest only
+   *
    * @param modelName - The model name to lookup
    * @returns Its model definition, throws error if not found
    */
-  public getModelDefinition<TModelName extends WildebeestModelName>(
-    modelName: TModelName,
-  ): ModelMap[TModelName]['definition'] {
+  public getModelDefinition(modelName: string): ModelDefinition {
     const model = this.modelDefinitions[modelName];
     if (!model) {
       throw new Error(`Could not find model for: "${modelName}"`);
@@ -539,7 +545,7 @@ export default class Wildebeest {
             } seconds`,
           );
         }
-      } /* eslint-enable */
+      } /* eslint-enable no-await-in-loop */
 
       this.verboseLogger.success('~Acquired migration lock~');
 
@@ -614,7 +620,8 @@ export default class Wildebeest {
       ModelDef.customInit(
         this,
         name as WildebeestModelName,
-        ModelDef.definition.tableName || this.pluralCase(name),
+        (ModelDef.definition as ModelDefinition).tableName ||
+          this.pluralCase(name),
       ),
     );
 
@@ -625,6 +632,8 @@ export default class Wildebeest {
   /* eslint-disable class-methods-use-this */
   /**
    * Verify that the db is setup and configured for migrations, useful to prevent execution of code until migrations have run
+   *
+   * @param transaction - The current transaction
    */
   public async isOperable(transaction?: Transaction): Promise<boolean> {
     return MigrationLock.isOperable(transaction);

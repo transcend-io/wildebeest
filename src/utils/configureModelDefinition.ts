@@ -21,6 +21,7 @@ import getForeignKeyName from './getForeignKeyName';
  *
  * @param wildebeest - The wildebeest configuration
  * @param belongsTo - The belongs to associations
+ * @returns The configured attribute definitions
  */
 export function createAttributesFromAssociations(
   wildebeest: Wildebeest,

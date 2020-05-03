@@ -14,6 +14,7 @@ import {
  * @param modelName - The name of the model being checked
  * @param tableName - The table of the model being checked
  * @param association - The association configuration
+ * @param associationName
  * @param name - The name of the association
  * @returns True if belongs to association is valid
  */
@@ -37,9 +38,7 @@ export default function checkBelongsToAssociation(
   const {
     associations = {},
     dontMatchBelongsTo,
-  } = wildebeest.getModelDefinition(
-    associationModelName as WildebeestModelName,
-  );
+  } = wildebeest.getModelDefinition(associationModelName);
 
   // Can skip if dont need to match it
   if (dontMatchBelongsTo) {
