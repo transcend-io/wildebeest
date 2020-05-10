@@ -24,7 +24,6 @@ import getNumberedList, {
 } from '@wildebeest/utils/getNumberedList';
 import pascalCase from '@wildebeest/utils/pascalCase';
 // utils
-import randomTimeoutPromise from '@wildebeest/utils/randomTimeoutPromise';
 import restoreFromDump from '@wildebeest/utils/restoreFromDump';
 import sleepPromise from '@wildebeest/utils/sleepPromise';
 import tableExists from '@wildebeest/utils/tableExists';
@@ -401,9 +400,35 @@ export default class Wildebeest<TModels extends ModelMap> {
    * @returns The setup promise
    */
   public async setup(): Promise<void> {
-    // Check if the migrations table exists
+    // Check if migrations have finished running on another instance
+    const isSetup = async (): Promise<boolean> => {
+      // Table must exist
+      const migrationsTableExists = await tableExists(
+        this.db,
+        this.tableNames.migration,
+      );
+
+      if (!migrationsTableExists) {
+        return false;
+      }
+
+      // There must be at least one migration in the table
+      const lastMigration = await this.models.migration.findOne({
+        order: [['createdAt', 'DESC']],
+        limit: 1,
+      });
+
+      if (!lastMigration) {
+        return false;
+      }
+
+      // Ensure the migrations have been completed
+      const last = this.migrations[this.migrations.length - 1];
+      return lastMigration.name === last.fileName;
+    };
+
     /* eslint-disable no-await-in-loop */
-    while (!(await tableExists(this.db, this.tableNames.migration))) {
+    while (!(await isSetup())) {
       // If the table does not exist yet, restore the genesis migration and indicate the first migration ocurred
       // Only run this from one node by controlling the value of waitForMigration
       if (!this.waitForMigration) {
@@ -422,7 +447,7 @@ export default class Wildebeest<TModels extends ModelMap> {
 
       this.logger.info('Waiting for the genesis migration to finish');
       // wait for some time
-      await randomTimeoutPromise(MIGRATION_TIMEOUT);
+      await sleepPromise(MIGRATION_TIMEOUT);
     }
   }
 
@@ -437,7 +462,7 @@ export default class Wildebeest<TModels extends ModelMap> {
 
     // Check if we need to migrate by comparing last migration
     // This is significantly faster on server start time than trying to acquire and run with lock
-    const last = this.migrations.pop();
+    const last = this.migrations[this.migrations.length - 1];
     if (last) {
       const { name } = await this.models.migration.findOne({
         order: [['createdAt', 'DESC']],
