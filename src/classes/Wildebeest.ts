@@ -400,8 +400,11 @@ export default class Wildebeest<TModels extends ModelMap> {
    * @returns The setup promise
    */
   public async setup(): Promise<void> {
-    // Check if migrations have finished running on another instance
-    const isSetup = async (): Promise<boolean> => {
+    // Determine whether the genesis migration has already been run
+    // Returns the last migration that was previously
+    const genesisMigrationHasRun = async (): Promise<
+      Migration<TModels> | undefined
+    > => {
       // Table must exist
       const migrationsTableExists = await tableExists(
         this.db,
@@ -409,15 +412,22 @@ export default class Wildebeest<TModels extends ModelMap> {
       );
 
       if (!migrationsTableExists) {
-        return false;
+        return undefined;
       }
 
       // There must be at least one migration in the table
-      const lastMigration = await this.models.migration.findOne({
+      return this.models.migration.findOne({
         order: [['createdAt', 'DESC']],
         limit: 1,
       });
+    };
 
+    // Check if migrations have finished running on another instance
+    // This check is designed for the thread that is not allowed to run
+    // the initial genesis migration
+    const secondaryThreadIsSetup = async (): Promise<boolean> => {
+      // Determine if migrations are ready
+      const lastMigration = await genesisMigrationHasRun();
       if (!lastMigration) {
         return false;
       }
@@ -427,11 +437,18 @@ export default class Wildebeest<TModels extends ModelMap> {
       return lastMigration.name === last.fileName;
     };
 
-    /* eslint-disable no-await-in-loop */
-    while (!(await isSetup())) {
+    // For processes that are not allowed to run genesis migration
+    if (this.waitForMigration) {
+      /* eslint-disable no-await-in-loop */
+      while (!(await secondaryThreadIsSetup())) {
+        this.logger.info('Waiting for the genesis migration to finish');
+        await sleepPromise(MIGRATION_TIMEOUT);
+      }
+    } else {
       // If the table does not exist yet, restore the genesis migration and indicate the first migration ocurred
       // Only run this from one node by controlling the value of waitForMigration
-      if (!this.waitForMigration) {
+      const genesisHasRun = await genesisMigrationHasRun();
+      if (!genesisHasRun) {
         await restoreFromDump(this, this.restoreSchemaOnEmpty);
 
         // Run the first migration if it has not been run yet
@@ -442,12 +459,7 @@ export default class Wildebeest<TModels extends ModelMap> {
             method: 'up',
           });
         }
-        break;
       }
-
-      this.logger.info('Waiting for the genesis migration to finish');
-      // wait for some time
-      await sleepPromise(MIGRATION_TIMEOUT);
     }
   }
 
