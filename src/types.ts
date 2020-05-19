@@ -475,12 +475,20 @@ export type HookOptions<M extends WildebeestModel<ModelMap>> = Partial<
       /** Before validate, missing transaction */
       beforeValidate(
         attributes: M,
-        options: ValidationOptions & Partial<TransactionOptions>,
+        options: ValidationOptions &
+          Partial<TransactionOptions> &
+          Partial<
+            MergedHookOptions<M, 'create'> & MergedHookOptions<M, 'update'>
+          >,
       ): HookReturn;
       /** After validate, missing transaction */
       afterValidate(
         attributes: M,
-        options: ValidationOptions & Partial<TransactionOptions>,
+        options: ValidationOptions &
+          Partial<TransactionOptions> &
+          Partial<
+            MergedHookOptions<M, 'create'> & MergedHookOptions<M, 'update'>
+          >,
       ): HookReturn;
       /** Before row is created */
       beforeCreate(
@@ -524,7 +532,7 @@ export type HookExtraOptions = {
   create?: {};
   /** Before and after a row is updated */
   update?: {};
-  /** Before an after a row is destroyed */
+  /** Before and after a row is destroyed */
   destroy?: {};
 };
 
