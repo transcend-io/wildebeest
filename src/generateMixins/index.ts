@@ -5,8 +5,7 @@ import './convert_paths';
 
 /* tslint:disable no-relative-imports */
 // external
-import { existsSync, readFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'fs';
 
 // local
 import Handlebars from './Handlebars';

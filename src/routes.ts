@@ -24,7 +24,7 @@ export default <TModels extends ModelMap>(
   // /////////// //
 
   // Save the wildebeest onto res.locals
-  router.all('*', (req, res, next) => {
+  router.all('*', (_, res, next) => {
     res.locals.wildebeest = wildebeest;
     next();
   });

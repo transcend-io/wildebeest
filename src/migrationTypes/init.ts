@@ -22,9 +22,8 @@ export default function init<TModels extends ModelMap>({
   genesisSchema,
 }: InitMigrationOptions): MigrationDefinition<TModels> {
   return custom({
-    up: (transactionOptions, wildebeest) =>
+    up: (_, wildebeest) =>
       wildebeest.runWithLock((lock) => lock.restoreSchema(genesisSchema)),
-    down: (transactionOptions, wildebeest) =>
-      wildebeest.runWithLock((lock) => lock.dropAll()),
+    down: (_, wildebeest) => wildebeest.runWithLock((lock) => lock.dropAll()),
   });
 }

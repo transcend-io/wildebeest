@@ -39,11 +39,11 @@ export default function renameIndex<TModels extends ModelMap>(
   options: RenameIndexOptions,
 ): MigrationDefinition<TModels> {
   return {
-    up: async (wildebeest, withTransaction) =>
+    up: async (_, withTransaction) =>
       withTransaction((transactionOptions) =>
         renameTableIndex(options, transactionOptions),
       ),
-    down: async (wildebeest, withTransaction) =>
+    down: async (_, withTransaction) =>
       withTransaction((transactionOptions) =>
         renameTableIndex(
           {

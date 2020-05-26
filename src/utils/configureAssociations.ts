@@ -38,13 +38,11 @@ export function setAs<
  * Convert any specially termed association settings into valid sequelize options
  *
  * @param wildebeest - The wildebeest configuration
- * @param modelName - The name of the model being connected
  * @param associations - The raw association inputs
  * @returns The configured sequelize associations configurations
  */
 export default function configureAssociations<TModels extends ModelMap>(
   wildebeest: Wildebeest<TModels>,
-  modelName: string,
   {
     belongsTo = {},
     belongsToMany = {},

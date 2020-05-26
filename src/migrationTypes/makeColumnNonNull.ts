@@ -104,7 +104,7 @@ export default function makeColumnNonNull<
           `ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" SET not null;`,
         );
       }),
-    down: async (wildebeest, withTransaction) =>
+    down: async (_, withTransaction) =>
       withTransaction(({ queryT }) =>
         queryT.raw(
           `ALTER TABLE "${tableName}" ALTER COLUMN "${columnName}" DROP not null;`,

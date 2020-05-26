@@ -1,5 +1,4 @@
 // global
-import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import {
   MigrationDefinition,
   MigrationTransactionOptions,
@@ -19,13 +18,11 @@ export type RenameEnumOptions = {
 /**
  * Change the name of an enum
  *
- * @param db - The database to migrate against
  * @param options - The change enum options
  * @param rawTransactionOptions - The raw transaction options
  * @returns The change name promise
  */
 export async function changeEnumName<TModels extends ModelMap>(
-  db: WildebeestDb<TModels>,
   options: RenameEnumOptions,
   transactionOptions: MigrationTransactionOptions<TModels>,
 ): Promise<void> {
@@ -49,14 +46,13 @@ export default function renameEnum<TModels extends ModelMap>(
 ): MigrationDefinition<TModels> {
   const { oldName, newName } = options;
   return {
-    up: async (wildebeest, withTransaction) =>
+    up: async (_, withTransaction) =>
       withTransaction((transactionOptions) =>
-        changeEnumName(wildebeest.db, { oldName, newName }, transactionOptions),
+        changeEnumName({ oldName, newName }, transactionOptions),
       ),
-    down: async (wildebeest, withTransaction) =>
+    down: async (_, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeEnumName(
-          wildebeest.db,
           { newName: oldName, oldName: newName },
           transactionOptions,
         ),

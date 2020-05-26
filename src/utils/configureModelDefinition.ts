@@ -87,7 +87,6 @@ export default function configureModelDefinition<TModels extends ModelMap>(
 
   const configuredAssociations = configureAssociations(
     wildebeest,
-    modelName,
     associations,
   );
   return {

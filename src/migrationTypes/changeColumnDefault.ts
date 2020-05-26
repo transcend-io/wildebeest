@@ -94,7 +94,7 @@ export default function newApiVersion<TModels extends ModelMap>(
   const { tableName, columnName, oldDefault, newDefault } = options;
   return {
     // Change or drop the default value
-    up: async (wildebeest, withTransaction) =>
+    up: async (_, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeDefaultValue(
           tableName,
@@ -104,7 +104,7 @@ export default function newApiVersion<TModels extends ModelMap>(
         ),
       ),
     // Change or add back the default value
-    down: async (wildebeest, withTransaction) =>
+    down: async (_, withTransaction) =>
       withTransaction((transactionOptions) =>
         changeDefaultValue(
           tableName,
