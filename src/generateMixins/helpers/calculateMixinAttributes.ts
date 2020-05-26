@@ -1,13 +1,16 @@
 // mixins
-import ChangeCase from '@mixins/ChangeCase';
-import { SEQUELIZE_MIXINS, WILDEBEEST_MIXINS } from '@mixins/constants';
+import ChangeCase from '@wildebeest/generateMixins/ChangeCase';
+import {
+  SEQUELIZE_MIXINS,
+  WILDEBEEST_MIXINS,
+} from '@wildebeest/generateMixins/constants';
 import {
   AssociationInput,
   AssociationMixins,
   AssociationType,
   MixinAttributeInput,
   MixinAttributes,
-} from '@mixins/types';
+} from '@wildebeest/generateMixins/types';
 
 /**
  * Get the typescript configuration in the directory

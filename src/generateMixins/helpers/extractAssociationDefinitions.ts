@@ -7,7 +7,7 @@ import {
   AssociationsMapping,
   AssociationType,
   GenerateMixinsConfig,
-} from '@mixins/types';
+} from '@wildebeest/generateMixins/types';
 
 // local
 import createCompilerHost from './createCompilerHost';

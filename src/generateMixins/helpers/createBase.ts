@@ -7,7 +7,7 @@ import {
   AssociationsDefinition,
   BaseFileInput,
   GenerateMixinsConfig,
-} from '@mixins/types';
+} from '@wildebeest/generateMixins/types';
 
 // local
 import associationDefinitionToSections from './associationDefinitionToSections';

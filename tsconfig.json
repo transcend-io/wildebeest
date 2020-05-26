@@ -12,8 +12,7 @@
     "baseUrl": ".",
     "paths": {
       "@generators/*": ["./generators*"],
-      "@wildebeest*": ["./src*"],
-      "@mixins*": ["./mixins*"]
+      "@wildebeest*": ["./src*"]
     },
     "outDir": "./build",
     "types": ["node", "mocha"],
@@ -21,7 +20,6 @@
   },
   "include": [
     "src/**/*",
-    "mixins/**/*",
     "scripts/**/*"
     // "generators/**/*" TODO
   ],

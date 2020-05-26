@@ -3,7 +3,7 @@ import {
   AssociationsDefinition,
   BaseFileInput,
   GenerateMixinsConfig,
-} from '@mixins/types';
+} from '@wildebeest/generateMixins/types';
 
 // local
 import pascalCase from './pascalCase';

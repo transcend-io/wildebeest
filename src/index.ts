@@ -22,6 +22,7 @@ export * from './migrationTypes';
 export * from './models';
 export * from './mixins/types';
 export * from './types';
+export { default as generateMixins } from './generateMixins';
 export { default as Logger } from './Logger';
 export const {
   createAssociationApply,
