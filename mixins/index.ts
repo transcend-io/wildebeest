@@ -16,21 +16,18 @@ import {
   getCompilerOptions,
   setConfigDefaults,
 } from './helpers';
-import { BaseFileInput } from './types';
+import { BaseFileInput, GenerateMixinsConfig } from './types';
 
 /**
  * Main runner for mixin generation
  *
  * @param configPath - The path to the config specified via command line arg
  */
-function main(configPath: string = join(process.cwd(), 'wildebeest.js')): void {
-  // Ensure the path exists
-  if (!existsSync(configPath)) {
-    throw new Error(`Wildebeest config does not exist at: "${configPath}"`);
-  }
-
+export default function generateMixins(
+  mixinConfig: GenerateMixinsConfig,
+): void {
   // Read in the config and set defaults
-  const config = setConfigDefaults(require(configPath)); // eslint-disable-line global-require,import/no-dynamic-require
+  const config = setConfigDefaults(mixinConfig);
 
   // Register any custom handlebars helpers
   Object.entries(config.handlebarsHelpers).map(([name, func]) =>
@@ -66,6 +63,3 @@ function main(configPath: string = join(process.cwd(), 'wildebeest.js')): void {
   // print out the doc
   // writeFileSync('types.json', JSON.stringify(output, undefined, 4));
 }
-
-// Run the main script
-main(process.argv[2]);
