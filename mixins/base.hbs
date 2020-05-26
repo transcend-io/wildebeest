@@ -15,7 +15,7 @@
 import * as w from '@transcend-io/wildebeest';
 
 // db
-import * as M from '{{ modelDefinitionsPath }}';
+import type * as M from '{{ modelDefinitionsPath }}';
 {{#ifEqual modelBaseFolder "db"}}
 import {{ ModelBaseName }} from '@bk/{{ modelBaseFolder }}/{{ ModelBaseName }}';
 {{/ifEqual}}
