@@ -2,7 +2,7 @@
 import get from 'lodash/get';
 
 // global
-import { AssociationDefinition } from '@wildebeest/generateMixins/types';
+import { AssociationDefinition } from '../types';
 
 /**
  * Get the value of a string from an object

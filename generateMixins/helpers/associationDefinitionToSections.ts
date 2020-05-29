@@ -3,7 +3,7 @@ import {
   AssociationsDefinition,
   AssociationSection,
   GenerateMixinsConfig,
-} from '@wildebeest/generateMixins/types';
+} from '../types';
 
 // local
 import calculateMixinAttributes from './calculateMixinAttributes';

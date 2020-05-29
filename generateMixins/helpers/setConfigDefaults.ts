@@ -3,7 +3,7 @@ import { join } from 'path';
 import pluralize from 'pluralize';
 
 // mixins
-import { GenerateMixinsConfig } from '@wildebeest/generateMixins/types';
+import { GenerateMixinsConfig } from '../types';
 
 // local
 import defaultDetermineModelToExtend from './determineModelToExtend';

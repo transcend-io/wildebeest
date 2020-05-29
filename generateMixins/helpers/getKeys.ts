@@ -1,5 +1,5 @@
 // global
-import { StringKeys } from '@wildebeest/generateMixins/types';
+import { StringKeys } from '../types';
 
 /**
  * Object.keys for string keys only

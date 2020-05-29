@@ -24,7 +24,8 @@
   },
   "include": [
     "src/**/*",
-    "scripts/**/*"
+    "scripts/**/*",
+    "generateMixins/**/*"
     // "generators/**/*" TODO
   ],
   "exclude": ["node_modules", "build", "docs", "Internal-Documentation"]

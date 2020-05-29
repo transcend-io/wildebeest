@@ -1,4 +1,3 @@
-/* tslint:disable no-relative-imports */
 // external
 import { readFileSync } from 'fs';
 
