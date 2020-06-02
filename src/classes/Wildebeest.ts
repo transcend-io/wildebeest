@@ -441,7 +441,7 @@ export default class Wildebeest<TModels extends ModelMap> {
     if (this.waitForMigration) {
       /* eslint-disable no-await-in-loop */
       while (!(await secondaryThreadIsSetup())) {
-        this.logger.info('Waiting for the genesis migration to finish');
+        this.logger.info('Waiting on the primary thread to run migrations...');
         await sleepPromise(MIGRATION_TIMEOUT);
       }
     } else {
