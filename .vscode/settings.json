@@ -1,6 +1,7 @@
 {
   "cSpell.words": [
     "backoff",
+    "bytea",
     "camelcase",
     "conname",
     "connamespace",
@@ -34,7 +35,8 @@
     "types",
     "umzug",
     "unnested",
-    "upsert"
+    "upsert",
+    "uuidv"
   ],
   "[handlebars]": { "editor.formatOnSave": false },
   "eslint.validate": [

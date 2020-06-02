@@ -1,6 +1,6 @@
 {
   "name": "@transcend-io/wildebeest",
-  "version": "2.17.2",
+  "version": "2.17.3",
   "description": "Type-safe sequelize with a simplified migration framework",
   "main": "build/src/index.js",
   "homepage": "https://github.com/transcend-io/wildebeest#readme",
@@ -42,8 +42,8 @@
     "sequelize": "^5.21.6"
   },
   "dependencies": {
-    "aws-sdk": "^2.654.0",
-    "change-case": "=3.1.0",
+    "aws-sdk": "^2.687.0",
+    "change-case": "4.1.1",
     "express": "^4.17.1",
     "handlebars": "^4.7.6",
     "lodash": "^4.17.15",
@@ -51,29 +51,29 @@
     "umzug": "^2.3.0"
   },
   "devDependencies": {
-    "sequelize": "^5.21.6",
     "@types/express": "^4.17.4",
-    "@types/lodash": "^4.14.149",
+    "@types/lodash": "^4.14.154",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^13.11.0",
+    "@types/node": "^14.0.9",
     "@types/pluralize": "0.0.29",
     "@types/umzug": "^2.2.3",
-    "@types/uuid": "^7.0.2",
-    "@typescript-eslint/eslint-plugin": "^2.27.0",
-    "@typescript-eslint/parser": "^2.27.0",
+    "@types/uuid": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
     "babel-eslint": "^10.1.0",
     "copy": "^0.3.2",
-    "eslint": "^6.8.0",
+    "eslint": "^7.1.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-config-prettier": "^6.10.1",
     "eslint-import-resolver-typescript": "^2.0.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-prettier": "^3.1.2",
-    "mocha": "^7.1.1",
+    "mocha": "^7.2.0",
     "prettier": "^2.0.4",
     "rimraf": "^3.0.2",
+    "sequelize": "^5.21.11",
     "tslint": "^6.1.1",
     "tslint-microsoft-contrib": "^6.2.0",
-    "typescript": "=3.8.3"
+    "typescript": "3.9.3"
   }
 }

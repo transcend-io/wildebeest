@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // external
 import { QueryTypes } from 'sequelize';
 
@@ -34,7 +35,7 @@ export async function hasConstraint<TModels extends ModelMap>(
 /**
  * Ensure the constraint between the table column associations is valid
  *
- * @param wilebeest - The wildebeest configuration
+ * @param wildebeest - The wildebeest configuration
  * @param tableName - The name of the table to check
  * @param name - The name of the column
  * @param definition - The attribute definition

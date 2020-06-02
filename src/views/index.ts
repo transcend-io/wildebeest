@@ -7,6 +7,7 @@ import { readFileSync } from 'fs';
 import Handlebars from 'handlebars';
 
 // helpers
+import type { ObjByString } from '@wildebeest/types';
 import pascalCase from '@wildebeest/utils/pascalCase';
 import { join } from 'path';
 
@@ -37,7 +38,7 @@ const TEMPLATES = {
  */
 export default function render(
   name: keyof typeof TEMPLATES,
-  params: {},
+  params: ObjByString,
 ): string {
   return Handlebars.compile(TEMPLATES[name])(params);
 }

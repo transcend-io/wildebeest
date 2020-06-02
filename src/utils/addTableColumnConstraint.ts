@@ -67,7 +67,6 @@ export default async function addTableColumnConstraint<
   }
   // Add the new constraint
   await queryInterface.addConstraint(tableName, [columnName], {
-    type: 'foreign key', // default constraint is a foreign key
     name: useConstraintName,
     references: references || inferTableReference(columnName, pluralCase),
     ...otherConstraintOptions,

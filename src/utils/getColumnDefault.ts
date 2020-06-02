@@ -20,7 +20,9 @@ export default async function getColumnDefault<TModels extends ModelMap>(
   transactionOptions?: MigrationTransactionOptions<TModels>,
 ): Promise<string> {
   // Get the default for the column
-  const [{ column_default }] = await db.queryInterface.sequelize.query(
+  const [
+    { column_default: columnDefault },
+  ] = await db.queryInterface.sequelize.query(
     `
     SELECT column_name, column_default
     FROM information_schema.columns
@@ -33,5 +35,5 @@ export default async function getColumnDefault<TModels extends ModelMap>(
     },
   );
 
-  return column_default;
+  return columnDefault;
 }
