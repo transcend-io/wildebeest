@@ -8,6 +8,7 @@ import {
   Attributes,
   MigrationTransactionOptions,
   ModelMap,
+  ObjByString,
 } from '@wildebeest/types';
 
 /**
@@ -36,7 +37,7 @@ export type WhereOptions = {
  * @returns The total number of processed rows
  */
 export default async function batchProcess<
-  T extends {},
+  T extends ObjByString,
   TModels extends ModelMap,
   TAttributes extends Attributes
 >(

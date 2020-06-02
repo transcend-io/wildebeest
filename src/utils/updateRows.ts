@@ -78,7 +78,7 @@ export type UpdateRowOptions = {
  * @returns The number of rows operate on
  */
 export default async function updateRows<
-  T extends {},
+  T extends { [k in string]: unknown },
   TModels extends ModelMap,
   TAttributes extends Attributes
 >(

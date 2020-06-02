@@ -22,7 +22,7 @@ import determineModelToExtend from './determineModelToExtend';
  */
 export default function createBase(
   associationsDefinition: AssociationsDefinition,
-  createBaseFile: (input: BaseFileInput) => void,
+  createBaseFile: (input: BaseFileInput) => string,
   config: Required<GenerateMixinsConfig>,
 ): void {
   // convert into input sections for the handlebars template

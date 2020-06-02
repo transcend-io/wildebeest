@@ -420,14 +420,14 @@ export type QueryHelpers<
     identifier?: sequelize.WhereOptions,
   ) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
   /** Insert rows inside the transaction */
-  insert: <TInput extends {}>(
+  insert: <TInput extends { [k in string]: unknown }>(
     tableName: string,
     records: TInput[],
   ) => Promise<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
   /** A raw SQL query returning metadata as well */
   raw: QueryWithTransaction;
   /** Batch process in the same transaction */
-  batchProcess: <T extends {}>(
+  batchProcess: <T extends { [k in string]: unknown }>(
     tableName: string,
     whereOptions: WhereOptions,
     processRow: (row: T) => void,
@@ -529,11 +529,11 @@ export type HookOptions<M extends WildebeestModel<ModelMap>> = Partial<
  */
 export type HookExtraOptions = {
   /** Before and after a row is created */
-  create?: {};
+  create?: { [k in string]: unknown };
   /** Before and after a row is updated */
-  update?: {};
+  update?: { [k in string]: unknown };
   /** Before and after a row is destroyed */
-  destroy?: {};
+  destroy?: { [k in string]: unknown };
 };
 
 /**
@@ -564,7 +564,7 @@ export type HookOptionsExtender = {
 export type MergedHookOptions<
   TModel extends HookOptionsExtender,
   THook extends keyof HookExtraOptions
-> = TModel['hookOptionsT'][THook] extends {}
+> = TModel['hookOptionsT'][THook] extends { [k in string]: unknown }
   ? TModel['hookOptionsT'][THook] & HookDefaultOptions[THook]
   : HookDefaultOptions[THook];
 

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // external
 import { QueryTypes } from 'sequelize';
 

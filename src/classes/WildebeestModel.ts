@@ -104,10 +104,10 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
    */
   public static create<M extends WildebeestModel<any>>(
     this: (new () => M) & typeof Model,
-    values: object,
+    values: { [k in string]: any },
     options?: MergedHookOptions<M, 'create'>,
   ): Bluebird<M> {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return super.create(values, options);
   }
@@ -209,14 +209,16 @@ export default class WildebeestModel<TModels extends ModelMap> extends Model {
 
   /**
    * Get the model definition by merging the default definition and definition
-   * TODO: Type this better so that it can be moved out of main
    *
    * @param mergeDefaults - The defaults to merge with the existing defaults
    * @returns The merged default definitions
    */
   public static mergeDefaultDefinitions<
     TNewDefaults extends Partial<ModelDefinition<StringKeys<ModelMap>>>,
-    M extends any
+    M extends {
+      /** Default type definitions, useful to allow override */
+      definitionDefaults?: any;
+    }
   >(mergeDefaults: TNewDefaults): TNewDefaults & M['definitionDefaults'] {
     return {
       // Definition overrides defaults

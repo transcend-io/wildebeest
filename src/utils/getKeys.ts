@@ -7,7 +7,9 @@ import { StringKeys } from '@wildebeest/types';
  * @param o - The object to get the keys from
  * @returns The string keys of the object preserving type
  */
-export function getStringKeys<T extends {}>(o: T): StringKeys<T>[] {
+export function getStringKeys<T extends { [k in string]: unknown }>(
+  o: T,
+): StringKeys<T>[] {
   return Object.keys(o).filter((k) => typeof k === 'string') as StringKeys<T>[];
 }
 
@@ -17,6 +19,8 @@ export function getStringKeys<T extends {}>(o: T): StringKeys<T>[] {
  * @param o - The object to get the keys from
  * @returns The keys of the object preserving type
  */
-export default function getKeys<T extends {}>(o: T): (keyof T)[] {
+export default function getKeys<T extends { [k in string]: unknown }>(
+  o: T,
+): (keyof T)[] {
   return Object.keys(o) as (keyof T)[];
 }

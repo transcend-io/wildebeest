@@ -92,7 +92,7 @@ export async function createNewTable<
                 ? constraintConfig
                 : constraintConfig.columnName,
             constraintOptions: {
-              type: 'foreign key' as 'foreign key',
+              type: 'foreign key',
               onDelete: 'SET NULL',
               onUpdate: 'CASCADE',
               ...(typeof constraintConfig === 'string'
