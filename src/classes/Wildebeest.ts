@@ -500,13 +500,12 @@ export default class Wildebeest<TModels extends ModelMap> {
   public async getSyncErrors(): Promise<SyncError[]> {
     const results = await BPromise.map(
       getStringKeys(this.models),
-      (modelName) => {
-        return checkModel(
+      (modelName) =>
+        checkModel(
           this,
           this.models[modelName].configuredDefinition,
           modelName,
-        );
-      },
+        ),
       {
         concurrency: 100, // The concurrent limit to avoid overwhelming the DB
       },
