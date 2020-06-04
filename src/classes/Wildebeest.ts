@@ -5,6 +5,7 @@
 
 // external
 import { S3 } from 'aws-sdk';
+import BPromise from 'bluebird';
 import * as express from 'express';
 import { existsSync, readdirSync } from 'fs';
 import flatten from 'lodash/flatten';
@@ -497,24 +498,28 @@ export default class Wildebeest<TModels extends ModelMap> {
    * @returns True if the model definitions are exactly defined in the db
    */
   public async getSyncErrors(): Promise<SyncError[]> {
-    const results = await Promise.all([
-      // Check that each model is in sync
-      ...getStringKeys(this.models).map((modelName) =>
-        checkModel(
+    const results = await BPromise.map(
+      getStringKeys(this.models),
+      (modelName) => {
+        return checkModel(
           this,
           this.models[modelName].configuredDefinition,
           modelName,
-        ),
-      ),
-      // Check for extra tables
-      checkExtraneousTables(
-        this.db,
-        getStringKeys(this.models)
-          .map((modelName) => this.models[modelName].tableName)
-          .concat(this.ignoredTableNames),
-      ),
-    ]);
-    return flatten(results);
+        );
+      },
+      {
+        concurrency: 100, // The concurrent limit to avoid overwhelming the DB
+      },
+    );
+
+    const extraTableResults = await checkExtraneousTables(
+      this.db,
+      getStringKeys(this.models)
+        .map((modelName) => this.models[modelName].tableName)
+        .concat(this.ignoredTableNames),
+    );
+
+    return flatten(results).concat(extraTableResults);
   }
 
   /**
