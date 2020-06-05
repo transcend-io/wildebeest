@@ -5,7 +5,7 @@ const chalk = require('chalk'); // eslint-disable-line @typescript-eslint/no-var
 /* tslint:enable no-var-requires */
 
 const applyChalkColor = (
-  color: 'red' | 'green' | 'blue' | 'bold',
+  color: 'red' | 'green' | 'blue' | 'bold' | 'yellow',
   props: Parameters<typeof console.log>,
 ): Parameters<typeof console.log> =>
   props.map((p) => (typeof p === 'string' ? chalk[color](p) : p)) as Parameters<
@@ -31,6 +31,13 @@ export default class Logger {
   }
 
   /**
+   * Standard console.warn
+   */
+  public warn(...props: Parameters<typeof console.log>): void {
+    console.warn(...applyChalkColor('yellow', props));
+  }
+
+  /**
    * Standard console.info
    */
   public info(...props: Parameters<typeof console.log>): void {
@@ -45,17 +52,10 @@ export default class Logger {
   }
 
   /**
-   * Standard console.info with bold font
-   */
-  public header(...props: Parameters<typeof console.log>): void {
-    console.info(...applyChalkColor('bold', props));
-  }
-
-  /**
    * Print a divider
    */
   public divide(): void {
-    this.header('-----------------------------------');
+    this.info('-----------------------------------');
   }
 }
 
@@ -65,8 +65,8 @@ export default class Logger {
 export const verboseLoggerDefault: Logger = {
   log: () => null,
   error: () => null,
+  warn: () => null,
   info: () => null,
-  header: () => null,
   success: () => null,
   divide: () => null,
 };

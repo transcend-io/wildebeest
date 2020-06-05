@@ -296,9 +296,15 @@ export default class Wildebeest<TModels extends ModelMap> {
       migration: Migration,
       migrationLock: MigrationLock,
     };
-    this.modelDefinitions = (apply(this.models, (model) =>
-      model.getDefinition(),
-    ) as any) as {
+    console.log(this.models);
+    this.modelDefinitions = (apply(this.models, (model, name) => {
+      if (!model) {
+        this.logger.warn(
+          `Missing model for ${name}, you may have a circular dependency`,
+        );
+      }
+      return model.getDefinition();
+    }) as any) as {
       [modelName in StringKeys<TModels>]: ModelDefinition<StringKeys<TModels>>;
     };
 
