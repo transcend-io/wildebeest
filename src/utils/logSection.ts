@@ -18,7 +18,7 @@ export default async function logSection(
   // Log start
   if (!IS_TEST) {
     logger.divide();
-    logger.header(`${header}:\n`);
+    logger.info(`${header}:\n`);
   }
 
   // Run the cb
