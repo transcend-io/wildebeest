@@ -512,7 +512,7 @@ export default class Wildebeest<TModels extends ModelMap> {
           modelName,
         ),
       {
-        concurrency: 100, // The concurrent limit to avoid overwhelming the DB
+        concurrency: 10, // The concurrent limit to avoid overwhelming the DB
       },
     );
 
