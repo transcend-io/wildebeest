@@ -301,11 +301,10 @@ export default class Wildebeest<TModels extends ModelMap> {
       migration: Migration,
       migrationLock: MigrationLock,
     };
-    console.log(this.models);
     this.modelDefinitions = (apply(this.models, (model, name) => {
       if (!model) {
         this.logger.warn(
-          `Missing model for ${name}, you may have a circular dependency`,
+          `Missing model definition for "${name}", you may have a circular dependency`,
         );
       }
       return model.getDefinition();
