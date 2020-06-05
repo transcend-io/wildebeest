@@ -288,6 +288,11 @@ export default class Wildebeest<TModels extends ModelMap> {
     this.pluralCase = pluralCase;
     this.allowSchemaWrites = allowSchemaWrites;
 
+    // Save the loggers
+    this.logger = logger;
+    this.verboseLogger = verboseLogger;
+    this.throwClientError = throwClientError;
+
     // Set models
     Migration.definition.tableName = this.tableNames.migration;
     MigrationLock.definition.tableName = this.tableNames.migrationLock;
@@ -311,11 +316,6 @@ export default class Wildebeest<TModels extends ModelMap> {
     // misc
     this.errOnSyncFailure = errOnSyncFailure;
     this.bottomTest = bottomTest;
-
-    // Save the loggers
-    this.logger = logger;
-    this.verboseLogger = verboseLogger;
-    this.throwClientError = throwClientError;
 
     // The naming conventions
     this.namingConventions = {
