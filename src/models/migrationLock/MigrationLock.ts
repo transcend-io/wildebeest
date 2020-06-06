@@ -196,24 +196,6 @@ export default class MigrationLock<TModels extends ModelMap>
   }
 
   /**
-   * Load in the latest empty db state
-   *
-   * @param schema - The schema to restore to
-   * @returns The promise that loads in the latest empty db state
-   */
-  public async latest(
-    schema = this.wildebeest.restoreSchemaOnEmpty,
-  ): Promise<void> {
-    // Restore the db to the latest save
-    await this.restoreSchema(schema);
-
-    // When the restore is not named latest, migrate forward
-    if (schema !== 'latest') {
-      await this.migrate();
-    }
-  }
-
-  /**
    * Migrate the db all the way forward
    *
    * @returns The migration promise
@@ -230,14 +212,12 @@ export default class MigrationLock<TModels extends ModelMap>
     } catch (err) {
       // Retry the migration when cannot find the migrations folder due to auto-reloading
       if (err.code === 'EIO') {
-        this.wildebeest.verboseLogger.error(
-          `Encountered i/o error: ${err.message}`,
-        );
-        this.wildebeest.verboseLogger.info('Retrying migration');
+        this.wildebeest.logger.error(`Encountered i/o error: ${err.message}`);
+        this.wildebeest.logger.info('Retrying migration');
         await this.migrate();
       } else {
-        this.wildebeest.verboseLogger.log(err);
-        this.wildebeest.verboseLogger.log(err.code);
+        this.wildebeest.logger.log(err);
+        this.wildebeest.logger.log(err.code);
         throw err;
       }
     }

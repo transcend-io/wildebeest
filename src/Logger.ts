@@ -47,7 +47,7 @@ export default class Logger {
   /**
    * Standard console.info
    */
-  public success(...props: Parameters<typeof console.log>): void {
+  public debug(...props: Parameters<typeof console.log>): void {
     console.info(...applyChalkColor('green', props));
   }
 
@@ -58,15 +58,3 @@ export default class Logger {
     this.info('-----------------------------------');
   }
 }
-
-/**
- * The default verbose logger does not log anything
- */
-export const verboseLoggerDefault: Logger = {
-  log: () => null,
-  error: () => null,
-  warn: () => null,
-  info: () => null,
-  success: () => null,
-  divide: () => null,
-};

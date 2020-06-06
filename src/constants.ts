@@ -68,11 +68,6 @@ export const NON_NULL = { foreignKey: { allowNull: false } };
 export const MAX_MIGRATION_DISPLAY = 30;
 
 /**
- * True if NODE_ENV=test
- */
-export const IS_TEST = process.env.NODE_ENV === 'test';
-
-/**
  * One second of time in ms
  */
 export const ONE_SECOND = 1000;

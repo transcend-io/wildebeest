@@ -270,6 +270,3 @@ checks.json
 
 # NVM config file
 .nvmrc
-
-# Do not commit latest schema dump since it is always changing/only needed by test
-*.hidden.dump
