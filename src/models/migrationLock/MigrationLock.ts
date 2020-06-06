@@ -12,6 +12,7 @@ import clearSchema from '@wildebeest/utils/clearSchema';
 import restoreFromDump from '@wildebeest/utils/restoreFromDump';
 import sleepPromise from '@wildebeest/utils/sleepPromise';
 import tableExists from '@wildebeest/utils/tableExists';
+import writeSchema from '@wildebeest/utils/writeSchema';
 
 // models
 import Migration from '@wildebeest/models/migration/Migration';
@@ -193,6 +194,15 @@ export default class MigrationLock<TModels extends ModelMap>
 
     // Restore the db to the latest save
     await restoreFromDump(this.wildebeest, schema);
+  }
+
+  /**
+   * Save the current schema to file
+   *
+   * @param schema - Name of the file
+   */
+  public async saveSchema(schema: string): Promise<void> {
+    await writeSchema(this.wildebeest, schema);
   }
 
   /**
