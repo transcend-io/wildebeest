@@ -22,7 +22,7 @@ export default async function writeSchema<TModels extends ModelMap>(
   // Hold the output of the sql
   const writePath = wildebeest.getSchemaFile(name);
   await Promise.resolve(
-    execSync(`pg_dump -Fc  ${wildebeest.databaseUri} > ${writePath}`),
+    execSync(`pg_dump -Fc  ${wildebeest.db.databaseUri} > ${writePath}`),
   );
 
   // Copy to src so that it can be synced
@@ -33,5 +33,5 @@ export default async function writeSchema<TModels extends ModelMap>(
   }
 
   // Log success
-  wildebeest.logger.success(`\nWrote schema to dump: "${name}"\n`);
+  wildebeest.logger.warn(`\nWrote schema to dump: "${name}"\n`);
 }

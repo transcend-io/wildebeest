@@ -1,5 +1,5 @@
 // global
-import { IS_TEST, LOG_SKIPS } from '@wildebeest/constants';
+import { LOG_SKIPS } from '@wildebeest/constants';
 import Logger from '@wildebeest/Logger';
 
 /**
@@ -8,10 +8,10 @@ import Logger from '@wildebeest/Logger';
 export const BASE_100_MIGRATIONS_REGEX = /== ([0-9][0-9]00).+?\(.+?s\)/;
 
 /**
- * Create a logging function to use with umzugs
+ * Create a logging function to use with umzug
  *
  * @param logger - The logger to use
- * @returns A logging function that can be used to initalize umzug
+ * @returns A logging function that can be used to initialize umzug
  */
 export default function createUmzugLogger(
   logger: Logger,
@@ -20,23 +20,17 @@ export default function createUmzugLogger(
     // The logging function to use
     const func =
       info.includes(': migrated') || info.includes(': reverted')
-        ? 'success'
-        : 'info';
+        ? 'info'
+        : 'debug';
 
     // Whether to skip
-    let skip = LOG_SKIPS.filter((tx) => info.includes(tx)).length > 0;
+    const skip = LOG_SKIPS.filter((tx) => info.includes(tx)).length > 0;
     const isBase100 = BASE_100_MIGRATIONS_REGEX.test(info);
 
-    // In test mode only show every 10 migration
-    if (IS_TEST) {
-      skip = skip || info === '' || (info.startsWith('== ') && !isBase100);
-    }
-
     // Determine logging contents
-    const txt =
-      !isBase100 || !IS_TEST
-        ? info
-        : `    ${(BASE_100_MIGRATIONS_REGEX.exec(info) || [])[1]}`;
+    const txt = !isBase100
+      ? info.replace('\n', '')
+      : `    ${(BASE_100_MIGRATIONS_REGEX.exec(info) || [])[1]}`;
 
     // Log if not skipping
     if (!skip) {

@@ -148,7 +148,7 @@ async function renameFiles<
 
   // Log the number of keys that were renamed and the number that were deleted
   if (renameCount > 0) {
-    wildebeest.logger.success(`Successfully renamed "${renameCount}" s3 files`);
+    wildebeest.logger.info(`Successfully renamed "${renameCount}" s3 files`);
   }
   if (errorCount > 0) {
     wildebeest.logger.error(`Failed to find "${errorCount}" s3 files`);

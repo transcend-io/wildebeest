@@ -29,6 +29,9 @@ export default class WildebeestDb<TModels extends ModelMap> extends Sequelize {
     modelName: TModelName,
   ) => TModels[TModelName];
 
+  /** The uri of the database */
+  public databaseUri: string;
+
   /**
    * Connect a global query interface
    *
@@ -37,6 +40,7 @@ export default class WildebeestDb<TModels extends ModelMap> extends Sequelize {
    */
   public constructor(databaseUri: string, options?: Options) {
     super(databaseUri, options);
+    this.databaseUri = databaseUri;
     this.queryInterface = this.getQueryInterface();
   }
 

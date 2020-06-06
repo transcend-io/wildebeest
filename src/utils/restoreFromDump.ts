@@ -3,7 +3,6 @@ import { execSync } from 'child_process';
 
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
-import { IS_TEST } from '@wildebeest/constants';
 import { ModelMap } from '@wildebeest/types';
 
 /**
@@ -24,12 +23,10 @@ export default async function restoreFromDump<TModels extends ModelMap>(
   await Promise.resolve(
     execSync(
       `pg_restore -d "${
-        wildebeest.databaseUri
+        wildebeest.db.databaseUri
       }" -n public -C ${wildebeest.getSchemaFile(name)}`,
     ),
   );
   // Log success
-  if (!IS_TEST) {
-    wildebeest.logger.info(`\nRestored database schema dump: "${name}"\n`);
-  }
+  wildebeest.logger.warn(`\nRestored database schema dump: "${name}"\n`);
 }

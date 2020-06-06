@@ -12,17 +12,15 @@ import flatten from 'lodash/flatten';
 import keyBy from 'lodash/keyBy';
 import { join } from 'path';
 import pluralize from 'pluralize';
-import { Options, Transaction } from 'sequelize';
-import Umzug from 'umzug';
+import { Transaction } from 'sequelize';
+import { migrationsList, SequelizeStorage, Umzug } from 'umzug';
 
 // utils
 import apply from '@wildebeest/utils/apply';
 import { transactionWrapper } from '@wildebeest/utils/createQueryMaker';
 import createUmzugLogger from '@wildebeest/utils/createUmzugLogger';
 import getBackoffTime from '@wildebeest/utils/getBackoffTime';
-import getNumberedList, {
-  NUMBERED_REGEX,
-} from '@wildebeest/utils/getNumberedList';
+import getNumberedList from '@wildebeest/utils/getNumberedList';
 import pascalCase from '@wildebeest/utils/pascalCase';
 // utils
 import restoreFromDump from '@wildebeest/utils/restoreFromDump';
@@ -45,7 +43,7 @@ import {
   ONE_SECOND,
 } from '@wildebeest/constants';
 import { DefaultTableNames } from '@wildebeest/enums';
-import Logger, { verboseLoggerDefault } from '@wildebeest/Logger';
+import Logger from '@wildebeest/Logger';
 import createRoutes from '@wildebeest/routes';
 import {
   Attributes,
@@ -69,8 +67,8 @@ export type NamingConventions = typeof DEFAULT_NAMING_CONVENTIONS;
  * The options needed to configure a wildebeest
  */
 export type WildebeestOptions<TModels extends ModelMap> = {
-  /** The uri of the database to connect to */
-  databaseUri: string;
+  /** An instance of the wildebeest db */
+  db: WildebeestDb<TModels>;
   /** The path to the folder where the migrations themselves are defined */
   directory: string;
   /** The directory that holds schemas dump */
@@ -79,12 +77,8 @@ export type WildebeestOptions<TModels extends ModelMap> = {
   restoreSchemaOnEmpty: string;
   /** The database model definitions to be validated */
   models: TModels;
-  /** Options to provide to sequelize */
-  sequelizeOptions?: Options;
   /** A logger that that should always log results. This is used mainly for logging errors and critical information */
   logger?: Logger;
-  /** A logger that that should only log when verbose is true */
-  verboseLogger?: Logger;
   /** Override the names of the db model tables */
   tableNames?: typeof DefaultTableNames;
   /** The default attributes to add to every model (ID, createdAt, updatedAt), set this to remove these columns */
@@ -122,7 +116,7 @@ export type WildebeestOptions<TModels extends ModelMap> = {
  */
 export default class Wildebeest<TModels extends ModelMap> {
   /**
-   * Index the migrations and validate that the numbering is correct
+   * Index the migrations and validate that the numbering is correct - TODO async
    */
   public static indexMigrations(
     directory: string,
@@ -138,9 +132,12 @@ export default class Wildebeest<TModels extends ModelMap> {
     return files.map((fileName) => ({
       numInt: parseInt(fileName.substring(0, 4), 10),
       num: fileName.substring(0, 4),
-      name: fileName.substring(0, fileName.length - 3),
-      fileName,
+      name: fileName.replace('.ts', '.js'),
+      fileName: fileName.replace('.ts', '.js'),
       fullPath: join(__dirname, fileName),
+      // TODO async
+      // eslint-disable-next-line
+      ...(require(join(directory, fileName)) as any),
     }));
   }
 
@@ -158,9 +155,6 @@ export default class Wildebeest<TModels extends ModelMap> {
   public modelDefinitions: {
     [modelName in StringKeys<TModels>]: ModelDefinition<StringKeys<TModels>>;
   };
-
-  /** Needed to restore schema dumps using pg_restore and pg_dump */
-  public databaseUri: string;
 
   /** Override the naming conventions */
   public namingConventions: NamingConventions;
@@ -193,9 +187,6 @@ export default class Wildebeest<TModels extends ModelMap> {
 
   /** A logger that that should always log results. This is used mainly for logging errors and critical information */
   public logger: Logger;
-
-  /** A logger that that should only log when verbose is true */
-  public verboseLogger: Logger;
 
   /** For throwing errors that should be exposed to a client i.e. "This id does not exist!" */
   public throwClientError: (err: string) => never;
@@ -243,7 +234,7 @@ export default class Wildebeest<TModels extends ModelMap> {
   public bottomTest: number;
 
   /** The umzug instance that will run the migrations up and down */
-  public umzug: Umzug.Umzug;
+  public umzug: Umzug;
 
   /** A router containing routes that can be used to run migrations and check the status of synced models */
   public router: express.Router;
@@ -256,9 +247,8 @@ export default class Wildebeest<TModels extends ModelMap> {
    */
   public constructor({
     directory,
-    sequelizeOptions,
+    db,
     schemaDirectory,
-    databaseUri,
     restoreSchemaOnEmpty,
     models,
     bottomTest = 1,
@@ -270,7 +260,6 @@ export default class Wildebeest<TModels extends ModelMap> {
     namingConventions = {},
     defaultAttributes = {},
     logger = new Logger(),
-    verboseLogger = verboseLoggerDefault,
     tableNames = DefaultTableNames,
     maxMigrationDisplay = MAX_MIGRATION_DISPLAY,
     forceUnlock = false,
@@ -280,9 +269,8 @@ export default class Wildebeest<TModels extends ModelMap> {
     waitForMigration = false,
   }: WildebeestOptions<TModels>) {
     // The db as a sequelize migrator
-    this.db = new WildebeestDb(databaseUri, sequelizeOptions);
+    this.db = db;
     this.tableNames = tableNames;
-    this.databaseUri = databaseUri;
     this.ignoredTableNames = ignoredTableNames;
     this.forceUnlock = forceUnlock;
     this.pluralCase = pluralCase;
@@ -290,7 +278,6 @@ export default class Wildebeest<TModels extends ModelMap> {
 
     // Save the loggers
     this.logger = logger;
-    this.verboseLogger = verboseLogger;
     this.throwClientError = throwClientError;
 
     // Set models
@@ -350,30 +337,24 @@ export default class Wildebeest<TModels extends ModelMap> {
 
     // Initialize the umzug instance
     this.umzug = new Umzug({
-      storage: 'sequelize',
-      // The table to hold the migrations
-      storageOptions: {
+      storage: new SequelizeStorage({
         sequelize: this.db,
         modelName: 'migration',
         tableName: this.tableNames.migration,
         columnName: 'name',
         timestamps: true,
-      },
+      }),
       // Migration logger
       logging: createUmzugLogger(this.logger),
       // The migrations to run
-      migrations: {
-        pattern: NUMBERED_REGEX,
-        params: [
-          // The database
-          this,
-          // A transaction wrapper
-          transactionWrapper(this),
-          // This
-          this,
-        ],
-        path: this.directory,
-      },
+      migrations: migrationsList(this.migrations, [
+        // The database
+        this,
+        // A transaction wrapper
+        transactionWrapper(this),
+        // This
+        this,
+      ]),
     });
 
     // Initialize all of the models
@@ -461,7 +442,7 @@ export default class Wildebeest<TModels extends ModelMap> {
         const hasMigrations = await Migration.count().then((cnt) => cnt > 0);
         if (!hasMigrations) {
           await Migration.execute({
-            migrations: [this.lookupMigration[this.bottomTest].fileName],
+            migrations: [this.lookupMigration[this.bottomTest].name],
             method: 'up',
           });
         }
@@ -608,7 +589,7 @@ export default class Wildebeest<TModels extends ModelMap> {
         }
       } /* eslint-enable */
 
-      this.verboseLogger.success('~Acquired migration lock~');
+      this.logger.info('~Acquired migration lock~');
 
       // Run the callback function
       await Promise.resolve(cb(lock));
@@ -616,7 +597,7 @@ export default class Wildebeest<TModels extends ModelMap> {
       // Release the lock
       await MigrationLock.releaseLock();
 
-      this.verboseLogger.success('~Released migration lock~');
+      this.logger.info('~Released migration lock~');
     } catch (err) {
       // Unlock if error occurred while running
       if (lock) {
@@ -665,7 +646,7 @@ export default class Wildebeest<TModels extends ModelMap> {
 
       // Log success
     } else {
-      this.logger.success('Database is in sync with sequelize definitions :)');
+      this.logger.info('Database is in sync with sequelize definitions :)');
     }
 
     // Return true if in sync

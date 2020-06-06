@@ -2,13 +2,6 @@
  * A database model for a Migration request.
  */
 
-// external
-import {
-  DownToOptions,
-  ExecuteOptions,
-  UpToOptions as UmzugUpToOptions,
-} from 'umzug';
-
 // global
 import Wildebeest from '@wildebeest/classes/Wildebeest';
 import WildebeestModel from '@wildebeest/classes/WildebeestModel';
@@ -16,6 +9,7 @@ import { ExtractAttributes, ModelMap, UpToOptions } from '@wildebeest/types';
 import logSection from '@wildebeest/utils/logSection';
 
 // local
+import { UmzugExecuteOptions } from 'umzug/lib/types';
 import definition from './definition';
 
 /**
@@ -59,7 +53,12 @@ export default class Migration<TModels extends ModelMap>
    * @param downOptions - Options
    * @returns The down promise
    */
-  public static async down(downOptions: DownToOptions): Promise<void> {
+  public static async down(downOptions: {
+    /** From this */
+    from?: string;
+    /** To this */
+    to?: string | 0;
+  }): Promise<void> {
     // Run umzug down
     return this.logSection((wildebeest) => wildebeest.umzug.down(downOptions));
   }
@@ -70,7 +69,9 @@ export default class Migration<TModels extends ModelMap>
    * @param executeOptions - Options
    * @returns The execute promise
    */
-  public static async execute(executeOptions: ExecuteOptions): Promise<void> {
+  public static async execute(
+    executeOptions: UmzugExecuteOptions,
+  ): Promise<void> {
     await this.setBatch();
     // Run umzug execute and set batch
     return this.logSection((wildebeest) =>
@@ -117,7 +118,7 @@ export default class Migration<TModels extends ModelMap>
       let restartFrom;
 
       // Call up
-      await wildebeest.umzug.up(upOptions as UmzugUpToOptions).catch((e) => {
+      await wildebeest.umzug.up(upOptions).catch((e) => {
         // Deal with weird case when loading in an existing db with migrations
         if (
           upOptions &&
@@ -134,11 +135,10 @@ export default class Migration<TModels extends ModelMap>
       // restart the migrations if the primary key issue occurred
       if (restartFrom) {
         // Call up
-        const castedUpTo: UmzugUpToOptions = {
+        await wildebeest.umzug.up({
           ...upOptions,
           from: restartFrom,
-        } as any; // eslint-disable-line
-        await wildebeest.umzug.up(castedUpTo);
+        });
       }
     });
   }

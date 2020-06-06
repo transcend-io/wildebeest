@@ -1,5 +1,4 @@
 // global
-import { IS_TEST } from '@wildebeest/constants';
 import Logger from '@wildebeest/Logger';
 
 /**
@@ -16,16 +15,12 @@ export default async function logSection(
   header = 'Migrations',
 ): Promise<void> {
   // Log start
-  if (!IS_TEST) {
-    logger.divide();
-    logger.info(`${header}:\n`);
-  }
+  logger.divide();
+  logger.info(`${header}:\n`);
 
   // Run the cb
   await Promise.resolve(cb());
 
   // Log finish
-  if (!IS_TEST) {
-    logger.divide();
-  }
+  logger.divide();
 }

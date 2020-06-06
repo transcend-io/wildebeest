@@ -4,13 +4,14 @@ import * as express from 'express';
 import * as sequelize from 'sequelize';
 import { HookReturn, ModelHooks } from 'sequelize/types/lib/hooks';
 import { ValidationOptions } from 'sequelize/types/lib/instance-validator';
-import * as umzug from 'umzug';
 
 // models
 import WildebeestDb from '@wildebeest/classes/WildebeestDb';
 import WildebeestModel from '@wildebeest/classes/WildebeestModel';
 
 // local
+import { TransactionMigrationDefinition } from '@wildebeest/migrationTypes/custom';
+import { MigrationDefinitionWithName } from 'umzug/lib/migrationsList';
 import { IndexType } from './enums';
 import Wildebeest from './index';
 import { WhereOptions } from './utils/batchProcess';
@@ -373,7 +374,7 @@ export type MigrationDefinition<TModels extends ModelMap> = {
 /**
  * A definition for a migration file
  */
-export type MigrationConfig = {
+export type MigrationConfig = MigrationDefinitionWithName & {
   /** The migration count */
   numInt: number;
   /** The migration count as a string */
@@ -384,14 +385,16 @@ export type MigrationConfig = {
   fileName: string;
   /** The full path to the file */
   fullPath: string;
-};
+} & TransactionMigrationDefinition<ModelMap>;
 
 /**
  * Custom up to
  */
-export type UpToOptions = Partial<umzug.UpToOptions> & {
-  /** Umzug types are missing from */
+export type UpToOptions = {
+  /** From this */
   from?: string;
+  /** To this */
+  to?: string | 0;
 };
 
 // //////////// //

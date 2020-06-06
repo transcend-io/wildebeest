@@ -68,7 +68,7 @@ export default function addUniqueConstraintIndex<TModels extends ModelMap>(
 
           // Log removal and remove
           if (removeIds) {
-            wildebeest.verboseLogger.info(
+            wildebeest.logger.debug(
               `Removing "${removeIds.length}" that duplicates`,
             );
             await queryT.delete(tableName, { id: removeIds });

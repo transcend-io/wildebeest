@@ -23,8 +23,7 @@ const handleError = <TModels extends ModelMap>(
   status = 400,
 ): ((error: Error) => void) => ({ message, stack }): void => {
   // Log the error verbosely
-  res.locals.wildebeest.logger.error(message);
-  res.locals.wildebeest.verboseLogger.log(stack);
+  res.locals.wildebeest.logger.error({ message, stack });
 
   // Render error with props
   res.status(200).send(
