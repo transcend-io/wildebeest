@@ -375,9 +375,7 @@ export default class Wildebeest<TModels extends ModelMap> {
     }
 
     // Read in the migrations
-    console.time('loading migrations');
     const loaded = await Wildebeest.loadMigrations(this.migrations);
-    console.timeEnd('loading migrations');
 
     // Initialize the umzug instance
     this.umzug = new Umzug({
