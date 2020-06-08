@@ -369,7 +369,6 @@ export default class Wildebeest<TModels extends ModelMap> {
    * @returns An umzug instance ready to run migrations
    */
   public async getUmzug(): Promise<Umzug> {
-    console.log('getting');
     // Return cache
     if (this.umzug) {
       return this.umzug;
