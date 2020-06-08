@@ -1,6 +1,6 @@
 {
   "name": "@transcend-io/wildebeest",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Type-safe sequelize with a simplified migration framework",
   "main": "build/src/index.js",
   "homepage": "https://github.com/transcend-io/wildebeest#readme",
@@ -35,7 +35,7 @@
     "test:nobuild": "NODE_ENV=test ./node_modules/.bin/mocha \"build/**/*.test.{js,ts}\" --reporter spec --timeout 10000",
     "####### Build #######": "",
     "prepare": "npm run build",
-    "build": "rimraf build && tsc && copy './generateMixins/{**/*.hbs,**/*.json}' build/generateMixins && copy './src/{**/*.hbs,**/*.json}' build/src && node ./fix_absolute_imports.js",
+    "build": "tsc && copy './generateMixins/{**/*.hbs,**/*.json}' build/generateMixins && copy './src/{**/*.hbs,**/*.json}' build/src && node ./fix_absolute_imports.js",
     "build:watch": "tsc --watch"
   },
   "peerDependencies": {
@@ -71,7 +71,6 @@
     "eslint-plugin-prettier": "^3.1.2",
     "mocha": "^7.2.0",
     "prettier": "^2.0.4",
-    "rimraf": "^3.0.2",
     "sequelize": "5.21.12",
     "tslint": "^6.1.1",
     "tslint-microsoft-contrib": "^6.2.0",

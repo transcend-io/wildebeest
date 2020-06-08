@@ -60,7 +60,9 @@ export default class Migration<TModels extends ModelMap>
     to?: string | 0;
   }): Promise<void> {
     // Run umzug down
-    return this.logSection((wildebeest) => wildebeest.umzug.down(downOptions));
+    return this.logSection((wildebeest) =>
+      wildebeest.getUmzug().then((umzug) => umzug.down(downOptions)),
+    );
   }
 
   /**
@@ -75,7 +77,11 @@ export default class Migration<TModels extends ModelMap>
     await this.setBatch();
     // Run umzug execute and set batch
     return this.logSection((wildebeest) =>
-      wildebeest.umzug.execute(executeOptions).then(() => this.setBatch()),
+      wildebeest
+        .getUmzug()
+        .then((umzug) =>
+          umzug.execute(executeOptions).then(() => this.setBatch()),
+        ),
     );
   }
 
@@ -118,7 +124,8 @@ export default class Migration<TModels extends ModelMap>
       let restartFrom;
 
       // Call up
-      await wildebeest.umzug.up(upOptions).catch((e) => {
+      const umzug = await wildebeest.getUmzug();
+      await umzug.up(upOptions).catch((e) => {
         // Deal with weird case when loading in an existing db with migrations
         if (
           upOptions &&
@@ -135,7 +142,7 @@ export default class Migration<TModels extends ModelMap>
       // restart the migrations if the primary key issue occurred
       if (restartFrom) {
         // Call up
-        await wildebeest.umzug.up({
+        await umzug.up({
           ...upOptions,
           from: restartFrom,
         });

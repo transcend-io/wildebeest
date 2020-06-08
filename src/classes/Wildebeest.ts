@@ -47,6 +47,7 @@ import Logger from '@wildebeest/Logger';
 import createRoutes from '@wildebeest/routes';
 import {
   Attributes,
+  ConfiguredMigrationConfig,
   MigrationConfig,
   ModelDefinition,
   ModelMap,
@@ -134,11 +135,23 @@ export default class Wildebeest<TModels extends ModelMap> {
       num: fileName.substring(0, 4),
       name: fileName.replace('.ts', '.js'),
       fileName: fileName.replace('.ts', '.js'),
-      fullPath: join(__dirname, fileName),
-      // TODO async
-      // eslint-disable-next-line
-      ...(require(join(directory, fileName)) as any),
+      fullPath: join(directory, fileName),
     }));
+  }
+
+  /**
+   * Actually read in all of the migrations
+   */
+  public static async loadMigrations(
+    migrations: MigrationConfig[],
+  ): Promise<ConfiguredMigrationConfig[]> {
+    // Convert to migration configurations
+    return Promise.all(
+      migrations.map(async (migration) => ({
+        ...migration,
+        ...(await import(migration.fullPath)),
+      })),
+    );
   }
 
   // // //
@@ -216,7 +229,7 @@ export default class Wildebeest<TModels extends ModelMap> {
   public reversedMigrations: MigrationConfig[];
 
   /** Lookup from number to migration config */
-  public lookupMigration: { [num in number]: MigrationConfig };
+  public lookupMigration: { [num in number]: MigrationConfig } = {};
 
   /** Blacklisted tables that should be ignored when syncing table */
   public ignoredTableNames: string[];
@@ -233,14 +246,14 @@ export default class Wildebeest<TModels extends ModelMap> {
   /** When testing migrations, this should be the bottom migration to run down to */
   public bottomTest: number;
 
-  /** The umzug instance that will run the migrations up and down */
-  public umzug: Umzug;
-
   /** A router containing routes that can be used to run migrations and check the status of synced models */
   public router: express.Router;
 
   /** Run table migration when DB empty */
   public waitForMigration: boolean;
+
+  /** The umzug instance that will run the migrations up and down */
+  private umzug: Umzug | undefined;
 
   /**
    * Initialize a wildebeest migration runner
@@ -311,7 +324,14 @@ export default class Wildebeest<TModels extends ModelMap> {
 
     // Index the migrations
     this.directory = directory;
-    this.migrations = Wildebeest.indexMigrations(directory, this.bottomTest);
+
+    // Load in the migrations by dynamically requiring the files
+    this.migrations = Wildebeest.indexMigrations(
+      this.directory,
+      this.bottomTest,
+    );
+
+    // Helpers
     this.reversedMigrations = [...this.migrations].reverse();
     this.lookupMigration = keyBy(this.migrations, 'numInt');
 
@@ -335,6 +355,31 @@ export default class Wildebeest<TModels extends ModelMap> {
     // Configure the model definitions
     this.defaultAttributes = defaultAttributes;
 
+    // Initialize all of the models
+    this.initializeModels();
+
+    // Construct the router
+    this.router = createRoutes(this);
+    this.waitForMigration = waitForMigration;
+  }
+
+  /**
+   * Instantiate umzug, or return the previously instantiated instance
+   *
+   * @returns An umzug instance ready to run migrations
+   */
+  public async getUmzug(): Promise<Umzug> {
+    console.log('getting');
+    // Return cache
+    if (this.umzug) {
+      return this.umzug;
+    }
+
+    // Read in the migrations
+    console.time('loading migrations');
+    const loaded = await Wildebeest.loadMigrations(this.migrations);
+    console.timeEnd('loading migrations');
+
     // Initialize the umzug instance
     this.umzug = new Umzug({
       storage: new SequelizeStorage({
@@ -347,7 +392,7 @@ export default class Wildebeest<TModels extends ModelMap> {
       // Migration logger
       logging: createUmzugLogger(this.logger),
       // The migrations to run
-      migrations: migrationsList(this.migrations, [
+      migrations: migrationsList(loaded, [
         // The database
         this,
         // A transaction wrapper
@@ -357,12 +402,7 @@ export default class Wildebeest<TModels extends ModelMap> {
       ]),
     });
 
-    // Initialize all of the models
-    this.initializeModels();
-
-    // Construct the router
-    this.router = createRoutes(this);
-    this.waitForMigration = waitForMigration;
+    return this.umzug;
   }
 
   /**

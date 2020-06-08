@@ -374,7 +374,7 @@ export type MigrationDefinition<TModels extends ModelMap> = {
 /**
  * A definition for a migration file
  */
-export type MigrationConfig = MigrationDefinitionWithName & {
+export type MigrationConfig = {
   /** The migration count */
   numInt: number;
   /** The migration count as a string */
@@ -385,7 +385,14 @@ export type MigrationConfig = MigrationDefinitionWithName & {
   fileName: string;
   /** The full path to the file */
   fullPath: string;
-} & TransactionMigrationDefinition<ModelMap>;
+};
+
+/**
+ * A definition for a migration file
+ */
+export type ConfiguredMigrationConfig = MigrationDefinitionWithName &
+  MigrationConfig &
+  TransactionMigrationDefinition<ModelMap>;
 
 /**
  * Custom up to
